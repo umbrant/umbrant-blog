@@ -6,7 +6,7 @@
 	<head>
 		<title>
 			
-			umbrant : umbrant : Research
+			umbrant : blog : Hello world!
 			
 		</title>
 
@@ -44,21 +44,23 @@
 	
 
 		<div class="post single">
-			<h2 class="title"><a href="">Research</a></h2>
+			<h2 class="title"><a href="">Hello world!</a></h2>
 			
-<p class="meta">&nbsp;</p>
-
+			<p class="meta"><span class="date">March 30, 2011</span></p>
+			
 			<div class="entry">
 			
 
-			<p>My current research interests are in distributed systems and&nbsp;datacenters.</p>
-<h3>Projects</h3>
-<p>Spring 2011, I started working with Prof. Ion Stoica's group on Memento, an in-memory caching infrastructure for datacenter distributed filesystems specifically targeted at MapReduce-style jobs. We developed scheduling and cache management policies that perform significantly better than theoretically "optimal" cache-eviction algorithms (such as farthest-in-the-future) by exploiting datacenter workload characteristics. Our paper is currently under submission to SOSP&nbsp;'11.</p>
-<p>Fall 2010, I worked on a CS262A class project with Prof. John Kubiatowicz within the domain of Tessellation, a multicore operating system being developed here at Berkeley. Tessellation focuses on providing strong application performance guarantees through hardware and software isolation mechanisms. For our project, my partners and I developed a version of the Qt Embedded GUI application framework based on the isolation mechanisms of Tessellation. This resulted in a demo web browser and text editor that showed orders of magnitude better latency and responsiveness under heavy load, running purely in userspace on&nbsp;Linux.</p>
-<h3>Papers</h3>
-<p>Try looking on <a href="http://www.informatik.uni-trier.de/~ley/db/indices/a-tree/w/Wang:Andrew.html">DBLP</a> as&nbsp;well.</p>
-<p>Rajkumar, R., Wang, A., Hiser, J., Nguyen-Tuong, A., Davidson, J., and J. Knight. "Component Oriented Monitoring of Binaries for Security", HICSS 2011:&nbsp;1-10</p>
-<p>Nguyen-Tuong, A., Wang, A., Hiser, J., Knight, J., and J.W. Davidson. "On the Effectiveness of the Metamorphic Shield", ECSA Companion Volume 2010:&nbsp;170-174</p>
+			<!-- Hyde::Article::Begin -->
+
+<!-- Hyde::Excerpt::Begin -->
+
+<p>Hello world! This is my new blog and profile site, purely static HTML hosted out of S3. 
+Since I find this to be a neat trick, I'm going to make the howto into my second-ever blog post.
+This site is still very much under development, I have lots of ideas for neat features I want to add (comments being the first), but it's good enough to put&nbsp;live.</p>
+<!-- Hyde::Excerpt::End -->
+
+<!-- Hyde::Article::End -->
 
 			
 			</div>
@@ -66,6 +68,26 @@
 
 
 	
+	<div id="comments">
+		<div id="disqus_thread"></div>
+		<script type="text/javascript">
+    		/* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+    		var disqus_shortname = 'umbrant'; // required: replace example with your forum shortname
+
+    		// The following are highly recommended additional parameters. Remove the slashes in front to use.
+    		// var disqus_identifier = 'unique_dynamic_id_1234';
+    		var disqus_url = 'http://umbrant.com/blog/2011/hello_world.html';
+
+    		/* * * DON'T EDIT BELOW THIS LINE * * */
+    		(function() {
+        		var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        		dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        		(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    		})();
+		</script>
+		<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+		<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+	</div>
 
 
 

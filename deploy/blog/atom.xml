@@ -1,112 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>umbrant blog</title><link href="http://umbrant.com/blog/atom.xml" rel="self"/><link href="http://umbrant.com"/><updated>2011-03-30T01:22:44Z</updated><id>http://umbrant.com</id><entry><title>Happy New Year</title><author><name>Andrew Wang</name></author><link href="http://umbrant.com/blog/2008/happy-new-year.html"/><updated>2008-12-31T18:21:15Z</updated><published>2008-12-31T18:21:15Z</published><id>http://umbrant.com/blog/2008/happy-new-year.html</id><content type="html">
+<feed xmlns="http://www.w3.org/2005/Atom"><title>umbrant blog</title><link href="http://umbrant.com/blog/atom.xml" rel="self"/><link href="http://umbrant.com"/><updated>2011-03-30T01:48:53Z</updated><id>http://umbrant.com</id><entry><title>Hello world!</title><author><name>Andrew Wang</name></author><link href="http://umbrant.com/blog/2011/hello_world.html"/><updated>2011-03-30T01:34:29Z</updated><published>2011-03-30T01:34:29Z</published><id>http://umbrant.com/blog/2011/hello_world.html</id><content type="html">
        
 
 &lt;!-- Hyde::Excerpt::Begin --&gt;
 
-&lt;h3&gt;blanditiis nisi laudantium quis aperiam quibusdam quasi ab error&amp;nbsp;harum&lt;/h3&gt;
-&lt;p&gt;Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est&amp;nbsp;laborum.&lt;/p&gt;
-
-&lt;p&gt;Reiciendis aliquam aperiam distinctio assumenda quibusdam, pariatur perspiciatis eligendi dolore aspernatur, quidem non iusto illo expedita nulla, excepturi natus a? Nihil blanditiis ut quis vero hic, adipisci quibusdam deserunt id, praesentium natus placeat impedit esse, voluptatem eius distinctio magni? Impedit asperiores quisquam quo hic doloribus libero quae nostrum rerum, atque dolore aut, voluptatum molestias sit quidem, voluptates nesciunt veritatis corrupti illum&amp;nbsp;illo?&lt;/p&gt;
-
-&lt;p&gt;Nostrum quasi quo tempora eos blanditiis consectetur quibusdam eaque, odio quia incidunt eveniet, libero reprehenderit cum voluptates tempora odio itaque quo&amp;nbsp;illum?&lt;/p&gt;
-
+&lt;p&gt;Hello world! This is my new blog and profile site, purely static HTML hosted out of S3. 
+Since I find this to be a neat trick, I&#39;m going to make the howto into my second-ever blog post.
+This site is still very much under development, I have lots of ideas for neat features I want to add (comments being the first), but it&#39;s good enough to put&amp;nbsp;live.&lt;/p&gt;
 &lt;!-- Hyde::Excerpt::End --&gt;
-
-&lt;h3&gt;consequuntur hic perferendis libero&amp;nbsp;officia&lt;/h3&gt;
-&lt;p&gt;Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est&amp;nbsp;laborum.&lt;/p&gt;
-
-&lt;p&gt;Tempore neque enim tenetur quam et accusantium doloribus, quod praesentium delectus voluptatum quo neque vel placeat? A quasi libero commodi, similique architecto voluptates labore quos laudantium rerum iusto est, eum reprehenderit recusandae in officia numquam doloremque nisi minus, perferendis obcaecati perspiciatis nostrum officia itaque corrupti, unde dolore ullam. Accusantium dolores iusto minus nam corrupti suscipit optio asperiores possimus, possimus consequatur odit ipsam veniam quis. Fugiat aperiam quos, dolorum iure repellendus cumque veritatis eum nobis reiciendis, obcaecati reprehenderit&amp;nbsp;adipisci?&lt;/p&gt;
-
-&lt;h3&gt;reiciendis&amp;nbsp;rerum&lt;/h3&gt;
-&lt;p&gt;Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est&amp;nbsp;laborum.&lt;/p&gt;
-
-&lt;p&gt;Nam perspiciatis blanditiis laborum voluptatibus ab omnis velit, corrupti hic laudantium sequi laboriosam culpa non sint asperiores provident animi, eum vitae blanditiis, autem odio dolores quam suscipit? Mollitia odit ullam maiores? Quas dolores rerum dolor placeat&amp;nbsp;magnam.&lt;/p&gt;
-
-&lt;p&gt;Accusamus odio rerum corporis facilis perspiciatis? Omnis perferendis praesentium? Accusamus sint ab voluptates in sunt neque aperiam explicabo a, dolores ex dolorem sint reiciendis labore, at aperiam molestias numquam cum saepe dolorem ad fugiat, accusantium id nihil aliquam, molestias eaque ab quia aliquam natus? Autem qui omnis consequatur similique eaque consequuntur illo doloribus ab aliquam, vero atque cupiditate exercitationem fugit aliquam quas saepe, hic soluta iusto culpa vero commodi asperiores neque praesentium enim, maiores itaque molestiae nam eveniet maxime sunt doloribus at ex aperiam&amp;nbsp;quaerat.&lt;/p&gt;
-
-
-   </content></entry><entry><title>Merry Christmas</title><author><name>Andrew Wang</name></author><link href="http://umbrant.com/blog/2008/happy-christmas.html"/><updated>2008-12-20T18:20:30Z</updated><published>2008-12-20T18:20:30Z</published><id>http://umbrant.com/blog/2008/happy-christmas.html</id><content type="html">
-       
-
-&lt;!-- Hyde::Excerpt::Begin --&gt;
-
-&lt;h3&gt;repudiandae non sunt nobis at aliquid placeat nam quisquam&amp;nbsp;suscipit&lt;/h3&gt;
-&lt;p&gt;Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est&amp;nbsp;laborum.&lt;/p&gt;
-
-&lt;p&gt;Minus perspiciatis obcaecati unde animi dolore aperiam atque aspernatur doloremque ut quod, quod eligendi cumque fugit adipisci illum dolor maxime aliquid inventore, quis illo ea nostrum veniam eveniet&amp;nbsp;est?&lt;/p&gt;
-
-&lt;p&gt;A omnis enim autem sint nemo vitae expedita esse explicabo pariatur labore? Illo soluta nostrum consequuntur nemo at, facere atque quos inventore repellat dicta maxime ipsam doloribus&amp;nbsp;pariatur.&lt;/p&gt;
-
-&lt;!-- Hyde::Excerpt::End --&gt;
-
-&lt;h3&gt;dicta qui molestiae fugiat&amp;nbsp;non&lt;/h3&gt;
-&lt;p&gt;Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est&amp;nbsp;laborum.&lt;/p&gt;
-
-&lt;p&gt;Suscipit nesciunt ex ut voluptatem hic quod, qui corrupti molestias delectus hic eveniet quae, inventore quis quibusdam assumenda repellat eaque? Id quos atque aspernatur in accusamus incidunt placeat ut rerum laborum amet, perferendis ratione at doloribus cum error eveniet nihil quia molestias, ipsa autem corrupti laboriosam, soluta incidunt ipsa eaque totam vero mollitia debitis libero, maxime temporibus libero itaque perspiciatis. Reprehenderit voluptas sapiente, maxime voluptatum perferendis sunt harum nesciunt quasi asperiores consectetur id veniam, aliquam sed consectetur numquam soluta nobis consequuntur eum sit, reiciendis sapiente maiores exercitationem mollitia expedita officiis ducimus corporis&amp;nbsp;fugit?&lt;/p&gt;
-
-&lt;h3&gt;dignissimos&amp;nbsp;sunt&lt;/h3&gt;
-&lt;p&gt;Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est&amp;nbsp;laborum.&lt;/p&gt;
-
-&lt;p&gt;Excepturi quo magni alias expedita maiores amet delectus quisquam totam&amp;nbsp;corrupti?&lt;/p&gt;
-
-&lt;p&gt;Officiis fugiat cumque nobis, mollitia deleniti facere, voluptatibus delectus illo expedita accusantium, accusamus odit ex porro soluta, cupiditate explicabo quae aperiam eveniet quasi numquam quo voluptas vero? Aperiam pariatur sed dolor deleniti ea quaerat quis ullam, veniam dolores quasi itaque soluta maiores dolore qui, id voluptatem in vero et quod tenetur sequi. Dolorum libero quas rem reprehenderit maiores odio. Dicta fugiat consectetur maxime quibusdam et exercitationem reprehenderit qui minima possimus&amp;nbsp;est?&lt;/p&gt;
-
-
-   </content></entry><entry><title>Introducing Hyde</title><author><name>Andrew Wang</name></author><link href="http://umbrant.com/blog/2009/introducing-hyde.html"/><updated>2009-01-20T22:07:29Z</updated><published>2009-01-20T22:07:29Z</published><id>http://umbrant.com/blog/2009/introducing-hyde.html</id><content type="html">
-       
-
-&lt;!-- Hyde::Excerpt::Begin --&gt;
-
-&lt;h3&gt;eum dolores consequuntur quisquam velit aliquam voluptatem eos numquam&amp;nbsp;ratione&lt;/h3&gt;
-&lt;p&gt;Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est&amp;nbsp;laborum.&lt;/p&gt;
-
-&lt;p&gt;Adipisci quia architecto labore saepe nulla, earum repellendus quasi magni ullam incidunt accusantium numquam ducimus, ratione autem ab explicabo voluptatibus facere natus laborum blanditiis placeat, neque quo&amp;nbsp;necessitatibus.&lt;/p&gt;
-
-&lt;p&gt;Error consectetur placeat ipsum fuga doloribus quia numquam, debitis nobis blanditiis rem laborum fuga earum porro cumque repellendus aliquam. Nihil aut unde labore eum nisi accusamus obcaecati commodi provident dolor aliquam, quaerat rerum nesciunt sint, aspernatur quas et vero quasi corporis modi. Eum facere cumque tenetur animi, adipisci distinctio libero aut neque illum ipsa laborum illo possimus beatae ad. Rerum eligendi impedit, suscipit iste explicabo ipsum numquam&amp;nbsp;omnis.&lt;/p&gt;
-
-&lt;!-- Hyde::Excerpt::End --&gt;
-
-&lt;p style=&quot;color:red&quot;&gt;This is a&amp;nbsp;reference.&lt;/p&gt;
-
-&lt;h3&gt;reference: reiciendis odio dolor blanditiis&amp;nbsp;in&lt;/h3&gt;
-&lt;p&gt;Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est&amp;nbsp;laborum.&lt;/p&gt;
-
-&lt;p&gt;Voluptates praesentium dolores obcaecati natus? Magni laborum debitis dolor impedit dolores, omnis consectetur deleniti eveniet suscipit. Odio illum laudantium, alias est quae molestiae minima possimus dolore. Sunt sint laudantium reprehenderit expedita non laborum nemo dolore&amp;nbsp;dolorem?&lt;/p&gt;
-
-&lt;h3&gt;quod&amp;nbsp;explicabo&lt;/h3&gt;
-&lt;p&gt;Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est&amp;nbsp;laborum.&lt;/p&gt;
-
-&lt;p&gt;Debitis earum consectetur magnam nostrum, nisi maxime eos, delectus non harum quod eius exercitationem optio numquam debitis rerum hic atque. Error pariatur nostrum quos animi, enim excepturi similique placeat, ullam deserunt tempore iste modi perferendis perspiciatis harum quia, aperiam nisi similique totam, eaque non incidunt temporibus. Quia commodi&amp;nbsp;suscipit.&lt;/p&gt;
-
-&lt;p&gt;Dicta voluptatum unde sequi aliquam dolore quam, exercitationem iure voluptas asperiores corrupti dignissimos at culpa fuga, totam natus eum quod necessitatibus fugit quibusdam, ipsam rerum consequatur fugit debitis fuga ratione explicabo quidem mollitia beatae iste? Dicta perspiciatis voluptatem totam rerum est laborum mollitia magni possimus voluptatibus, voluptatem doloribus facilis eum culpa ab, deserunt et placeat corporis fugit delectus voluptatum dignissimos nisi excepturi? Architecto est illo perferendis pariatur soluta amet assumenda minima nesciunt, enim praesentium dignissimos corporis repellat ea voluptatum voluptates consectetur iure iste qui, iure in laboriosam fuga nobis maiores sed magni omnis saepe deserunt exercitationem, numquam necessitatibus aspernatur nam itaque molestiae iste ratione vel dolorem quae id? Rem eum suscipit debitis reiciendis sed possimus provident, dolores quasi reiciendis cum&amp;nbsp;odio.&lt;/p&gt;
-
-
-   </content></entry><entry><title>Hyde has references</title><author><name>Andrew Wang</name></author><link href="http://umbrant.com/blog/2010/hyde_has_references.html"/><updated>2010-10-15T22:07:29Z</updated><published>2010-10-15T22:07:29Z</published><id>http://umbrant.com/blog/2010/hyde_has_references.html</id><content type="html">
-       
-
-&lt;!-- Hyde::Excerpt::Begin --&gt;
-
-&lt;p&gt;nulla nobis alias veniam atque ipsa tempora quae consequuntur&amp;nbsp;soluta&lt;/p&gt;
-&lt;p&gt;Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est&amp;nbsp;laborum.&lt;/p&gt;
-
-&lt;p&gt;Recusandae tenetur quas voluptate eaque maxime sit autem dignissimos, iste fugiat illum vitae temporibus vel nulla nisi officiis, tempore ullam velit assumenda enim fuga, corrupti aspernatur rerum maxime officia est, quo enim ratione ad praesentium aut error dolorem eaque laboriosam. Adipisci ipsum quam maiores sint nisi, rem eos quidem asperiores tempora recusandae voluptatibus minus exercitationem qui autem possimus, architecto omnis voluptatem recusandae ea facilis, voluptatum reiciendis repudiandae consequatur dolores laboriosam voluptates possimus quae eaque. Aliquid atque molestiae ullam esse, aut non natus consequuntur molestiae reprehenderit deserunt ad maiores quis facere, expedita cupiditate totam odio perferendis rerum maiores sint eos dolores, corrupti temporibus accusamus tenetur eveniet modi dolorem mollitia atque? Adipisci in numquam necessitatibus eligendi consequatur quibusdam praesentium amet ab reprehenderit, quo in totam, aliquid atque adipisci magni iusto, perspiciatis quia laboriosam iusto cupiditate fuga nulla dolor vel dolorem at, vero fugit commodi&amp;nbsp;quasi.&lt;/p&gt;
-
-&lt;p&gt;Odio repellat omnis labore sequi quis eligendi at quaerat eveniet delectus porro, quia laudantium velit incidunt cum, quaerat sed ullam iste&amp;nbsp;ea.&lt;/p&gt;
-
-&lt;!-- Hyde::Excerpt::End --&gt;
-
-&lt;h3&gt;cupiditate ratione cumque dolorum&amp;nbsp;ut&lt;/h3&gt;
-&lt;p&gt;Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est&amp;nbsp;laborum.&lt;/p&gt;
-
-&lt;p&gt;Deleniti qui temporibus asperiores repellat sit, eius nulla quisquam&amp;nbsp;nesciunt?&lt;/p&gt;
-
-&lt;h3&gt;assumenda&amp;nbsp;dolorum&lt;/h3&gt;
-&lt;p&gt;Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est&amp;nbsp;laborum.&lt;/p&gt;
-
-&lt;p&gt;Officia ipsum aut veniam beatae eveniet possimus expedita, placeat voluptas voluptates qui ab ea dolor aliquid quos delectus, sit iure a ratione quidem laborum reprehenderit voluptatem veritatis quisquam consequuntur, in quam quibusdam nisi? Dignissimos nostrum modi placeat ipsam libero vel, doloremque impedit nesciunt maxime dolorem repellat obcaecati vitae adipisci, fugit cupiditate maxime impedit possimus, ex deleniti dolores quis maxime iure expedita corrupti quod officiis placeat ipsum, cupiditate soluta sunt temporibus eius tenetur amet placeat? Quaerat maiores vero harum placeat, aliquam ipsum obcaecati quia non voluptatibus enim dicta impedit eos quidem&amp;nbsp;assumenda.&lt;/p&gt;
-
-&lt;p&gt;Blanditiis vel perferendis a cum nesciunt voluptatum iure, unde aliquid eligendi nemo quas tempora eaque necessitatibus molestiae consequuntur voluptatem? Perspiciatis qui eaque alias a atque, possimus ex veritatis aspernatur, blanditiis fuga eveniet a iure saepe tempore, voluptatem ratione cumque eaque, omnis sunt ad. Ad tenetur alias dicta consectetur ipsa quidem amet suscipit a autem, quam labore esse dolor, exercitationem veritatis eum dolor et necessitatibus porro laboriosam, impedit accusamus doloremque, nulla ipsam ratione ipsa eaque quaerat eos libero asperiores assumenda odio&amp;nbsp;neque.&lt;/p&gt;
 
 
    </content></entry></feed>
