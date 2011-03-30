@@ -1,0 +1,46 @@
+<div id="sidebar">
+	<div id="logo">
+		<h1><a href="{{site.url}}/">{{site.name}}</a></h1>
+	</div>
+	<div>
+		<p>My name is Andrew Wang. I'm a computer science PhD student at UC Berkeley in distributed systems.</p>
+	</div>
+	<div id="menu">
+		<ul>
+			<li><a href="{{nav_links.home}}">Home</a></li>
+			<li><a href="{{nav_links.about}}">About</a></li>
+			<li><a href="{{nav_links.research}}">Research</a></li>
+			<li><a href="{{nav_links.contact}}">Contact</a></li>
+		</ul>
+	</div>
+	<ul>
+		<li>
+		<h2>Recent Posts</h2>
+		<ul>
+			{% for page in site.walk %}
+				{% ifequal page.name "blog" %}
+
+				{% recent_posts recents 6 page  %}
+				{% for post in recents %}
+				<li><a href="{{post.url}}">{{post.title}}</a></li>
+				{% endfor %}
+				{% endifequal %}
+			{% endfor %}
+		</ul>
+		</li>
+		<li>
+		<h2>Archive</h2>
+		<ul>
+			{% for page in site.walk %}
+			{% ifequal page.name "blog" %}
+				{% for year in page.walk reversed %}
+					{% ifnotequal year.name "blog" %}
+					<li><a href="{{year.url}}">{{year.name}}</a></li>
+					{% endifnotequal %}
+				{% endfor %}
+			{% endifequal %}
+			{% endfor %}
+		</ul>
+		</li>
+	</ul>
+</div>

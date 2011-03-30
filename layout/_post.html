@@ -1,0 +1,38 @@
+{% extends "umbrant/body.html" %}
+
+{% block content_header %}
+{% endblock %}
+
+{% block content_body %}
+
+		<div class="post single">
+			<h2 class="title"><a href="{{post.url}}">{{page.title}}</a></h2>
+			{% block meta %}
+			<p class="meta"><span class="date">{{page.created|date:"F j, Y"}}</span></p>
+			{% endblock %}
+			<div class="entry">
+			{% filter typogrify %}
+
+			{% markdown %}
+
+			{% block article %}
+			{% endblock %}
+				
+			{% endmarkdown %}
+
+			{% endfilter %}
+			</div>
+		</div>
+{% endblock %}
+
+
+{% block content_footer %}
+	<div class="comments">
+		<p class="links"><a href="#">Comments powered by Disqus</a></p>
+	</div>
+{% endblock %}
+
+
+{% block context_nav %}
+{% include "skeleton/_context_nav.html" %}
+{% endblock %}
