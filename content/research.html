@@ -6,6 +6,21 @@
 
 {% block article %}
 
-My current research interests are in distributed systems and datacenters. TODO: post paper citations and links, detail projects.
+My current research interests are in distributed systems and datacenters.
+
+### Projects ###
+
+Spring 2011, I started working with Prof. Ion Stoica's group on Memento, an in-memory caching infrastructure for datacenter distributed filesystems specifically targeted at MapReduce-style jobs. We developed scheduling and cache management policies that perform significantly better than theoretically "optimal" cache-eviction algorithms (such as farthest-in-the-future) by exploiting datacenter workload characteristics. Our paper is currently under submission to SOSP '11.
+
+Fall 2010, I worked on a CS262A class project with Prof. John Kubiatowicz within the domain of Tessellation, a multicore operating system being developed here at Berkeley. Tessellation focuses on providing strong application performance guarantees through hardware and software isolation mechanisms. For our project, my partners and I developed a version of the Qt Embedded GUI application framework based on the isolation mechanisms of Tessellation. This resulted in a demo web browser and text editor that showed orders of magnitude better latency and responsiveness under heavy load, running purely in userspace on Linux.
+
+### Papers ###
+
+Try looking on [DBLP](http://www.informatik.uni-trier.de/~ley/db/indices/a-tree/w/Wang:Andrew.html) as well.
+
+Rajkumar, R., Wang, A., Hiser, J., Nguyen-Tuong, A., Davidson, J., and J. Knight. "Component Oriented Monitoring of Binaries for Security", HICSS 2011: 1-10
+
+Nguyen-Tuong, A., Wang, A., Hiser, J., Knight, J., and J.W. Davidson. "On the Effectiveness of the Metamorphic Shield", ECSA Companion Volume 2010: 170-174
+
 
 {% endblock %}
