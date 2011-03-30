@@ -35,7 +35,7 @@
 			{% ifequal page.name "blog" %}
 				{% for year in page.walk reversed %}
 					{% ifnotequal year.name "blog" %}
-					<li><a href="{{year.url}}">{{year.name}}</a></li>
+					<li><a href="{{year.listing_page.url}}">{{year.name}}</a></li>
 					{% endifnotequal %}
 				{% endfor %}
 			{% endifequal %}

@@ -24,7 +24,7 @@ h2 {
 h3 {
 	font-size:1.6em;
 	line-height:26px;
-	padding-bottom:26px;
+	padding:26px 0 13px;
 }
 
 p, ul, ol {
@@ -51,7 +51,7 @@ a:active {
 #wrapper {
 	margin:0 auto;
 	padding:0;
-	background:#222 url(../images/bg.png) repeat-y left top;
+	background:#222 url(../images/bg_footer.png) repeat-y left top;
 }
 
 /* Header */
@@ -78,9 +78,7 @@ a:active {
 
 #logo h1 {
 	margin:0px;
-	padding:0 0 10px 0;
-	color:#000;
-	text-align:center;
+	padding:0 0 10px 20px;
 	font-family:Georgia, "Times New Roman", Times, serif;
 }
 
@@ -147,6 +145,7 @@ div#menu li {
 
 #page {
 	width:1000px;
+	background:#222 url(../images/bg.png) repeat-y left top;
 }
 
 #page-bgtop {
@@ -161,7 +160,7 @@ div#menu li {
 
 #content {
 	float:left;
-	width:531px;
+	width:533px;
 	padding:39px 65px 0px 39px;
 	/*background:#f2efe4;*/
 	background:transparent;
@@ -171,19 +170,19 @@ div#menu li {
 	margin-bottom:40px;
 }
 
-.post .title {
+.title {
 	padding:0 0 10px 0;
 	text-transform:lowercase;
 	font-family:Georgia, "Times New Roman", Times, serif;
 	letter-spacing:-.5px;
 }
 
-.post .title a {
+.title a {
 	color:#000;
 	border:none;
 }
 
-.post .meta {
+.meta {
 	overflow:hidden;
 	margin-bottom:26px;
 	padding:0px;
@@ -193,15 +192,15 @@ div#menu li {
 	font-weight:bold;
 }
 
-.post .meta .date {
+.meta .date {
 	float:left;
 }
 
-.post .meta .posted {
+.meta .posted {
 	float:right;
 }
 
-.post .meta a {
+.meta a {
 }
 
 .post .entry {
@@ -227,11 +226,23 @@ div#menu li {
 #sidebar {
 	float:right;
 	width:273px;
-	margin:0px;
+	margin:0;
 	padding:39px 0 0 10px;
 	color:#FFF;
 	background:transparent;
+}
 
+html, 
+body,
+#sidebar
+{
+	height:100%;
+}
+
+#wrapper,
+#content
+{
+	min-height:100%;
 }
 
 #sidebar ul {

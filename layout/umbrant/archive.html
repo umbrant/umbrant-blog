@@ -1,0 +1,38 @@
+{% extends "_staticpage.html"%}
+
+{% block content_header %}
+<h2 class="title">{{page.title}} {{node.name}}</h2>
+{% endblock %}
+
+
+{% block content_body %}
+
+{% block meta %}
+<p class="meta">&nbsp;</p>
+{% endblock %}
+
+
+<div class="page-listing">
+	{% for node in page.node.walk_reverse %}
+		<ul>
+
+    {% for list_page in node.pages|dictsort:"created" reversed %}
+		{% ifnotequal list_page node.listing_page %}
+			{% if list_page.display_in_list %}
+				<li>
+					<span>{{list_page.created|date:"Y-m-d" }}  </span>
+					<a href="{{list_page.url}}">
+					{% with list_page.name_without_extension|remove_date_prefix|unslugify as default_title %}
+						{{list_page.title|default_if_none:default_title }}
+					{%endwith%}</a>
+				</li>
+			{% endif %}
+		{% endifnotequal %}
+	{% endfor %}
+		</ul>
+	{% endfor %}
+</div>
+
+<div class="clear"></div>
+
+{% endblock %}
