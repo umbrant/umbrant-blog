@@ -160,7 +160,7 @@ div#menu li {
 
 #content {
 	float:left;
-	width:533px;
+	width:559px;
 	padding:39px 65px 0px 39px;
 	/*background:#f2efe4;*/
 	background:transparent;
@@ -225,7 +225,7 @@ div#menu li {
 
 #sidebar {
 	float:right;
-	width:273px;
+	width:247px;
 	margin:0;
 	padding:39px 0 0 10px;
 	color:#FFF;
@@ -293,10 +293,12 @@ body,
 	background:#111;
 	color:#fff;
 	float:left;
-	width:637px;
-	border-right:1px solid #222;
+	width:663px;
+	border-right:1px solid #111;
+	border-top:1px solid #000;
 	text-align:center;
 	padding:39px 0;
+	margin-top:39px;
 	font-family:Arial, sans-serif;
 }
 

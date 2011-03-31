@@ -84,7 +84,7 @@ CONTENT_PROCESSORS = {
     'prerendered/': {
         '*.*' :
             ('hydeengine.content_processors.PassthroughProcessor',)
-            }
+    }
 }
 
 SITE_POST_PROCESSORS = {
@@ -102,7 +102,10 @@ CONTEXT = {
         'home': '/',
         'about': '/about.html',
         'research' : '/research.html',
-        'contact' : '/contact.html'
+        'contact' : '/contact.html',
+        'bucket_list': '/bucket.html',
+    },
+    'links' : {
     }
 }
 

@@ -1,0 +1,25 @@
+{% extends "_post.html" %}
+
+{%load webdesign %}
+
+{%hyde
+    title: Hello world!
+    created: 1900-01-01 00:00:00
+    draft: True
+%}
+
+{% block article %}
+
+{%article%}
+
+{% excerpt %}
+
+Excerpt goes here.
+
+{%endexcerpt%}
+
+Rest of article goes here.
+
+{%endarticle%}
+
+{% endblock %}

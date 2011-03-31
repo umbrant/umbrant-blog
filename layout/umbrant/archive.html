@@ -18,7 +18,7 @@
 
     {% for list_page in node.pages|dictsort:"created" reversed %}
 		{% ifnotequal list_page node.listing_page %}
-			{% if list_page.display_in_list %}
+			{% if list_page.display_in_list and not list_page.draft %}
 				<li>
 					<span>{{list_page.created|date:"Y-m-d" }}  </span>
 					<a href="{{list_page.url}}">
