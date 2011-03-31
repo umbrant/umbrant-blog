@@ -1,0 +1,182 @@
+
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+	<head>
+		<title>
+			
+			Hello world! : umbrant
+			
+		</title>
+
+		<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+		<link rel="icon" type="image/ico" href="/favicon.ico"/>
+
+		
+		<link href="/blog/atom.xml" rel="alternate" title="umbrant" type="application/atom+xml"/>
+		
+
+		
+		<link href="/media/css/style.css" rel="stylesheet" type="text/css" media="screen" />
+		<link href="/media/css/pygments.css" rel="stylesheet" type="text/css" media="screen" />
+		<link href='http://fonts.googleapis.com/css?family=Quattrocento|Droid+Sans|Droid+Sans+Mono' rel='stylesheet' type='text/css'>
+		
+		
+		
+
+		
+		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js"></script>
+		<script type="text/javascript" src="/media/js/umbrant.js"></script>
+		
+		
+		
+	</head>
+
+	<body>
+		<div id="wrapper">
+			<div id="page">
+				<div id="page-bgtop">
+					<div id="page-bgbtm">
+						<div id="content">
+
+							
+
+	
+
+
+	
+
+		<div class="post single">
+			<h2 class="title"><a href="">Hello world!</a></h2>
+			
+			<p class="meta"><span class="date">March 30, 2007</span></p>
+			
+			<div class="entry">
+			
+
+			<!-- Hyde::Article::Begin -->
+
+<!-- Hyde::Excerpt::Begin -->
+
+<p>Excerpt goes&nbsp;here.</p>
+<!-- Hyde::Excerpt::End -->
+
+<p>Rest of article goes&nbsp;here.</p>
+<div class="code"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">simples3</span> <span class="kn">import</span> <span class="o">*</span><br /><span class="kn">import</span> <span class="nn">os</span><br /><span class="kn">import</span> <span class="nn">re</span><br />&nbsp;<br /><span class="c"># Config options</span><br /><span class="n">ACCESS_KEY</span> <span class="o">=</span> <span class="s">&#39;&#39;</span><br /><span class="n">SECRET_KEY</span> <span class="o">=</span> <span class="s">&#39;&#39;</span><br /><span class="n">BUCKET_NAME</span>  <span class="o">=</span>  <span class="s">&quot;&quot;</span><br /><span class="n">BASE_URL</span> <span class="o">=</span> <span class="s">&#39;&#39;</span><br />&nbsp;<br /><span class="c"># NO TRAILING SLASH</span><br /><span class="n">SOURCE_DIR</span> <span class="o">=</span> <span class="s">&quot;&quot;</span><br />&nbsp;<br /><span class="n">IGNORE</span> <span class="o">=</span> <span class="p">(</span><br />          <span class="s">&quot;\.(.*).swp$&quot;</span><span class="p">,</span> <span class="s">&quot;~$&quot;</span><span class="p">,</span> <span class="c"># ignore .swp files</span><br />         <span class="p">)</span><br />&nbsp;<br /><span class="c"># code</span><br />&nbsp;<br /><span class="n">ignore_re</span> <span class="o">=</span> <span class="p">[]</span><br /><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">IGNORE</span><span class="p">:</span><br />    <span class="n">ignore_re</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">i</span><span class="p">))</span><br />&nbsp;<br /><span class="c"># open bucket</span><br /><span class="n">bucket</span> <span class="o">=</span> <span class="n">S3Bucket</span><span class="p">(</span><span class="n">BUCKET_NAME</span><span class="p">,</span> <span class="n">access_key</span><span class="o">=</span><span class="n">ACCESS_KEY</span><span class="p">,</span> <br />                  <span class="n">secret_key</span><span class="o">=</span><span class="n">SECRET_KEY</span><span class="p">,</span> <span class="n">base_url</span><span class="o">=</span><span class="n">BASE_URL</span><span class="p">)</span><br />&nbsp;<br /><span class="c"># recursively put in all files in SOURCE_DIR</span><br />&nbsp;<br /><span class="k">for</span> <span class="n">root</span><span class="p">,</span> <span class="n">dirs</span><span class="p">,</span> <span class="n">files</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">walk</span><span class="p">(</span><span class="n">SOURCE_DIR</span><span class="p">):</span><br />    <span class="n">relroot</span> <span class="o">=</span> <span class="n">root</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">SOURCE_DIR</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">:]</span><br />    <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">files</span><span class="p">:</span><br />        <span class="c"># root directory files should not have a preceding &quot;/&quot;</span><br />        <span class="c"># puts the files in a blank named directory, not what we want</span><br />        <span class="n">key</span> <span class="o">=</span> <span class="s">&quot;&quot;</span><br />        <span class="k">if</span> <span class="n">relroot</span><span class="p">:</span><br />            <span class="n">key</span> <span class="o">=</span> <span class="n">relroot</span> <span class="o">+</span> <span class="s">&quot;/&quot;</span> <span class="o">+</span> <span class="n">f</span><br />        <span class="k">else</span><span class="p">:</span><br />            <span class="n">key</span> <span class="o">=</span> <span class="n">f</span><br />        <span class="n">filename</span> <span class="o">=</span> <span class="n">root</span> <span class="o">+</span> <span class="s">&quot;/&quot;</span> <span class="o">+</span> <span class="n">f</span><br />&nbsp;<br />        <span class="c"># check in the ignore list</span><br />        <span class="n">ignore</span> <span class="o">=</span> <span class="bp">False</span><br />        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">ignore_re</span><span class="p">:</span><br />            <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">f</span><span class="p">):</span><br />                <span class="k">print</span> <span class="s">&quot;Ignoring&quot;</span><span class="p">,</span> <span class="n">key</span><br />                <span class="n">ignore</span> <span class="o">=</span> <span class="bp">True</span><br />        <span class="k">if</span> <span class="n">ignore</span><span class="p">:</span><br />            <span class="k">continue</span><br />&nbsp;<br />        <span class="n">stat</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">stat</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span><br />        <span class="n">metadata</span> <span class="o">=</span> <span class="p">{</span><span class="s">&quot;modtime&quot;</span><span class="p">:</span><span class="nb">str</span><span class="p">(</span><span class="n">stat</span><span class="o">.</span><span class="n">st_mtime</span><span class="p">)}</span><br />&nbsp;<br />        <span class="c"># check if it&#39;s changed with modtimes</span><br />        <span class="n">sf</span> <span class="o">=</span> <span class="bp">False</span><br />        <span class="k">try</span><span class="p">:</span><br />            <span class="n">sf</span> <span class="o">=</span> <span class="n">bucket</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">key</span><span class="p">)</span><br />        <span class="k">except</span><span class="p">:</span><br />            <span class="n">contents</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><br />            <span class="n">bucket</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">contents</span><span class="p">,</span> <span class="n">acl</span><span class="o">=</span><span class="s">&quot;public-read&quot;</span><span class="p">,</span> <span class="n">metadata</span><span class="o">=</span><span class="n">metadata</span><span class="p">)</span><br />            <span class="k">print</span> <span class="s">&quot;Uploading&quot;</span><span class="p">,</span> <span class="n">key</span><br />            <span class="k">continue</span><br />&nbsp;<br />        <span class="k">if</span> <span class="ow">not</span> <span class="n">sf</span><span class="p">[</span><span class="s">&quot;metadata&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">has_key</span><span class="p">(</span><span class="s">&quot;modtime&quot;</span><span class="p">)</span> <span class="ow">or</span> \<br />        <span class="n">sf</span><span class="p">[</span><span class="s">&quot;metadata&quot;</span><span class="p">][</span><span class="s">&quot;modtime&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="nb">str</span><span class="p">(</span><span class="n">stat</span><span class="o">.</span><span class="n">st_mtime</span><span class="p">):</span><br />            <span class="n">bucket</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">(),</span> <span class="n">acl</span><span class="o">=</span><span class="s">&quot;public-read&quot;</span><span class="p">,</span> <br />                       <span class="n">metadata</span><span class="o">=</span><span class="n">metadata</span><span class="p">)</span><br />            <span class="k">print</span> <span class="s">&quot;Uploading&quot;</span><span class="p">,</span> <span class="n">key</span><br />            <span class="k">continue</span><br />&nbsp;<br />        <span class="k">print</span> <span class="s">&quot;Skipping&quot;</span><span class="p">,</span> <span class="n">key</span><br /></pre></div><br /></div>
+
+<!-- Hyde::Article::End -->
+
+			
+			</div>
+		</div>
+
+
+	
+	<div id="comments">
+		<div id="disqus_thread"></div>
+		<script type="text/javascript">
+    		/* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+    		var disqus_shortname = 'umbrant'; // required: replace example with your forum shortname
+
+    		// The following are highly recommended additional parameters. Remove the slashes in front to use.
+    		// var disqus_identifier = 'unique_dynamic_id_1234';
+    		var disqus_url = 'http://umbrant.com/blog/2011/test_draft.html';
+
+    		/* * * DON'T EDIT BELOW THIS LINE * * */
+    		(function() {
+        		var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        		dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        		(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    		})();
+		</script>
+		<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+		<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+	</div>
+
+
+
+
+						</div>
+						<!-- end #content -->
+
+						<div id="sidebar">
+	<div id="logo">
+		<h1><a href="/">umbrant</a></h1>
+	</div>
+	<div>
+		<p>My name is Andrew Wang. I'm a computer science PhD student at UC Berkeley in distributed systems.</p>
+	</div>
+	<div id="menu">
+		<ul>
+			<li><a href="/">Home</a></li>
+			<li><a href="/about.html">About</a></li>
+			<li><a href="/research.html">Research</a></li>
+			<li><a href="/contact.html">Contact</a></li>
+		</ul>
+	</div>
+	<ul>
+		<li>
+		<h2>Recent Posts</h2>
+		<ul>
+			
+				
+			
+				
+
+					
+					
+						
+						<li><a href="/blog/2011/hello_world.html">Hello world!</a></li>
+						
+					
+						
+					
+						
+					
+				
+			
+				
+			
+		</ul>
+		</li>
+		<li>
+		<h2>Archive</h2>
+		<ul>
+			
+			
+			
+			
+				
+					
+					<li><a href="/blog/2011/2011.html">2011</a></li>
+					
+				
+					
+				
+			
+			
+			
+			
+		</ul>
+		</li>
+	</ul>
+</div>
+
+						<!-- end #sidebar -->
+
+									<div id="footer">
+				<p>Copyright &copy; Andrew Wang, umbrant.com. All rights reserved.</p>
+			</div>
+
+						<!-- end #footer -->
+
+					</div>
+				</div>
+			</div>
+			<!-- end #page -->
+		</div>
+	</body>
+</html>
+
