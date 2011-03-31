@@ -48,6 +48,10 @@ a:hover {
 a:active {
 }
 
+div.code div.highlight {
+	font-family:"Droid Sans Mono", monospace;
+}
+
 #wrapper {
 	margin:0 auto;
 	padding:0;
@@ -79,7 +83,7 @@ a:active {
 #logo h1 {
 	margin:0px;
 	padding:0 0 10px 20px;
-	font-family:Georgia, "Times New Roman", Times, serif;
+	font-family:"Quattrocento", Georgia, "Times New Roman", Times, serif;
 }
 
 #logo h1 a {
@@ -136,7 +140,6 @@ div#menu li {
 	padding:6px 0 0 20px;
 	text-decoration:none;
 	text-transform:capitalize;
-	font-family:Arial, sans-serif;
 	font-size:13px;
 	font-weight:bold;
 }
@@ -173,7 +176,7 @@ div#menu li {
 .title {
 	padding:0 0 10px 0;
 	text-transform:lowercase;
-	font-family:Georgia, "Times New Roman", Times, serif;
+	font-family:"Quattrocento", Georgia, "Times New Roman", Times, serif;
 	letter-spacing:-.5px;
 }
 
@@ -187,7 +190,6 @@ div#menu li {
 	margin-bottom:26px;
 	padding:0px;
 	text-align:left;
-	font-family:Arial, sans-serif;
 	font-size:13px;
 	font-weight:bold;
 }
@@ -299,7 +301,6 @@ body,
 	text-align:center;
 	padding:39px 0;
 	margin-top:39px;
-	font-family:Arial, sans-serif;
 }
 
 #footer p {
