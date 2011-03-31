@@ -19,7 +19,7 @@
 				<h2 class="title"><a href="{{post.url}}">{{post.title}}</a></h2>
 				<p class="meta"><span class="date">{{post.created|date:"F j, Y"}}</span></p>
 				<div class="entry">
-					{% render_excerpt post %}
+					{% render_excerpt post 300 %}
 					<p class="links"><a href="{{post.url}}">Read More</a>&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;<a href="{{post.url}}#comments">Comments</a></p>
 				</div>
 			</div>
