@@ -4,8 +4,7 @@
 
 {%hyde
     title: Static website hosting on Amazon S3
-    created: 2011-03-31 20:42:00
-    draft: True
+    created: 2011-04-01 02:49:00
 %}
 
 {% block article %}
@@ -14,19 +13,20 @@
 
 {% excerpt %}
 
-[Werner Vogels](http://en.wikipedia.org/wiki/Werner_Vogels), Amazon CTO, posted on his [blog](http://www.allthingsdistributed.com/) about a month ago on "[New AWS feature: Run your website from Amazon S3](http://www.allthingsdistributed.com/2011/02/website_amazon_s3.html)". S3 now offers the ability to host static HTML pages directly from an S3 bucket, which is a great alternative for small blogs and sites (provided, of course, that you don't actually need any dynamic content). This has the potential to greatly reduce your hosting costs. A small Dreamhost/Slicehost/Linode costs around $20 a month, and I used to run this site out of an extreme budget VPS ([Virpus](http://virpus.com/)) which was only $5 a month, but I expect to be paying only a few cents per month for S3 (current pricing is just [15&cent; per GB-month](http://aws.amazon.com/s3/#pricing)). Of course, you also gain automatic durability, fault-tolerance, and scalability thanks to S3, meaning that your little site should easily survive a slashdotting.
+[Werner Vogels](http://en.wikipedia.org/wiki/Werner_Vogels), Amazon CTO, posted on his [blog](http://www.allthingsdistributed.com/) about a month ago on "[New AWS feature: Run your website from Amazon S3](http://www.allthingsdistributed.com/2011/02/website_amazon_s3.html)". S3 now offers the ability to host static HTML pages directly from an S3 bucket, which is a great alternative for small blogs and sites (provided, of course, that you don't actually need any dynamic content). This has the potential to greatly reduce your hosting costs. A small Dreamhost/Slicehost/Linode costs around $20 a month, and I used to run this site out of an extreme budget VPS ([Virpus](http://virpus.com/)) which was only $5 a month, but I expect to be paying only a few cents per month for S3 (current pricing is just [15&cent; per GB-month](http://aws.amazon.com/s3/#pricing)). Of course, you also gain best-of-class durability, fault-tolerance, and scalability from hosting out of S3, meaning that your little site should easily survive a slashdotting.
 
 {%endexcerpt%}
 
-The difficulty here is that most of the popular blogging engines require a backing database and do their content generation dynamically server side. That doesn't fly with S3; everything has to be static and pregenerated. I chose to use [Hyde](http://ringce.com/hyde), a Python content generator that is based on the [Django](http://www.djangoproject.com/) templating engine (Ruby folks can check out [Jekyll](http://jekyllrb.com/)). Like Django, Hyde has you write dynamic page templates in Django's templating language for each of the pages. Hyde then parses these templates, fills in the dynamic content, and generates the final static HTML pages which are suitable for uploading to S3.
+The difficulty here is that most of the popular blogging engines require a backing database, and do their content generation dynamically server side. That doesn't fly with S3; since it is, after all, just a Simple Storage Service, content has to be static and pregenerated. I chose to use [Hyde](http://ringce.com/hyde), a Python content generator that turns templates (based on the [Django](http://www.djangoproject.com/) templating engine) into HTML. Hyde page templates are dynamic, written in [Django's templating language](http://docs.djangoproject.com/en/dev/topics/templates/) which supports variables, control flow, and hierarchal inheritance. Hyde will parse these templates, fill in the dynamic content, and finally generate static HTML pages suitable for uploading to S3. Ruby folks can check out [Jekyll](http://jekyllrb.com/) as an alternative.
 
 ### Caveats ###
 
-To be clear, purely static content won't suffice for most sites out there. Even a simple blog like this one is only feasible because there are web services that fill in the gaps in functionality. [Disqus](http://disqus.com/) seems to have cornered the market for comments as a service; you just include a little bit of Javascript and it's good to go. It's similarly easy to include a [Twitter widget showing your recent tweets](http://tweet.seaofclouds.com/) with another little blob of Javascript, and [Feedburner](http://www.feedburner.com) and [Google Analytics](http://www.google.com/analytics/) are defacto analytics tools. There's barely a need these days to scrape, store, and serve content yourself these days, further obviating the need for a real server.
+To be clear, purely static content won't suffice for many sites out there (like anything with user-generated content). Even a simple blog like is only feasible because there are web services that fill in the gaps in functionality. [Disqus](http://disqus.com/) seems to have cornered the market for comments as a service; you just include a little bit of Javascript and it's good to go. It's similarly easy to include a [Twitter widget showing your recent tweets](http://tweet.seaofclouds.com/) with another little blob of Javascript, and [Feedburner](http://www.feedburner.com) and [Google Analytics](http://www.google.com/analytics/) are defacto analytics tools. There's barely a need these days to scrape, store, and serve content yourself these days, further obviating the need for a real server.
 
-This is also clearly a more coding heavy approach to blogging and site generation than most people need. With free blog services like [Wordpress.com](http://wordpress.com), [Blogger](http://www.blogger.com), [Tumblr](http://www.tumblr.com), and [Posterous](http://www.posterous.com), blogging has never been easier or more available. [Google Sites](http://sites.google.com) is also a great way of throwing up a quick website. I went with S3 and Hyde because I wanted more customization in the look and feel of the site, I like the Django templating system, and I wanted to play with S3 (especially since Amazon offers [1 year of free AWS credit](http://aws.amazon.com/free/). I also feel a bit safer about my data, since it's backed by [Amazon's eleven 9's durability guarantee](http://aws.amazon.com/s3/faqs/#How_is_Amazon_S3_designed_to_achieve_99.999999999%_durability) on S3, on my local machine, and [under version control at github][github].
+This is also clearly a more coding heavy approach to blogging and site generation than most people need. With free blog services like [Wordpress.com](http://wordpress.com), [Blogger](http://www.blogger.com), [Tumblr](http://www.tumblr.com), and [Posterous](http://www.posterous.com), blogging has never been easier or more available. [Google Sites](http://sites.google.com) is also a great way of throwing up a quick website. I went with S3 and Hyde because I wanted more customization in the look and feel of the site, I like the Django templating system, and I wanted to play with S3 (especially since Amazon offers [1 year of free AWS credit](http://aws.amazon.com/free/)). I also feel a bit safer about my data, since it's backed by [Amazon's eleven 9's of durability](http://aws.amazon.com/s3/faqs/#How_is_Amazon_S3_designed_to_achieve_99.999999999%_durability) on S3, it's on my local machine, and [under version control at github][github].
 
 [github]: https://github.com/umbrant/umbrant-blog
+
 
 ### Hyde ###
 
@@ -34,9 +34,12 @@ Hyde is pretty straightforward for anyone with experience writing Django templat
 
 I still found myself a little stuck, and what was most useful was reading the source for the skeleton site that Hyde generates for you initially, and the [code that Steve Losh](https://github.com/sjl/stevelosh/) uses to generate his own blog. To help you out, I've [published the code][github] for this site on github too. It might be useful to read [Steve's write up on moving from Django to Hyde](http://stevelosh.com/blog/2010/01/moving-from-django-to-hyde/) as well.
 
-The features I had to add to the skeleton code are a draft status for posts, and the "Recent Posts" and "Archive" sections on the sidebar. Drafts were done by adding a metadata `draft: True` tag to draft posts, and modifying all my "listing" pages to exclude these posts (like the home page, archive, recent posts, atom feed). The "Recent Posts" and "Archive" sidebar use `page.walk` to traverse the blog directory and the `recents` tag the most recent posts. These posts are then filtered with if statements to exclude non-draft content. This is all slightly hacky, since if you want to show the 5 most recent blog posts (as returned by `recents 5`), you might have less than 5 after filtering out drafts. This is worked around by not dating drafts until publication (which gives them a default date in 1900).
+A few nice features of Hyde I like are the ability to automatically compress Javascript and CSS with jsmin and cssmin, and support for writing posts in [Markdown](http://daringfireball.net/projects/markdown/), which is a lot easier and more portable than HTML. There's also support for writing "higher level CSS" (CleverCSS, HSS, LessCSS), but I never understood the point of these and didn't use them.
 
-I also had to modify Hyde's `page.walk` and `page.walk_reverse` to walk directories in lexicographic sorted order, but I'm hoping that's already fixed in git (I was using version 0.4).
+The features I had to add to the skeleton code are a draft status for posts, and the "Recent Posts" and "Archive" sections on the sidebar. Drafts were done by adding a metadata `draft: True` tag to draft posts, and modifying all my "listing" pages to exclude these posts (like the home page, archive, recent posts, atom feed). The "Recent Posts" and "Archive" sidebar use `page.walk` to traverse the blog directory and the `recents` tag the most recent posts. These posts are then filtered with if statements to exclude non-draft content. This is all slightly hacky, since if you want to show the 5 most recent blog posts (as returned by `recents 5`), you might have less than 5 posts after filtering out drafts. This is worked around by not dating drafts until publication (which gives them a default date in 1900).
+
+I also had to modify Hyde's `page.walk` and `page.walk_reverse` to walk directories in lexicographically sorted order, but I'm hoping that's been fixed in git (I was using version 0.4).
+
 
 ### S3 ###
 
@@ -55,14 +58,14 @@ $ dig www.umbrant.com
 ;www.umbrant.com.		IN	A
 
 ;; ANSWER SECTION:
-www.umbrant.com.	831	IN	CNAME	s3-website-us-west-1.amazonaws.com.
+www.umbrant.com.	831	IN	CNAME  s3-website-us-west-1.amazonaws.com.
 s3-website-us-west-1.amazonaws.com. 60 IN A	204.246.162.151
 
 <snip>
 
 {% endsyntax %}
 
-My subdomain isn't actually CNAME'd to my S3 bucket domain name, I've set it to alias directly to `s3-website-us-west-1.amazonaws.com`. This is a mild optimization that saves a DNS lookup; if you `dig` my bucket domain name, you see that it's CNAME'd to `s3-website-us-west-1.amazonaws.com` anyway, which finally gets turned into the IP address for an S3 server (A record). This server uses the referring domain name (`www.umbrant.com`) to look up the S3 bucket with the same name (`www.umbrant.com`). This system also means that if someone's already made a bucket in your region with the same name as your subdomain, you've got to choose a different subdomain (thanks to S3's flat keyspace). In other words, when using S3, your bucket name and subdomain must be the same.
+My subdomain isn't actually CNAME'd to my S3 bucket domain name, I've set it to alias directly to `s3-website-us-west-1.amazonaws.com`. This is a mild optimization that saves a DNS lookup; if you `dig` my bucket domain name, you see that it's CNAME'd to `s3-website-us-west-1.amazonaws.com` anyway, which finally gets turned into the IP address for an S3 server (the A record). This server uses the referring domain name (`www.umbrant.com`) to look up the S3 bucket with the same name. This system also means that if someone's already made a bucket in your region with the same name as your subdomain, you've got to choose a different subdomain (thanks to S3's flat keyspace). In other words, when using S3, your bucket name and subdomain must be the same.
 
 Uploading files to S3 isn't too bad. I'm sure there are existing tools out there for interfacing with S3 on the commandline, but I rolled my own in Python with the [SimpleS3](http://pypi.python.org/pypi/simples3/1.0) library available on PyPI. It's basically rsync-for-S3 with some issues; it doesn't delete old files from S3, the parsing isn't bulletproof, and it uses modtimes to check for updates instead of checksums (which I plan on implementing soon, right now it's almost my entire blog each time I re-run Hyde). However, it does work, and it is really simple to use.
 
@@ -144,7 +147,7 @@ for root, dirs, files in os.walk(SOURCE_DIR):
 
 ### Final remarks ###
 
-This was a pretty reasonable and fun 2 days of effort, most of which was really spent on making the CSS template and writing content, not wrangling code. Hyde doesn't feel fully mature (documentation is lacking, skeleton site is slightly broken, the sorting bug), but it works well enough and is perfect for people transitioning from Django. S3 and Amazon Web Services in general are technologies I'm very positive about, since my site is now essentially impervious to failure ([modulo Elastic Block Store being terrible](http://blog.reddit.com/2011/03/why-reddit-was-down-for-6-of-last-24.html), but that's a rant for another day). It's also pleasing to see top management like Werner Vogels dogfooding Amazon's features.
+This was a pretty reasonable and fun 2 days of effort, most of which was spent on tuning the CSS template and writing content, not wrangling code. Hyde doesn't feel very mature (documentation is lacking, example skeleton site is slightly broken, the sorting bug), but it works well enough and is good for people transitioning from Django. I'm very positive about S3 and Amazon Web Services in general ([modulo Elastic Block Store being terrible](http://blog.reddit.com/2011/03/why-reddit-was-down-for-6-of-last-24.html), but that's a rant for another day), since my site is now essentially impervious to failure. It's also pleasing to see top management like Werner Vogels dogfooding Amazon's features.
 
 {%endarticle%}
 
