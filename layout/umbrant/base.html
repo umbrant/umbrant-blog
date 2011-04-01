@@ -1,7 +1,6 @@
 {% extends "skeleton/_root.html" %}
 
-{% block all %}
-<?xml version="1.0" encoding="utf-8" ?>
+{% block all %}<?xml version="1.0" encoding="utf-8" ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -23,7 +22,7 @@
 		{% block css %}
 		<link href="{{site.url}}/media/css/style.css" rel="stylesheet" type="text/css" media="screen" />
 		<link href="{{site.url}}/media/css/pygments.css" rel="stylesheet" type="text/css" media="screen" />
-		<link href='http://fonts.googleapis.com/css?family=Quattrocento|Droid+Sans|Droid+Sans+Mono' rel='stylesheet' type='text/css'>
+		<link href='http://fonts.googleapis.com/css?family=Quattrocento|Droid+Sans|Droid+Sans+Mono' rel='stylesheet' type='text/css'/>
 		{% block extra_css %}
 		{% endblock %}
 		{% endblock %}
@@ -59,7 +58,20 @@
 			</div>
 			<!-- end #page -->
 		</div>
-	</body>
-</html>
+		<script type="text/javascript">
 
-{% endblock %}
+  			var _gaq = _gaq || [];
+  			_gaq.push(['_setAccount', 'UA-4601421-1']);
+  			_gaq.push(['_trackPageview']);
+
+  			(function() {
+    		 var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    		 ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    		 var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  			 })();
+
+		 </script>
+	 </body>
+ </html>
+
+ {% endblock %}
