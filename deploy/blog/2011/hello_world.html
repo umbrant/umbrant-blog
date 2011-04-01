@@ -15,7 +15,7 @@
 		<link rel="icon" type="image/ico" href="/favicon.ico"/>
 
 		
-		<link href="/blog/atom.xml" rel="alternate" title="umbrant" type="application/atom+xml"/>
+		<link rel="alternate" type="application/atom+xml" href="http://feeds.feedburner.com/UmbrantBlog" title="umbrant"/>
 		
 
 		
@@ -73,26 +73,25 @@ This site is still very much under development, I have lots of ideas for neat fe
 
 
 	
-	<div id="comments">
-		<div id="disqus_thread"></div>
-		<script type="text/javascript">
-    		/* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
-    		var disqus_shortname = 'umbrant'; // required: replace example with your forum shortname
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+    var disqus_shortname = 'umbrant'; // required: replace example with your forum shortname
 
-    		// The following are highly recommended additional parameters. Remove the slashes in front to use.
-    		// var disqus_identifier = 'unique_dynamic_id_1234';
-    		var disqus_url = 'http://umbrant.com/blog/2011/hello_world.html';
+    // The following are highly recommended additional parameters. Remove the slashes in front to use.
+    var disqus_identifier = '/blog/2011/hello_world.html';
+    var disqus_url = 'http://www.umbrant.com/blog/2011/hello_world.html';
+    var disqus_developer = 1;
 
-    		/* * * DON'T EDIT BELOW THIS LINE * * */
-    		(function() {
-        		var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-        		dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
-        		(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-    		})();
-		</script>
-		<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-		<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
-	</div>
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
 
 
 
@@ -167,6 +166,10 @@ This site is still very much under development, I have lots of ideas for neat fe
 
 									<div id="footer">
 				<p>Copyright &copy; Andrew Wang, umbrant.com. All rights reserved.</p>
+				<br/>
+				<p>
+				<a href="http://feeds.feedburner.com/UmbrantBlog"><img src="/media/images/feed-icon-14x14.png" alt="feed"/>&nbsp; Subscribe to my feed</a>
+				</p>
 			</div>
 
 						<!-- end #footer -->

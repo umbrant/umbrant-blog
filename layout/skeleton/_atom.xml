@@ -11,7 +11,7 @@
  <updated>{{now|xmldatetime}}</updated>
  <id>{{site.full_url}}</id>
  {% for node_page in page.node.walk_pages %}
- {% if node_page.display_in_list %}
+ {% if node_page.display_in_list and not node_page.draft %}
  <entry>
    <title>{{node_page.title}}</title>
    <author><name>{{site.author}}</name></author>

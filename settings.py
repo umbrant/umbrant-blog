@@ -12,7 +12,7 @@ BACKUPS_DIR = here('backups')
 BACKUP = False
 
 SITE_ROOT = "/"
-SITE_WWW_URL = "http://umbrant.com"
+SITE_WWW_URL = "http://www.umbrant.com"
 SITE_NAME = "umbrant"
 SITE_AUTHOR = "Andrew Wang"
 
@@ -76,7 +76,9 @@ MEDIA_PROCESSORS = {
         '.coffee':(
                 'hydeengine.media_processors.TemplateProcessor',
                 'hydeengine.media_processors.CoffeeScript',
-                'hydeengine.media_processors.JSmin',)
+                'hydeengine.media_processors.JSmin',),
+        '.png':(
+                'hydeengine.content_processors.PassthroughProcessor',),
     }
 }
 
@@ -104,8 +106,10 @@ CONTEXT = {
         'research' : '/research.html',
         'contact' : '/contact.html',
         'bucket_list': '/bucket.html',
+        'atom': 'http://feeds.feedburner.com/UmbrantBlog',
     },
     'links' : {
+        'twitter_umbrant': 'http://twitter.com/umbrant',
     }
 }
 

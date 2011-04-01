@@ -20,7 +20,7 @@
 		{% ifnotequal list_page node.listing_page %}
 			{% if list_page.display_in_list and not list_page.draft %}
 				<li>
-					<span>{{list_page.created|date:"Y-m-d" }}  </span>
+					<span>{{list_page.created|date:"F j" }} &mdash; </span>
 					<a href="{{list_page.url}}">
 					{% with list_page.name_without_extension|remove_date_prefix|unslugify as default_title %}
 						{{list_page.title|default_if_none:default_title }}

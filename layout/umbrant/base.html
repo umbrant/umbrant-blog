@@ -17,7 +17,7 @@
 		<link rel="icon" type="image/ico" href="/favicon.ico"/>
 
 		{% block feeds %}
-		<link href="{{site.url}}/blog/atom.xml" rel="alternate" title="{{site.name}}" type="application/atom+xml"/>
+		<link rel="alternate" type="application/atom+xml" href="{{nav_links.atom}}" title="{{site.name}}"/>
 		{% endblock %}
 
 		{% block css %}
