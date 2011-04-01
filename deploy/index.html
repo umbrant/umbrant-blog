@@ -29,12 +29,25 @@
 		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js"></script>
 		<script type="text/javascript" src="/media/js/umbrant.js"></script>
 		
-		
-		
-	</head>
+		<script type="text/javascript">
 
-	<body>
-		<div id="wrapper">
+  			var _gaq = _gaq || [];
+  			_gaq.push(['_setAccount', 'UA-4601421-1']);
+  			_gaq.push(['_trackPageview']);
+
+  			(function() {
+    		 var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    		 ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    		 var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  			 })();
+
+		 </script>
+		 
+		 
+	 </head>
+
+	 <body>
+		 <div id="wrapper">
 			<div id="page">
 				<div id="page-bgtop">
 					<div id="page-bgbtm">
@@ -185,19 +198,6 @@ This site is still very much under development, I have lots of ideas for neat fe
 			</div>
 			<!-- end #page -->
 		</div>
-		<script type="text/javascript">
-
-  			var _gaq = _gaq || [];
-  			_gaq.push(['_setAccount', 'UA-4601421-1']);
-  			_gaq.push(['_trackPageview']);
-
-  			(function() {
-    		 var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-    		 ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-    		 var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-  			 })();
-
-		 </script>
 	 </body>
  </html>
 
