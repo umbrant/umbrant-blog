@@ -109,6 +109,7 @@ div.code div.highlight {
 
 #menu a {
 	/*color:#e89b0c;*/
+	padding-left:0;
 }
 
 #menu {
@@ -119,6 +120,7 @@ div.code div.highlight {
 
 #menu ul {
 	line-height:normal;
+	margin-left:20px
 }
 
 #sidebar li li,
@@ -135,10 +137,9 @@ div#menu li {
 #sidebar li li a,
 #menu a {
 	display:block;
-	width:260px;
 	margin:0px;
 	line-height:26px;
-	padding:6px 0 0 20px;
+	padding:6px 0 0 0;
 	text-decoration:none;
 	font-size:13px;
 	font-weight:bold;
@@ -254,13 +255,17 @@ body,
 }
 
 #sidebar li {
-	margin:0;
+	margin-left:20px;
 	padding:0;
 }
 
 #sidebar li ul {
-	margin:13px 0 0 20px;
+	margin:13px 0 0 0;
 	padding-bottom:45px;
+}
+
+#sidebar li ul li {
+	margin-left:0;
 }
 
 #sidebar li li a {
