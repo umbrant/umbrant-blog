@@ -37,13 +37,13 @@ ul, ol {
 
 a:link {
 	text-decoration:none;
-	color:#e89b0c;
+	color:#BD6800;
 }
 a:visited {
-	color:#624205;
+	color:#702d00;
 }
 a:hover {
-	border-bottom:1px dashed #e89b0c;
+	border-bottom:1px dashed #BD6800;
 }
 a:active {
 }
@@ -108,6 +108,7 @@ div.code div.highlight {
 /* Menu */
 
 #menu a {
+	/*color:#e89b0c;*/
 }
 
 #menu {
@@ -164,8 +165,8 @@ div#menu li {
 	float:left;
 	width:559px;
 	padding:39px 65px 0px 39px;
-	/*background:#f2efe4;*/
 	background:transparent;
+	background:#edeae1;
 }
 
 .post {
@@ -283,9 +284,11 @@ body,
 	padding:0px 20px 26px 20px;
 }
 
-#sidebar a {
+#sidebar a,
+#footer a
+{
 	border:none;
-	color:#e89b0c;
+	color:#e39607;
 }
 
 /* Footer */
