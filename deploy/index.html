@@ -69,6 +69,19 @@
 		
 
 			
+			<div class="post">
+				<h2 class="title"><a href="/blog/2011/external_sorting.html">External sorting of large datasets</a></h2>
+				<p class="meta"><span class="date">April 16, 2011</span></p>
+				<div class="entry">
+					
+
+<p>This is a common interview question: how do you sort data that is bigger than memory? "Big data" in the range of tera or petabytes can now almost be considered the norm (think of Google saving every search, click, and ad impression ever), so this manifests in reality as well. This is also a canonical problem in the database world, where it is referred to as an "external&nbsp;sort".</p>
+<p>Your mind should immediately turn to divide and conquer algorithms, namely merge sort. Write out intermediate merged output to disk, and read it back in lazily for the next round. I decided this would be a fun implementation and optimization exercise to do in C. There will probably be a follow-up post, since there are lots of optimizations I haven't yet&nbsp;implemented.</p>
+
+					<p class="links"><a href="/blog/2011/external_sorting.html">Read More</a>&#160;&#160;&#160;&#160;|&#160;&#160;&#160;&#160;<a href="/blog/2011/external_sorting.html#disqus_thread">Comments</a></p>
+				</div>
+			</div>
+			
 		
 
 			
@@ -160,6 +173,8 @@ This site is still very much under development, I have lots of ideas for neat fe
 
 					
 					
+						
+						<li><a href="/blog/2011/external_sorting.html">External sorting of large datasets</a></li>
 						
 					
 						

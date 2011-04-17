@@ -177,6 +177,9 @@ div#menu li {
 .post img {
 	margin:13px 0;
 }
+.post table {
+	margin-bottom:13px;
+}
 
 .title {
 	padding:0 0 10px 0;

@@ -4,8 +4,7 @@
 
 {%hyde
     title: External sorting of large datasets
-    created: 2011-04-15 00:00:00
-    draft: True
+    created: 2011-04-16 17:24:00
 %}
 
 {% block article %}
@@ -96,11 +95,15 @@ Also note that for the relatively low fan outs at 64 and 128MB, the desktop with
 
 Both of the aforementioned performance issues can be solved by parallelizing the merge step by running multiple n-way merges simultaneously. This lowers the fanout while still using all available memory, and will better balance CPU and I/O time. The number of threads and fan-out of the merge can be parameterized separately, adding two more tuning knobs to the existing knobs of total memory usage and size of I/O buffer (autotuner time?).
 
-Another potential performance improvement is (double buffering)[http://en.wikipedia.org/wiki/Multiple_buffering]. This is essentially asynchronous I/O; instead of waiting synchronously for an I/O operation to complete, the CPU switches over to a second buffer and continues processing data. This comes at the cost of doubling memory usage (two buffers instead of one), but is probably especially beneficial for the write buffer since it's so active.
+Another potential performance improvement is [double buffering](http://en.wikipedia.org/wiki/Multiple_buffering). This is essentially asynchronous I/O; instead of waiting synchronously for an I/O operation to complete, the CPU switches over to a second buffer and continues processing data. This comes at the cost of doubling memory usage (two buffers instead of one), but is probably especially beneficial for the write buffer since it's so active.
+
+There are a few more minor performance tweaks I can think of, but no more really fundamental ones. Let me know in the comments if there's something I've missed.
+
+A natural extension to this is parallel sorting with multiple machines, but I don't plan on taking this little C codebase that far. Better to do it properly with Hadoop in a lot less code.
 
 ### Conclusion ###
 
-My best case sorts 1GB of 32-bit integers in 127 seconds in 64MB of memory on my laptop, and I think there's at least a 2x improvement left with bigger memory sizes. I really enjoy this kind of performance analysis and tuning, since it requires thinking about the storage hierarchy, memory management, and parallelism. It's been a reasonable two-day project, and I could see this being assigned as an undergrad course project.
+My best case sorts 1GB of 32-bit integers in 127 seconds in 64MB of memory on my laptop, and I think there's at least a 2x improvement left with bigger memory sizes. I really enjoy this kind of performance analysis and tuning, since it requires thinking about the storage hierarchy, memory management, and parallelism. It's been a reasonable two-day project, and I could see this being assigned as an undergrad course project. It doesn't feel altogether too different from research either, just at a much smaller scale.
 
 Once again, all the code is available [at github](https://github.com/umbrant/extsort).
 

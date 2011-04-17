@@ -1,5 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>umbrant blog</title><link href="http://www.umbrant.com/blog/atom.xml" rel="self"/><link href="http://www.umbrant.com"/><updated>2011-04-16T17:17:48Z</updated><id>http://www.umbrant.com</id><entry><title>Album first impressions pt. 1</title><author><name>Andrew Wang</name></author><link href="http://www.umbrant.com/blog/2011/album_first_impressions_pt_1.html"/><updated>2011-04-08T00:00:00Z</updated><published>2011-04-08T00:00:00Z</published><id>http://www.umbrant.com/blog/2011/album_first_impressions_pt_1.html</id><content type="html">
+<feed xmlns="http://www.w3.org/2005/Atom"><title>umbrant blog</title><link href="http://www.umbrant.com/blog/atom.xml" rel="self"/><link href="http://www.umbrant.com"/><updated>2011-04-16T17:32:26Z</updated><id>http://www.umbrant.com</id><entry><title>External sorting of large datasets</title><author><name>Andrew Wang</name></author><link href="http://www.umbrant.com/blog/2011/external_sorting.html"/><updated>2011-04-16T17:24:00Z</updated><published>2011-04-16T17:24:00Z</published><id>http://www.umbrant.com/blog/2011/external_sorting.html</id><content type="html">
+       
+
+&lt;!-- Hyde::Excerpt::Begin --&gt;
+
+&lt;p&gt;This is a common interview question: how do you sort data that is bigger than memory? &quot;Big data&quot; in the range of tera or petabytes can now almost be considered the norm (think of Google saving every search, click, and ad impression ever), so this manifests in reality as well. This is also a canonical problem in the database world, where it is referred to as an &quot;external&amp;nbsp;sort&quot;.&lt;/p&gt;
+&lt;p&gt;Your mind should immediately turn to divide and conquer algorithms, namely merge sort. Write out intermediate merged output to disk, and read it back in lazily for the next round. I decided this would be a fun implementation and optimization exercise to do in C. There will probably be a follow-up post, since there are lots of optimizations I haven&#39;t yet&amp;nbsp;implemented.&lt;/p&gt;
+&lt;!-- Hyde::Excerpt::End --&gt;
+
+&lt;h3&gt;Introduction&lt;/h3&gt;
+&lt;p&gt;Guido van Rossum (the creator of Python) did this a while ago for the rather smaller (and simpler) case of &lt;a href=&quot;http://neopythonic.blogspot.com/2008/10/sorting-million-32-bit-integers-in-2mb.html&quot;&gt;sorting a million 32-bit integers in 2MB of RAM&lt;/a&gt;. I took the same approach of a merge sort that writes intermediate runs out to files on disk, buffering file I/O to improve performance. However, since I&#39;m targeting file sizes that are actually larger than RAM (e.g. a couple gigabytes), I need to do more complicated&amp;nbsp;things.&lt;/p&gt;
+&lt;p&gt;The &lt;a href=&quot;http://en.wikipedia.org/wiki/Merge_sort&quot;&gt;basic merge sort&lt;/a&gt; you learn in CS 101 recurses down to the base case of runs of just 1 element, which are progressively merged together in pairs in a logarithmic fashion (arriving at the ultimate O(n*log n) time complexity). This is inefficient for large datasets, because the merging rate is too low. If you&#39;re sorting a 1GB file of 32-bit integers, the first round of merging would generate &lt;code&gt;(1GB/sizeof(int)/2) = (2^30/2^2/2) = 2^27&lt;/code&gt; 8-byte files, which is just too many files. This also leads to the second core problem: small disk I/Os are highly inefficient, since they result in expensive disk seeks. Writing a bunch of 8-byte (or even 8-kilobyte) files effectively randomizes your access pattern, and will choke your throughput. To avoid bad seeks, reads and writes need to be done at about the size of the disk&#39;s buffer (about 16MB these&amp;nbsp;days).&lt;/p&gt;
+&lt;p&gt;All of my code is also &lt;a href=&quot;https://github.com/umbrant/extsort&quot;&gt;available on github&lt;/a&gt; if you want to follow along, this post is based more-or-less on the &lt;a href=&quot;https://github.com/umbrant/extsort/tree/3ce53516063bff05570736c412eed032b803ea15&quot;&gt;initial commit&lt;/a&gt;.&lt;/p&gt;
+&lt;h3&gt;Basic&amp;nbsp;Approach&lt;/h3&gt;
+&lt;p&gt;So our goal is to reduce the number of files written by the first merge step, and also write these files in much bigger chunks. This can be accomplished by increasing the quantum for merging, and doing n-way instead of 2-way&amp;nbsp;merging.&lt;/p&gt;
+&lt;p&gt;I increased the merge quantum by sorting each page (4KB) of initial input with quicksort. This way, even with just 2-way merging, the first round for our 1GB of integers only generates &lt;code&gt;(1GB/page_size/2) = (2^30/2^12/2)&lt;/code&gt; = 2^18 intermediate files, which is a lot better than 2^27, but still too large (a quarter million files is a&amp;nbsp;lot). &lt;/p&gt;
+&lt;p&gt;N-way merging merges more (many more) than two runs together at once, and is basically the same algorithm as 2-way merging. This finally reduces the level of fan out to manageable levels, and means that the size of the output runs is much larger, meaning that disk I/O can be more easily batched into large 16MB chunks. With 64-way merging we finally get down to &lt;code&gt;(2^18/2^6) = 2^12&lt;/code&gt;, or 4096 intermediate files, which is a pleasant&amp;nbsp;number.&lt;/p&gt;
+&lt;p&gt;A further necessary improvement is to incrementally pull large runs off disk (required for later merge steps, when the runs are too large to all fit into memory). I do this at the same granularity as my other I/O operations: 16MB. Currently, this decides the degree of fan out as well, since I pack as many 16MB buffers into memory as I&#39;m allowed, and n-way merge across all of them. This could be a problem if oodles and oodles of memory are allocated to the sort (since n gets large), but my computer with 4GB of RAM can only hold 256 runs, which isn&#39;t that&amp;nbsp;many.&lt;/p&gt;
+&lt;h3&gt;Miscellaneous&amp;nbsp;notes&lt;/h3&gt;
+&lt;p&gt;There are a few other miscellaneous notes. I ran into the per-process fd limit when doing large merges, so files have to be closed and reopened at the correct offset. I also parallelize the initial quicksorting of pages with a simple worker pool, which really helps speed up the first layer of merging. 
+My quicksort also reduces recursion depth by bubblesorting for runs smaller than 5, which is okay since bubblesort is efficient on tiny sets (worst case 6 compares, 6 swaps, compare that to insertion sort). This might or might not increase performance, but it&#39;s fun. Finally, even if 256 buffers can fit into memory, one buffer must always be reserved to be an output buffer (meaning you can do at most a 255-way merge). There&#39;s also some &lt;code&gt;O(n)&lt;/code&gt; memory overhead outside of just storing the data buffers, which you need to be aware of if your memory bound is especially&amp;nbsp;tight.&lt;/p&gt;
+&lt;h3&gt;Benchmarking&lt;/h3&gt;
+&lt;p&gt;Enough discussion, onto the numbers! This is a situation where I feel like building an autotuner, since my envisioned final version will have a number of knobs to tweak (a future project I suppose). Right now, the two knobs I have to play with are the size of the overall buffer, and the size of I/O&amp;nbsp;buffers. &lt;/p&gt;
+&lt;p&gt;I took two sets of numbers. The first set was taken on my laptop, which is a Intel Core i7-620M supporting 4 hyperthreads, 4GB of RAM, and a 7200 RPM disk. The second set was taken on my desktop, an AMD Phenom II X4 965 Black Edition supporting 4 hardware threads, 4GB of RAM, and an 60GB OCZ Vertex 2 SSD. The SSD should help for the smaller I/O buffer sizes, but sequential access shouldn&#39;t be too far&amp;nbsp;apart.&lt;/p&gt;
+&lt;p&gt;&lt;img alt=&quot;Desktop mergesort&quot; src=&quot;external_sorting/extsort_desktop.png&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt=&quot;Laptop mergesort&quot; src=&quot;external_sorting/extsort_laptop.png&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;I found these numbers pretty interesting. Each line represents a different total memory size. The graphs indicate that increasing the number of I/O buffer pages leads to better performance as expected, but the small total memory sizes end up performing generally better. Furthermore, my laptop performs better than my desktop with the&amp;nbsp;SSD.&lt;/p&gt;
+&lt;p&gt;This can be interpreted as follows. First, linking the fan out of the merge to total memory size is a bad idea. The following table helps make this&amp;nbsp;clear.&lt;/p&gt;
+&lt;table border=1&gt;
+    &lt;tr&gt;
+        &lt;th colspan=4&gt;Fan out of n-way merge&lt;/th&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+        &lt;td&gt;&lt;/td&gt;
+        &lt;th colspan=3&gt;Number of I/O buffer pages (4k)&lt;/th&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+        &lt;th&gt;Total memory (MB)&lt;/th&gt;
+        &lt;td&gt;1024&lt;/td&gt;&lt;td&gt;2048&lt;/td&gt;&lt;td&gt;4096&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+        &lt;td&gt;64&lt;/td&gt;&lt;td&gt;15&lt;/td&gt;&lt;td&gt;7&lt;/td&gt;&lt;td&gt;3&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+        &lt;td&gt;128&lt;/td&gt;&lt;td&gt;31&lt;/td&gt;&lt;td&gt;15&lt;/td&gt;&lt;td&gt;7&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+        &lt;td&gt;256&lt;/td&gt;&lt;td&gt;63&lt;/td&gt;&lt;td&gt;31&lt;/td&gt;&lt;td&gt;15&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+        &lt;td&gt;384&lt;/td&gt;&lt;td&gt;95&lt;/td&gt;&lt;td&gt;47&lt;/td&gt;&lt;td&gt;23&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+        &lt;td&gt;512&lt;/td&gt;&lt;td&gt;127&lt;/td&gt;&lt;td&gt;63&lt;/td&gt;&lt;td&gt;31&lt;/td&gt;
+    &lt;/tr&gt;
+&lt;/table&gt;
+
+&lt;p&gt;By looking at the laptop graph and this table together, we see that high fanout for 512MB is killing performance, since it&#39;s fine when fan out drops down to 31 at 4096 buffer pages. Conversely, the 64MB case suffers the opposite problem at 4096 pages; a fan out of 3 is too low. Since the two fastest completion times were both with a fan out of 7 (64MB with 2048 pages, 128MB with 4096 pages), I&#39;m betting that it&#39;s around here, but this requires further tuning to decide for&amp;nbsp;sure.&lt;/p&gt;
+&lt;p&gt;The second finding is that the sort is currently CPU bound. This isn&#39;t what I expected since there&#39;s a lot of disk I/O, but it seems that the I/O batching techniques are effective. Otherwise, the desktop with the SSD should outpace the laptop. Furthermore, since merging is still single-threaded, the i7 laptop actually might have an advantage because of &lt;a href=&quot;http://en.wikipedia.org/wiki/Intel_Turbo_Boost&quot;&gt;Turbo Boost&lt;/a&gt; kicking up single core performance above the Phenom II&amp;nbsp;desktop.&lt;/p&gt;
+&lt;p&gt;Also note that for the relatively low fan outs at 64 and 128MB, the desktop with the SSD has very flat performance as the size of the I/O buffer changes. This is the beauty of fast random accesses, and might be exploitable for better performance since you can save on memory usage by shrinking the I/O&amp;nbsp;buffers.&lt;/p&gt;
+&lt;h3&gt;Future&amp;nbsp;work&lt;/h3&gt;
+&lt;p&gt;Both of the aforementioned performance issues can be solved by parallelizing the merge step by running multiple n-way merges simultaneously. This lowers the fanout while still using all available memory, and will better balance CPU and I/O time. The number of threads and fan-out of the merge can be parameterized separately, adding two more tuning knobs to the existing knobs of total memory usage and size of I/O buffer (autotuner&amp;nbsp;time?).&lt;/p&gt;
+&lt;p&gt;Another potential performance improvement is &lt;a href=&quot;http://en.wikipedia.org/wiki/Multiple_buffering&quot;&gt;double buffering&lt;/a&gt;. This is essentially asynchronous I/O; instead of waiting synchronously for an I/O operation to complete, the CPU switches over to a second buffer and continues processing data. This comes at the cost of doubling memory usage (two buffers instead of one), but is probably especially beneficial for the write buffer since it&#39;s so&amp;nbsp;active.&lt;/p&gt;
+&lt;p&gt;There are a few more minor performance tweaks I can think of, but no more really fundamental ones. Let me know in the comments if there&#39;s something I&#39;ve&amp;nbsp;missed.&lt;/p&gt;
+&lt;p&gt;A natural extension to this is parallel sorting with multiple machines, but I don&#39;t plan on taking this little C codebase that far. Better to do it properly with Hadoop in a lot less&amp;nbsp;code.&lt;/p&gt;
+&lt;h3&gt;Conclusion&lt;/h3&gt;
+&lt;p&gt;My best case sorts 1GB of 32-bit integers in 127 seconds in 64MB of memory on my laptop, and I think there&#39;s at least a 2x improvement left with bigger memory sizes. I really enjoy this kind of performance analysis and tuning, since it requires thinking about the storage hierarchy, memory management, and parallelism. It&#39;s been a reasonable two-day project, and I could see this being assigned as an undergrad course project. It doesn&#39;t feel altogether too different from research either, just at a much smaller&amp;nbsp;scale.&lt;/p&gt;
+&lt;p&gt;Once again, all the code is available &lt;a href=&quot;https://github.com/umbrant/extsort&quot;&gt;at github&lt;/a&gt;.&lt;/p&gt;
+
+   </content></entry><entry><title>Album first impressions pt. 1</title><author><name>Andrew Wang</name></author><link href="http://www.umbrant.com/blog/2011/album_first_impressions_pt_1.html"/><updated>2011-04-08T00:00:00Z</updated><published>2011-04-08T00:00:00Z</published><id>http://www.umbrant.com/blog/2011/album_first_impressions_pt_1.html</id><content type="html">
        
 
 &lt;!-- Hyde::Excerpt::Begin --&gt;

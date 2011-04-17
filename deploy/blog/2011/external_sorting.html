@@ -63,7 +63,7 @@
 		<div class="post single">
 			<h2 class="title"><a href="">External sorting of large datasets</a></h2>
 			
-			<p class="meta"><span class="date">April 15, 2011</span></p>
+			<p class="meta"><span class="date">April 16, 2011</span></p>
 			
 			<div class="entry">
 			
@@ -129,9 +129,11 @@ My quicksort also reduces recursion depth by bubblesorting for runs smaller than
 <p>Also note that for the relatively low fan outs at 64 and 128MB, the desktop with the SSD has very flat performance as the size of the I/O buffer changes. This is the beauty of fast random accesses, and might be exploitable for better performance since you can save on memory usage by shrinking the I/O&nbsp;buffers.</p>
 <h3>Future&nbsp;work</h3>
 <p>Both of the aforementioned performance issues can be solved by parallelizing the merge step by running multiple n-way merges simultaneously. This lowers the fanout while still using all available memory, and will better balance CPU and I/O time. The number of threads and fan-out of the merge can be parameterized separately, adding two more tuning knobs to the existing knobs of total memory usage and size of I/O buffer (autotuner&nbsp;time?).</p>
-<p>Another potential performance improvement is (double buffering)[http://en.wikipedia.org/wiki/Multiple_buffering]. This is essentially asynchronous I/O; instead of waiting synchronously for an I/O operation to complete, the CPU switches over to a second buffer and continues processing data. This comes at the cost of doubling memory usage (two buffers instead of one), but is probably especially beneficial for the write buffer since it's so&nbsp;active.</p>
+<p>Another potential performance improvement is <a href="http://en.wikipedia.org/wiki/Multiple_buffering">double buffering</a>. This is essentially asynchronous I/O; instead of waiting synchronously for an I/O operation to complete, the CPU switches over to a second buffer and continues processing data. This comes at the cost of doubling memory usage (two buffers instead of one), but is probably especially beneficial for the write buffer since it's so&nbsp;active.</p>
+<p>There are a few more minor performance tweaks I can think of, but no more really fundamental ones. Let me know in the comments if there's something I've&nbsp;missed.</p>
+<p>A natural extension to this is parallel sorting with multiple machines, but I don't plan on taking this little C codebase that far. Better to do it properly with Hadoop in a lot less&nbsp;code.</p>
 <h3>Conclusion</h3>
-<p>My best case sorts 1GB of 32-bit integers in 127 seconds in 64MB of memory on my laptop, and I think there's at least a 2x improvement left with bigger memory sizes. I really enjoy this kind of performance analysis and tuning, since it requires thinking about the storage hierarchy, memory management, and parallelism. It's been a reasonable two-day project, and I could see this being assigned as an undergrad course&nbsp;project.</p>
+<p>My best case sorts 1GB of 32-bit integers in 127 seconds in 64MB of memory on my laptop, and I think there's at least a 2x improvement left with bigger memory sizes. I really enjoy this kind of performance analysis and tuning, since it requires thinking about the storage hierarchy, memory management, and parallelism. It's been a reasonable two-day project, and I could see this being assigned as an undergrad course project. It doesn't feel altogether too different from research either, just at a much smaller&nbsp;scale.</p>
 <p>Once again, all the code is available <a href="https://github.com/umbrant/extsort">at github</a>.</p>
 <!-- Hyde::Article::End -->
 
@@ -193,6 +195,8 @@ My quicksort also reduces recursion depth by bubblesorting for runs smaller than
 
 					
 					
+						
+						<li><a href="/blog/2011/external_sorting.html">External sorting of large datasets</a></li>
 						
 					
 						
