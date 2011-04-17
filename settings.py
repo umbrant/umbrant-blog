@@ -83,6 +83,12 @@ MEDIA_PROCESSORS = {
 }
 
 CONTENT_PROCESSORS = {
+    '*':{
+        '.ico':(
+                'hydeengine.content_processors.PassthroughProcessor',),
+        '.png':(
+                'hydeengine.content_processors.PassthroughProcessor',),
+    },
     'prerendered/': {
         '*.*' :
             ('hydeengine.content_processors.PassthroughProcessor',)
