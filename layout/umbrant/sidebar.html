@@ -33,12 +33,12 @@
 		<li>
 		<h2>Archive</h2>
 		<ul>
-			{% for page in site.walk %}
-			{% ifequal page.name "blog" %}
-				{% for year in page.walk reversed %}
-					{% ifnotequal year.name "blog" %}
-					<li><a href="{{year.listing_page.url}}">{{year.name}}</a></li>
-					{% endifnotequal %}
+			{% for p in site.walk %}
+			{% ifequal p.name "blog" %}
+				{% for year in p.walk reversed %}
+				{% if year.listing_page.url and year.name != "blog" %}
+				<li><a href="{{year.listing_page.url}}">{{year.name}}{{year.next.name}}</a></li>
+				{% endif %}
 				{% endfor %}
 			{% endifequal %}
 			{% endfor %}
