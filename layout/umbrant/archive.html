@@ -8,12 +8,26 @@
 {% block content_body %}
 
 {% block meta %}
-<p class="meta">&#160;</p>
+	<ul class="archive-years">
+    {% for module in site.children %}
+	{% ifequal module.name "blog" %}
+	<li><a {% ifnotequal module.listing_url page.url %}href="{{module.listing_url}}"{% endifnotequal %}>All</a></li>
+		{% for year in module.walk %}
+			{% if year.listing_page.url and year.name != "blog" %}
+				<li><a {% ifnotequal year.listing_url page.url %}href="{{year.listing_url}}"{% endifnotequal %}>{{year.name}}{{year.next.name}}</a></li>
+			{% endif %}
+		{% endfor %}
+	{% endifequal %}
+	{% endfor %}
+	</ul>
 {% endblock %}
 
 
 <div class="page-listing">
+
 	{% for node in page.node.walk_reverse %}
+	{% if node.listing_page.url and node.name != "blog" %}
+	<h3>{{ node.name }}</h3>
 		<ul>
 
     {% for list_page in node.pages|dictsort:"created" reversed %}
@@ -30,6 +44,7 @@
 		{% endifnotequal %}
 	{% endfor %}
 		</ul>
+	{% endif %}
 	{% endfor %}
 </div>
 
