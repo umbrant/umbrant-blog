@@ -28,4 +28,13 @@
 		{% endifequal %}
 	{% endfor %}
 
+	{% for page in site.walk %}
+	{% ifequal page.name "blog" %}
+		{% recent_posts recents 5 page %}
+		{% with recents|last as l %}
+		<a href="{{ l.node.listing_url }}">{{ "<<"|escape}} Older posts</a>
+		{% endwith %}
+	{% endifequal %}
+	{% endfor %}
+
 {%endblock%}

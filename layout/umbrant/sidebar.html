@@ -37,7 +37,7 @@
 			{% ifequal p.name "blog" %}
 				{% for year in p.walk reversed %}
 				{% if year.listing_page.url and year.name != "blog" %}
-				<li><a href="{{year.listing_page.url}}">{{year.name}}{{year.next.name}}</a></li>
+				<li><a href="{{year.listing_page.url}}">{{year.name}}</a></li>
 				{% endif %}
 				{% endfor %}
 			{% endifequal %}
