@@ -1,0 +1,56 @@
+{% extends "_post.html" %}
+
+{%load webdesign %}
+
+{%hyde
+    title: Concurrency review
+    created: 2011-06-11 18:33:00
+    draft: True
+    tags: concurrency, computer science, prelim
+%}
+
+{% block article %}
+
+{%article%}
+
+{% excerpt %}
+
+I assume everyone has already read Andrew Birrell's [seminal paper on "Programming with Threads"](ftp://apotheca.hpl.hp.com/pub/dec/SRC/research-reports/SRC-035.pdf). This is going to deal with locking and concurrency at a higher level. At-bat today are five selected papers on concurrency:
+
+* "Granularity of Locks and Degrees of Consistency in a Shared Data Base", by Gray et al., 1975
+* "Experience with Processes and Monitors in Mesa", Lampson and Redell, 1980
+* "On Optimistic Methods for Concurrency Control", Kung and Robinson, 1981
+* "Threads and Input/Output in the Synthesis Kernel", Massalin and Pa, 1989
+* "Concurrency Control Performance Modeling: Alternatives and Implications", Agrawal, Carey and Livny, 1987
+
+{%endexcerpt%}
+
+### Background ###
+
+I know I said I expected Birrell's paper as base knowledge, but here's a TLDR that might let you skip it.
+
+The need for locking is derived from the concurrent reader/writer problem. It's safe for multiple threads to be reading the same data at the same time, but it's not safe to read or write while someone else is writing since you can get corrupted results. This requires the idea of the [reader-writer lock](http://en.wikipedia.org/wiki/Readers-writer_lock), which allows any number of concurrent readers, but will make sure that any writer gets exclusive access (i.e. no other readers or writers are accessing the protected data). This is also called shared/exclusive locking, and is an especially common construct in parallel programming.
+
+### Granularity of Locks ###
+
+The important takeaway from this Jim Gray paper is the idea of *hierarchal locking*, where locking a database table also locks all the rows and row fields in that table. This hierarchal structure allows locking at an almost arbitrary granularity depending on the needs of the executing query, which ameliorates the issues that can happen with too-fine-grained locking (excessive lock overhead from doing lots of acquisitions and releases) or too-coarse-grained locking (poor concurrency from unnecessary lock contention). 
+
+This scheme applies to exclusive (X) locks used for writes as well as share (S) locks used for reads, but also requires the introduction of a third lock type: *intention locks*. Intention locks are used to indicate in an ancestor node that one of its children has been locked, preventing another query from falsely locking the ancestor, and thus, the child as well. This is refined to having both a *intention share lock* (IS) and an *intention exclusive lock* (IX) to allow concurrent reads, since intention share locks are compatible. Exclusive intention locks are also compatible, since they still have to ultimately exclusively lock the child they want to modify. Queries are required to leave a breadcrumb trail of correct intention locks behind as they traverse toward what they ultimately want to access. Locks also must be released in leaf-to-root order, so the locking hierarchy remains consistent.
+
+One more intention lock type is introduced for yet better concurrency: *share and intention exclusive locks* (SIX). This is interpreted as "read-only access to a subtree, exclusively-locking some to be written". This is necessary because normally you can't have concurrent read/writes (cannot just first acquire the share lock and then an intention exclusive lock since they're incompatible), but since these rights are being granted to the same query, it can be depended upon not to read a row that it's currently writing. This read-modify-write behavior for a subtree is super common in databases, which is why SIX locks are important.
+
+Table 1 on page 5 of the paper is a concise rundown of what locks are compatible with each other. It might be a nice exercise to work through (the lock types being null, IS, IX, S, SIX, X).
+
+The rest of the paper seems less relevant. Gray et al. explain how this can be applied to a more dynamic graph based on locking ranges of mutable indexes, with the same strategy. I don't think this works for multiple indexes, since then the hierarchy DAG is no longer a DAG. They also cover the idea of "degrees of consistency" with tradeoffs between performance (concurrency) and recovery (consistency). I don't think real-world databases use anything except the highest degree of consistency, since the idea of unrecoverable, non-serializable transactions isn't pleasant. Anything with eventual consistency (looking at you, NoSQL) has made this tradeoff.
+
+### Experience with Processes and Monitors in Mesa ###
+
+### On Optimistic Methods for Concurrency Control ###
+
+### Threads and Input/Output in the Synthesis Kernel ###
+
+### Concurrency Control Performance Modeling ###
+
+{%endarticle%}
+
+{% endblock %}
