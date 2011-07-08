@@ -51,6 +51,22 @@ The rest of the paper seems less relevant. Gray et al. explain how this can be a
 
 ### Concurrency Control Performance Modeling ###
 
+This paper does a deep comparison between three concurrency control algorithms: blocking locks, immediate restart on lock contention, and optimistic concurrency. I really love papers like this one, since they take a bunch of different algorithms that all tested well under different model assumptions, carefully dismantle said assumptions, and reveal real truths with their own meticulous performance model. It really demonstrates the authors' complete understanding of the problem at hand.
+
+There are a number of model parameters that are crucial to performance here. The *database system model* specifies the physical hardware (CPUs and disks), associated schedulers, characteristics of the DB (size and granularity), load control mechanisms, and the concurrency control algorithm itself. The *user model* specifies the arrival process for users, and the type of transactions (batch or interactive). The *transaction model* specifies the storage access pattern of a transaction, as well as its computational requirements (expressed in terms of probabilities). 
+
+I consider this to be about as complete as possible. They ignore I/O patterns and cache behavior, but those are just damn hard to model. Using a Poisson distribution for transaction inter-arrival rates is canonical without evidence to disprove it ( see "On the Self-similar Nature of Ethernet Traffic" by Leland et al. for a situation where Poisson does not hold so true). They also do not take into account processing time spent on the concurrency control algo itself, which feels like a slight copout since I think this means they ignore lock overhead and use a completely granular locking system (not hierarchical locking), which disfavors optimistic concurrency. This is implementation specific and a lot of additional work to add to the model, and considering there's some prior work showing that the costs are roughly comparable and negligible compared to access costs, I'm willing to let it go.
+
+The interesting part comes when they manipulate all the model parameters, and explain how different papers arrived at their different performance results. Basically, under the assumption of infinite resources, optimistic concurrency does splendidly as the level of multiprogramming increases, since locking strategies run into contention and transactions get blocked up. Optimistic transactions still face more conflicts and have to be restarted, but since there the pipeline is always full of running transactions (none are just blocked and using up a queue slot while doing no work), overall throughput continues to increase. Immediate-restart reaches an interesting performance plateau, due to its scheme of trying to match the rate of transaction completion with the rate of re-introducing restarted transactions. This was the model used in a number of prior papers.
+
+Introducing a very resource limited situation turns things sharply in favor of blocking algos. Blocking performs much better until very high levels of multiprogramming, immediate-restart hits the same plateau for the same reason, and optimistic concurrency performs linearly worse beyond a very small multiprogramming level. Basically, every optimistic conflict detected at the end of a transaction just wasted all of the resources used; immediate restart does better since it will restart if it detects a conflict midway, and also delays restarts to match the completion rate.
+
+Increasing the number of resources begins to favor optimistic concurrency again, but the price/performance isn't there since doubling the # of resources does not lead to a doubling in performance. They do a few more different situations, examining different workloads and model assumptions, which you can read yourself if you want to know more.
+
+Basically, it's hard to make general statements about performance; things are dependent on your model. It seems that for most real-world use cases though (limited resources, high utilization), blocking is the concurrency control method of choice. It's also important to carefully control the level of multiprogramming for optimal throughput, since performance tends to peak and then decline as things thrash.
+
+I also just find it really cool that they explained the performance results of a lot of previous papers within the scope of their own model, basically saying that no one was wrong, just incomplete in their analysis.
+
 {%endarticle%}
 
 {% endblock %}
