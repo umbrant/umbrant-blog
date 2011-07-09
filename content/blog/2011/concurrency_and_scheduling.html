@@ -15,7 +15,7 @@
 
 {% excerpt %}
 
-I assume everyone has already read Andrew Birrell's [seminal paper on "Programming with Threads"](ftp://apotheca.hpl.hp.com/pub/dec/SRC/research-reports/SRC-035.pdf). This is going to deal with locking and concurrency at a higher level. At-bat today are five selected papers on concurrency:
+I assume that everyone has already read Andrew Birrell's [seminal paper on "Programming with Threads"](ftp://apotheca.hpl.hp.com/pub/dec/SRC/research-reports/SRC-035.pdf) or at least has a basic conception of parallel programming. This is going to deal with locking and concurrency at a higher level. At-bat today are five selected papers on concurrency:
 
 * "Granularity of Locks and Degrees of Consistency in a Shared Data Base", by Gray et al., 1975
 * "Experience with Processes and Monitors in Mesa", Lampson and Redell, 1980
@@ -45,11 +45,43 @@ The rest of the paper seems less relevant. Gray et al. explain how this can be a
 
 ### Experience with Processes and Monitors in Mesa ###
 
+This paper specifies a new parallel programming language, Mesa, used to implement a new operating system, Pilot. Introducing a new language and OS at the same time is pretty common, and is how we arrived at C and Unix. This is where the idea of "Mesa semantics" for monitors came from (compared to Hoare semantics). To put the work in proper context, apparently in 1979 one had to justify why a preemptive scheduler is required over a non-preemptive design even assuming a uniprocessor (the obvious reason being interrupt handling).
+
+Mesa is kind of a neat language, in that any procedure can be easily forked off as a new process, and processes are first class values in the language and can be treated like any other value. This isn't to say that everything is expected to be able to run concurrently, just that the `FORK` language construct is easy to apply. The core organizational construct in Mesa is the "module" or the "monitor module". This is basically a way of logically organizing procedures, and specifying which of them need to acquire the monitor lock as part of execution.
+
+This is also where "Mesa semantics" come in. Instead of immediately switching to a waiting process on a signal, the signaller continues running. This seems like a great win, since although it means slightly different semantics to the program, it also means fewer context switches.
+
+The paper goes on to describe more about monitors and the implementation.
+
 ### On Optimistic Methods for Concurrency Control ###
+
+When I read this paper for 262A, it was a big eye-opener. I felt that the idea wouldn't hold up in real usage (and I think that this is true, except in the specific situations noted), but it was a refreshing approach to handling concurrency I had never thought of.
+
+The idea behind "optimistic concurrency" is doing away with locking, and instead doing checking at the end before commit to see if there are any conflicts from concurrent queries, and aborting if so. In this way, even if incorrect query results are generated along the way, they are not externalized. This is speculative and will result in lots of aborted transactions (and thus wasted work) under write-heavy workloads, but as the paper says, this works wonderfully for read-heavy workloads where it's unlikely to have a conflict.
+
+The motivation here is that locking often imposes unnecessary overhead, and can complicate things. In a locking scheme, even read-only queries need to lock rows even though they aren't modifying the data, just to indicate that the reads is happening. All this checking and verifying adds up, increasing complexity of the system, and leading to potential deadlocks which have to be resolved through a deadlock-free scheme, or deadlock detection and abort. Locking also can operate at too coarse a granularity; imagine the root node in a hierarchical locking scheme as described by Gray et al., it's basically constantly under lock contention, often times unnecessarily since queries are not necessarily operating on the same subtrees.
+
+This is implemented by having *two-phase transactions*, which goes *read phase*, *validate*, then *write phase*. In the read phase, the transaction gathers up the names of all the objects it needs to read, defining a *read set*. It then validates whether the transaction T_j is [serializable](http://en.wikipedia.org/wiki/Serializability), checking to make sure that for all prior transactions T_i one of the following is true:
+
+1. T_i completes its write phase before T_j starts its read phase. T_i comes entirely before T_j, so it's fine.
+1. The write set of T_i does not intersect with the read set of T_j, and the T_i finishes writing before T_j starts writing. As long as there's no intersection, T_j's reads are safe, and as long as T_i finishes writing before T_j starts, T_j will not be overwritten by T_i.
+1. The write set of T_i does not intersect the read or write set of T_j, and T_i finishes reading before T_j starts writing. Similar to the previous, no intersection with the read or write set makes T_j very safe, and T_i needs to finish reading before T_j starts writing to protect T_i's read set.
+
+This means that validation needs to check the write sets of all transactions that had finished reading but not finished writing (conditions 2 and 3). This poses an issue for long-running transactions, since the validator might be expected to keep around write-sets almost indefinitely. The proposed answer is to abort and restart the transaction, which leads to the question of how to deal with transactions that repeatedly fail validation. This is answered by write-locking the entire database and letting the "starving" transaction run to completion in isolation. This isn't great at all, but the assumption is that both long-running transactions and repeat-failures are rare.
+
+The evaluation in this paper is kind of spotty. It's purely theoretical, and they chose to do their analysis on a B-tree, which is one of the better (though also common) situations because of the high fanout and low depth leading to lock contention on root nodes. They also assume a uniformly random distribution for accesses which is probably untrue (accesses are normally temporally correlated, which is why LRU caching works).
+
+All-in-all, this is the system design maxim of "optimize for the common case" taken to the extreme. The common case of no-conflict transactions will be faster with optimistic concurrency control, but it'll collapse under load a lot worse. Like the authors say, it's only for situations where transaction conflict is rare.
 
 ### Threads and Input/Output in the Synthesis Kernel ###
 
+This seems to be a more meta paper, where optimistic concurrency and lock-avoiding techniques were applied to an OS to improve performance. It's also chock-full of system-specific jargon, which I will kindly avoid introducing. Honestly, most of what's laid out in the paper feels like a bunch of small optimizations for a specialized kernel that add up to something that performs demonstrable better than SunOS. Some of these techniques might be translatable back to Unix-y implementations, some of it is unique to the system (runtime optimization of syscalls?), and some of it is because it's a special-purpose kernel. I like how the references are to the SunOS source code, GEB (yes, the Hofstadter book), 3 of the author's own papers, and then two external. Certainly a different time.
+
+The takeaways here are unclear. The conclusion of "avoid synchronization when possible" seems hardly novel, and it feels too much like they implemented to optimize their microbenchmarks (no real apps were written).
+
 ### Concurrency Control Performance Modeling ###
+
+
 
 {%endarticle%}
 
