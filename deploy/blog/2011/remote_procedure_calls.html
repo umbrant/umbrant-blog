@@ -6,7 +6,7 @@
 	<head>
 		<title>
 			
-			Virtual memory review : umbrant
+			Remote Procedure Call review : umbrant
 			
 		</title>
 
@@ -61,9 +61,9 @@
 	
 
 		<div class="post single">
-			<h2 class="title"><a href="">Virtual memory review</a></h2>
+			<h2 class="title"><a href="">Remote Procedure Call review</a></h2>
 			
-			<p class="meta"><span class="date">June 11, 2011</span></p>
+			<p class="meta"><span class="date">June 11, 1911</span></p>
 			
 			<div class="entry">
 			
@@ -72,8 +72,12 @@
 
 <!-- Hyde::Excerpt::Begin -->
 
-<p>I&#8217;m taking the <span class="caps">OS</span> prelim this fall, which means I have to read ~100 papers this summer for background material. Since repetition aids retention, I&#8217;m putting notes for papers I read up on my blog. The topics are wide-ranging, so I&#8217;m trying to start with the fundamentals and then move on up to the whole-system&nbsp;papers.</p>
-<p>I&#8217;m kicking it off with &#8220;Virtual Memory, Processes, and Sharing in <span class="caps">MULTICS</span>&#8221; by Daley and Dennis (1968) and &#8220;The Multics Virtual Memory: Concepts and Design&#8221; by Bensoussan, Clingen, and Daley (1972). Learn about the joys of segmentation and dynamic linking from classic papers from the 70s! These are slightly infamous papers for some systems students here at Berkeley, due to a certain past <span class="caps">OS</span> prelim examiner grilling them on exactly these&nbsp;details.</p>
+<p>Part two in my self-study on important papers in systems. This time, I&#8217;m covering remote procedure calls (<span class="caps">RPC</span>), which are effective ways of packaging up a function call, sending it to a remote machine to be executed, and then getting the result. The idea throughout all of these schemes is to make the difference between remote and local calls as minimal as possible, and almost transparent from a programming perspective. Material is derived from three&nbsp;papers:</p>
+<ul>
+<li><em>Implementing Remote Procedure Calls</em> by Birrell and Nelson&nbsp;(1984)</li>
+<li><em><span class="caps">RPC</span> in the x-Kernel: Evaluating New Design Techniques</em> by Hutchinson et al.&nbsp;(1989)</li>
+<li><em>Lightweight Remote Procedure Call</em> by Bershad et al.&nbsp;(1990)</li>
+</ul>
 <!-- Hyde::Excerpt::End -->
 
 <h3>Background&nbsp;Review</h3>
@@ -117,8 +121,8 @@
     var disqus_shortname = 'umbrant'; // required: replace example with your forum shortname
 
     // The following are highly recommended additional parameters. Remove the slashes in front to use.
-    var disqus_identifier = '/blog/2011/virtual_memory.html';
-    var disqus_url = 'http://www.umbrant.com/blog/2011/virtual_memory.html';
+    var disqus_identifier = '/blog/2011/remote_procedure_calls.html';
+    var disqus_url = 'http://www.umbrant.com/blog/2011/remote_procedure_calls.html';
     //var disqus_developer = 1;
 
     /* * * DON'T EDIT BELOW THIS LINE * * */
