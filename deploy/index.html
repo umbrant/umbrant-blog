@@ -70,6 +70,25 @@
 
 			
 			<div class="post">
+				<h2 class="title"><a href="/blog/2011/lottery_stride_scheduling.html">Lottery and stride scheduling</a></h2>
+				<p class="meta"><span class="date">July 17, 2011</span></p>
+				<div class="entry">
+					
+
+<p>Today is a shorter post than previous topics, since I didn&#8217;t want to lump the last paper (Paxos, ick) in with these. I&#8217;m covering lottery and stride scheduling, two very related approaches to doing efficient proportional-share scheduling. I believe this is the canonical way of doing things, since mClock (by Gulati et al., presented at <span class="caps">OSDI</span> 2010) used stride scheduling successfully to schedule disk I/O in a&nbsp;hypervisor.</p>
+<ul>
+<li><span class="dquo">&#8220;</span>Lottery Scheduling: Flexible Proportional-Share Resource Management&#8221;, Waldspurger and Weihl,&nbsp;1994</li>
+<li><span class="dquo">&#8220;</span>Stride Scheduling: Deterministic Proportional-Share Resource Management&#8221;, Waldspurger and Weihl,&nbsp;1995</li>
+</ul>
+
+					<p class="links"><a href="/blog/2011/lottery_stride_scheduling.html">Read More</a>&#160;&#160;&#160;&#160;|&#160;&#160;&#160;&#160;<a href="/blog/2011/lottery_stride_scheduling.html#disqus_thread">Comments</a></p>
+				</div>
+			</div>
+			
+		
+
+			
+			<div class="post">
 				<h2 class="title"><a href="/blog/2011/concurrency.html">Concurrency review</a></h2>
 				<p class="meta"><span class="date">July 8, 2011</span></p>
 				<div class="entry">
@@ -117,22 +136,6 @@
 <p>This isn&#8217;t a tutorial, but it&#8217;d probably be a useful read if you&#8217;re thinking of getting started with Android development. My pain, your&nbsp;gain.</p>
 
 					<p class="links"><a href="/blog/2011/android_the_good_and_bad.html">Read More</a>&#160;&#160;&#160;&#160;|&#160;&#160;&#160;&#160;<a href="/blog/2011/android_the_good_and_bad.html#disqus_thread">Comments</a></p>
-				</div>
-			</div>
-			
-		
-
-			
-			<div class="post">
-				<h2 class="title"><a href="/blog/2011/external_sorting.html">External sorting of large datasets</a></h2>
-				<p class="meta"><span class="date">April 16, 2011</span></p>
-				<div class="entry">
-					
-
-<p>This is a common interview question: how do you sort data that is bigger than memory? &#8220;Big data&#8221; in the range of tera or petabytes can now almost be considered the norm (think of Google saving every search, click, and ad impression ever), so this manifests in reality as well. This is also a canonical problem in the database world, where it is referred to as an &#8220;external&nbsp;sort&#8221;.</p>
-<p>Your mind should immediately turn to divide and conquer algorithms, namely merge sort. Write out intermediate merged output to disk, and read it back in lazily for the next round. I decided this would be a fun implementation and optimization exercise to do in C. There will probably be a follow-up post, since there are lots of optimizations I haven&#8217;t yet&nbsp;implemented.</p>
-
-					<p class="links"><a href="/blog/2011/external_sorting.html">Read More</a>&#160;&#160;&#160;&#160;|&#160;&#160;&#160;&#160;<a href="/blog/2011/external_sorting.html#disqus_thread">Comments</a></p>
 				</div>
 			</div>
 			
@@ -200,6 +203,10 @@
 					
 					
 						
+						<li><a href="/blog/2011/lottery_stride_scheduling.html">Lottery and stride scheduling</a></li>
+						
+					
+						
 						<li><a href="/blog/2011/concurrency.html">Concurrency review</a></li>
 						
 					
@@ -217,10 +224,6 @@
 					
 						
 						<li><a href="/blog/2011/album_first_impressions_pt_1.html">Album first impressions pt. 1</a></li>
-						
-					
-						
-						<li><a href="/blog/2011/static_hosting_on_s3.html">Static website hosting on Amazon S3</a></li>
 						
 					
 				
