@@ -6,7 +6,7 @@
 	<head>
 		<title>
 			
-			Hello world! : umbrant
+			Paper review: Warehouse-Scale Computing: Entering the Teenage Decade : umbrant
 			
 		</title>
 
@@ -61,9 +61,9 @@
 	
 
 		<div class="post single">
-			<h2 class="title"><a href="">Hello world!</a></h2>
+			<h2 class="title"><a href="">Paper review: Warehouse-Scale Computing: Entering the Teenage Decade</a></h2>
 			
-			<p class="meta"><span class="date">January 1, 1911</span></p>
+			<p class="meta"><span class="date">September 6, 2011</span></p>
 			
 			<div class="entry">
 			
@@ -72,10 +72,23 @@
 
 <!-- Hyde::Excerpt::Begin -->
 
-<p>Excerpt goes&nbsp;here.</p>
+<p>This review is based on a presentation by Luiz Andre Barroso from Google, titled &#8220;Warehouse-Scale Computing: Entering the Teenage Decade&#8221;. I believe it was given this past year (2011) at <span class="caps">FCRC</span>. I really strongly recommend it, since it talks about the operational issues in running a Google datacenter, and also identifies a lot of the research issues surrounding &#8220;warehouse-scale&nbsp;computation&#8221;.</p>
 <!-- Hyde::Excerpt::End -->
 
-<p>Rest of article goes&nbsp;here.</p>
+<h3>Key&nbsp;Points</h3>
+<p>There were a couple problems identified in the talk, some of which have been solved, some of which have not&nbsp;been.</p>
+<ul>
+<li>I/O latency variability right now is terrible, with basically all durable storage displaying a long latency tail. Random accesses to spinning disks are slow, flash writes are slow, and these high-latency events muck up the latency for potentially fast&nbsp;events.</li>
+<li>Network I/O suffers a similar problem. Using <span class="caps">TCP</span> and interrupts adds orders of magnitude of latency to network requests, making fast network hardware slow again in&nbsp;software.</li>
+<li>Datacenter power efficiency as defined by <span class="caps">PUE</span> (Power Usage Effectiveness) has gotten pretty good (&lt;10 percent is used on operational overhead). The real problem now is making better use of servers, to get <span class="caps">CPU</span> load up into the 80% range instead of the current&nbsp;30%.</li>
+<li>This leads into the another problem: how do you share all of the resources in a cluster among many different services, while also chopping off the latency&nbsp;tail?</li>
+</ul>
+<p>To summarize, there are two big ideas in the talk. First, latency and variation in latency are the key performance metrics for services these days; today&#8217;s web-based applications demand both to provide a good user experience. This may require reexamination of a lot of fundamental assumptions about <span class="caps">IO</span>. Second, increasing the utilization of resources in a cluster is important from an efficiency and performance standpoint. Server hardware should be a fungible resource that can be easily shared among different&nbsp;services.</p>
+<p>The differences here between warehouse-scale computing and datacenter-scale computing lie in scale and the type of user experience provided. Warehouse-scale computing operates in the many petabyte range, and allows for complete system integration of the hardware, software, power, and cooling of the cluster. The types of services hosted by a warehouse-scale computer are also scaled way up, in terms of the latency requirements and the size of the data that is being&nbsp;crunched.</p>
+<h3>Trade&nbsp;offs</h3>
+<p>One of the key tradeoffs mentioned was between latency and throughput. Most of the software stack for I/O these days is done to optimize throughput, done in response to relatively slow disks or networks. An example of this would be Nagle&#8217;s algorithm in <span class="caps">TCP</span>; small packets are delayed and batched to be sent in bulk, reducing <span class="caps">TCP</span> overhead (fewer bytes need to be sent) but also increasing latency. New technologies like flash and fast networks mean that these assumptions should be&nbsp;reexamined.</p>
+<h3>Long-term&nbsp;impact</h3>
+<p>Web-based services are here to stay, and I feel confident in saying that this is an area that is going to see yet more growth. Large internet companies like Google and Facebook are already dealing with these issues internally, and there are only going to be more warehouse-scale datacenters built. It&#8217;s clear that these are hard problems that aren&#8217;t going away because of some <em>deus ex machina</em> like Moore&#8217;s Law, so any solutions are likely to have a big&nbsp;impact.</p>
 <!-- Hyde::Article::End -->
 
 			
@@ -90,8 +103,8 @@
     var disqus_shortname = 'umbrant'; // required: replace example with your forum shortname
 
     // The following are highly recommended additional parameters. Remove the slashes in front to use.
-    var disqus_identifier = '/blog/template.html';
-    var disqus_url = 'http://www.umbrant.com/blog/template.html';
+    var disqus_identifier = '/blog/2011/warehouse_scale_computing_summary.html';
+    var disqus_url = 'http://www.umbrant.com/blog/2011/warehouse_scale_computing_summary.html';
     //var disqus_developer = 1;
 
     /* * * DON'T EDIT BELOW THIS LINE * * */
