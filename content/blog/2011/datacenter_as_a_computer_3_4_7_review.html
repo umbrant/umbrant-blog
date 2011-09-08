@@ -1,0 +1,48 @@
+{% extends "_post.html" %}
+
+{%load webdesign %}
+
+{%hyde
+    title: "The Datacenter as a Computer Ch. 3, 4, 7 review"
+    created: 2011-09-07 15:19:00
+    draft: True
+%}
+
+{% block article %}
+
+{%article%}
+
+{% excerpt %}
+
+This is a review of chapters 3, 4, and 7 from "The Datacenter as a Computer". The topics covered are hardware for servers, datacenter basics, and fault tolerance and recovery. 
+
+Main idea
+Problems, are they real?
+fundamental tradeoffs
+long-term impact
+
+{%endexcerpt%}
+
+Amdahl's law and the limits of parallelism
+low end vs. high end server tradeoffs
+*   request level parallelism is slower on low end
+*   low end is more power efficient, but harder to run at high load
+*   low end is more cost effective
+*   low end can be better when I/O bound, wider bus
+software/hardware codesign
+fungible resources are the best
+
+cooling is a major concern
+hot and cold aisles, pressurized cold air in the floor goes through perforated floor tiles
+UPS are generally not actually on the datacenter floor, they're instead external and the power distribution unit (PDU) is near the racks
+Coolant is cooled back down via a chiller tower, or "free cooling" using the external environment
+cooling costs can be really expensive: 40% of load
+in-rack cooling is more effective at increasing power density, but has concerns about spillage of coolant onto the datacenter floor
+container-based datacenters are also really effective at increasing power density
+
+only need about 4 9s of fault tolerance, since you're also subject to internet outages.
+fault tolerance is a nice property to have, since it masks failures and makes upgrades easier
+
+{%endarticle%}
+
+{% endblock %}
