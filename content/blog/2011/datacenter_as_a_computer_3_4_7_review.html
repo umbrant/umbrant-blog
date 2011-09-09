@@ -3,9 +3,8 @@
 {%load webdesign %}
 
 {%hyde
-    title: "The Datacenter as a Computer Ch. 3, 4, 7 review"
-    created: 2011-09-07 15:19:00
-    draft: True
+    title: "Paper review: The Datacenter as a Computer Ch. 3, 4, 7"
+    created: 2011-09-08 20:31:00
 %}
 
 {% block article %}
@@ -16,16 +15,9 @@
 
 This is a review of chapters 3, 4, and 7 from "The Datacenter as a Computer". The topics covered are hardware for servers, datacenter basics, and fault-tolerance and recovery. 
 
-Since this is a broad set of topics, the discussion here will be a bit disjointed.
-
-Main idea
-Problems, are they real?
-fundamental tradeoffs
-long-term impact
-
 {%endexcerpt%}
 
-## Main idea
+### Main idea
 
 The three chapters here cover essentially how to design the hardware, software, and operational concerns of a datacenter. 
 
@@ -35,44 +27,30 @@ Operationally, the concerns deal with power and cooling of nodes, factors which 
 
 The chapter on fault-tolerance and recovery talks about the different types of faults that can present in hardware and software, and how they might affect service availability. The ultimate goal of the service is to be able to survive faults without significantly affecting availability, either through overprovisioning or graceful degradation of service quality.
 
-## Problems presented
+### Problems presented
+
+I divided this up into three sections, based on the chapters.
 
 #### Hardware/software scaling
 *   How low can you go? Small nodes are more cost-efficient than beefy ones in terms of computation-per-watt and price-per-computation, but might start becoming a bottleneck due to the limits of request parallelism. Further parallelization of an application can be really painful, and having to deal with coordination between more nodes has its drawbacks. Never forget Amdahl's Law: if the serial parts of your program dominate, and you're running that serial code on slow nodes, your program is going to run slowly too. Beefy nodes can run the serial part quickly.
 *   Another point about small nodes is that they are harder to schedule efficiently. Resources effectively get fragmented; there might not be enough left on a small node to schedule a new task. Big nodes pack more efficiently.
 
 #### Operations
+*   What is the most effective way of cooling servers? This is heavily related to power density (# of servers / volume), with a higher power density being a more efficient use of a datacenter. The current canonical strategy seems to be alternating hot and cold aisles, with cold air pumped up through the floor by a central AC unit. Modular container datacenters seem to be another strategy, which are effective because they can be designed very tightly and are self-contained.
+*   What is the most efficient way of cooling server? This relates to economic costs; it's claimed that cooling can account for 40% of load, which is a big power bill.
+
+One question I had here was that they mention that UPSes are generally in a separate room, with just the power distribution unit on the floor. I remember reading that Google integrated batteries right into their servers, but maybe one source or the other is outdated. Having a battery right in the server might increase fault-tolerance and modularity.
 
 #### Fault-tolerance
+*   What are the real limitations on availability? Internet is apparently only 99.99% available, and software faults dominate hardware faults (only 10%). Machines apparently last an average of 6 years before replacement, after factoring out "infant mortality", a number I found to be surprisingly high considering how much talk there is of nodes keeling over, but again just indicates that most keeling is due to software faults.
+*   How do you maintain service when faults happen? In a datacenter, a new node fails on the order of hours, so it's not acceptable to become unavailable. This is done through some degree of overprovisioning of resources, and designing software that is fault-tolerant. When operating with faults, it's desirable to have the property of *graceful degradation*, where the quality of service gradually degrades (e.g. using older cached data, serving reads but denying writes, disabling some features). Fault-tolerance also makes the need for repairs less urgent and thus less expensive.
 
-## Tradeoffs
-
+### Tradeoffs
 *   Programming cost vs. hardware cost. Can speed up either by throwing programmers at a problem (squeeze more parallelism from the code), or by buying better hardware (run the same code faster). This is an economic balancing act.
-*   
 
-## Impact
+### Impact
 
-Amdahl's law and the limits of parallelism
-low end vs. high end server tradeoffs
-*   request level parallelism is slower on low end
-*   low end is more power efficient, but harder to run at high load
-*   low end is more cost effective
-*   low end can be better when I/O bound, wider bus
-software/hardware codesign
-fungible resources are the best
-
-cooling is a major concern
-hot and cold aisles, pressurized cold air in the floor goes through perforated floor tiles
-UPS are generally not actually on the datacenter floor, they're instead external and the power distribution unit (PDU) is near the racks
-Coolant is cooled back down via a chiller tower, or "free cooling" using the external environment
-cooling costs can be really expensive: 40% of load
-in-rack cooling is more effective at increasing power density, but has concerns about spillage of coolant onto the datacenter floor
-container-based datacenters are also really effective at increasing power density
-
-only need about 4 9s of fault tolerance, since you're also subject to internet outages.
-fault tolerance is a nice property to have, since it masks failures and makes upgrades easier
-most faults are caused by software errors, not hardware. machines last 6 years between faults on average.
-being fault-tolerant makes repairs less urgent and uses technicians more efficiently
+This textbook isn't going to be winning any awards, but I find it to be a fascinating look into operations and system design at Google. Like I mentioned in my last writeup, there are only going to be more datacenters being built in the future, so advice like this on how to design and build datacenters and datacenter applications is very useful.
 
 {%endarticle%}
 

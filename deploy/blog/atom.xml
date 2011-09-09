@@ -1,5 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>umbrant blog</title><link href="http://www.umbrant.com/blog/atom.xml" rel="self"/><link href="http://www.umbrant.com"/><updated>2011-09-08T19:35:22Z</updated><id>http://www.umbrant.com</id><entry><title>Paper review: Warehouse-Scale Computing: Entering the Teenage Decade</title><author><name>Andrew Wang</name></author><link href="http://www.umbrant.com/blog/2011/warehouse_scale_computing_summary.html"/><updated>2011-09-06T22:10:00Z</updated><published>2011-09-06T22:10:00Z</published><id>http://www.umbrant.com/blog/2011/warehouse_scale_computing_summary.html</id><content type="html">
+<feed xmlns="http://www.w3.org/2005/Atom"><title>umbrant blog</title><link href="http://www.umbrant.com/blog/atom.xml" rel="self"/><link href="http://www.umbrant.com"/><updated>2011-09-08T20:34:42Z</updated><id>http://www.umbrant.com</id><entry><title>Paper review: The Datacenter as a Computer Ch. 3, 4, 7</title><author><name>Andrew Wang</name></author><link href="http://www.umbrant.com/blog/2011/datacenter_as_a_computer_3_4_7_review.html"/><updated>2011-09-08T20:31:00Z</updated><published>2011-09-08T20:31:00Z</published><id>http://www.umbrant.com/blog/2011/datacenter_as_a_computer_3_4_7_review.html</id><content type="html">
+       
+
+&lt;!-- Hyde::Excerpt::Begin --&gt;
+
+&lt;p&gt;This is a review of chapters 3, 4, and 7 from &amp;#8220;The Datacenter as a Computer&amp;#8221;. The topics covered are hardware for servers, datacenter basics, and fault-tolerance and&amp;nbsp;recovery. &lt;/p&gt;
+&lt;!-- Hyde::Excerpt::End --&gt;
+
+&lt;h3&gt;Main&amp;nbsp;idea&lt;/h3&gt;
+&lt;p&gt;The three chapters here cover essentially how to design the hardware, software, and operational concerns of a&amp;nbsp;datacenter. &lt;/p&gt;
+&lt;p&gt;In terms of datacenter hardware, the main concern is choosing the most cost-efficient type of node that still runs your workload sufficiently&amp;nbsp;fast.&lt;/p&gt;
+&lt;p&gt;Operationally, the concerns deal with power and cooling of nodes, factors which limit the density of nodes in a datacenter. Cooling can account for a major part of the power cost of a datacenter, and &lt;span class=&quot;caps&quot;&gt;AC&lt;/span&gt; is just as critical a service as power since the datacenter can survive for only a matter of minutes if the &lt;span class=&quot;caps&quot;&gt;AC&lt;/span&gt; unit&amp;nbsp;dies.&lt;/p&gt;
+&lt;p&gt;The chapter on fault-tolerance and recovery talks about the different types of faults that can present in hardware and software, and how they might affect service availability. The ultimate goal of the service is to be able to survive faults without significantly affecting availability, either through overprovisioning or graceful degradation of service&amp;nbsp;quality.&lt;/p&gt;
+&lt;h3&gt;Problems&amp;nbsp;presented&lt;/h3&gt;
+&lt;p&gt;I divided this up into three sections, based on the&amp;nbsp;chapters.&lt;/p&gt;
+&lt;h4&gt;Hardware/software&amp;nbsp;scaling&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;How low can you go? Small nodes are more cost-efficient than beefy ones in terms of computation-per-watt and price-per-computation, but might start becoming a bottleneck due to the limits of request parallelism. Further parallelization of an application can be really painful, and having to deal with coordination between more nodes has its drawbacks. Never forget Amdahl&amp;#8217;s Law: if the serial parts of your program dominate, and you&amp;#8217;re running that serial code on slow nodes, your program is going to run slowly too. Beefy nodes can run the serial part&amp;nbsp;quickly.&lt;/li&gt;
+&lt;li&gt;Another point about small nodes is that they are harder to schedule efficiently. Resources effectively get fragmented; there might not be enough left on a small node to schedule a new task. Big nodes pack more&amp;nbsp;efficiently.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4&gt;Operations&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;What is the most effective way of cooling servers? This is heavily related to power density (# of servers / volume), with a higher power density being a more efficient use of a datacenter. The current canonical strategy seems to be alternating hot and cold aisles, with cold air pumped up through the floor by a central &lt;span class=&quot;caps&quot;&gt;AC&lt;/span&gt; unit. Modular container datacenters seem to be another strategy, which are effective because they can be designed very tightly and are&amp;nbsp;self-contained.&lt;/li&gt;
+&lt;li&gt;What is the most efficient way of cooling server? This relates to economic costs; it&amp;#8217;s claimed that cooling can account for 40% of load, which is a big power&amp;nbsp;bill.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;One question I had here was that they mention that UPSes are generally in a separate room, with just the power distribution unit on the floor. I remember reading that Google integrated batteries right into their servers, but maybe one source or the other is outdated. Having a battery right in the server might increase fault-tolerance and&amp;nbsp;modularity.&lt;/p&gt;
+&lt;h4&gt;Fault-tolerance&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;What are the real limitations on availability? Internet is apparently only 99.99% available, and software faults dominate hardware faults (only 10%). Machines apparently last an average of 6 years before replacement, after factoring out &amp;#8220;infant mortality&amp;#8221;, a number I found to be surprisingly high considering how much talk there is of nodes keeling over, but again just indicates that most keeling is due to software&amp;nbsp;faults.&lt;/li&gt;
+&lt;li&gt;How do you maintain service when faults happen? In a datacenter, a new node fails on the order of hours, so it&amp;#8217;s not acceptable to become unavailable. This is done through some degree of overprovisioning of resources, and designing software that is fault-tolerant. When operating with faults, it&amp;#8217;s desirable to have the property of &lt;em&gt;graceful degradation&lt;/em&gt;, where the quality of service gradually degrades (e.g. using older cached data, serving reads but denying writes, disabling some features). Fault-tolerance also makes the need for repairs less urgent and thus less&amp;nbsp;expensive.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3&gt;Tradeoffs&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;Programming cost vs. hardware cost. Can speed up either by throwing programmers at a problem (squeeze more parallelism from the code), or by buying better hardware (run the same code faster). This is an economic balancing&amp;nbsp;act.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3&gt;Impact&lt;/h3&gt;
+&lt;p&gt;This textbook isn&amp;#8217;t going to be winning any awards, but I find it to be a fascinating look into operations and system design at Google. Like I mentioned in my last writeup, there are only going to be more datacenters being built in the future, so advice like this on how to design and build datacenters and datacenter applications is very&amp;nbsp;useful.&lt;/p&gt;
+
+   </content></entry><entry><title>Paper review: Warehouse-Scale Computing: Entering the Teenage Decade</title><author><name>Andrew Wang</name></author><link href="http://www.umbrant.com/blog/2011/warehouse_scale_computing_summary.html"/><updated>2011-09-06T22:10:00Z</updated><published>2011-09-06T22:10:00Z</published><id>http://www.umbrant.com/blog/2011/warehouse_scale_computing_summary.html</id><content type="html">
        
 
 &lt;!-- Hyde::Excerpt::Begin --&gt;
