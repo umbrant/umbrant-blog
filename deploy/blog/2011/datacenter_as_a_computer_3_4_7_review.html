@@ -6,7 +6,7 @@
 	<head>
 		<title>
 			
-			Hello world! : umbrant
+			The Datacenter as a Computer Ch. 3, 4, 7 review : umbrant
 			
 		</title>
 
@@ -61,9 +61,9 @@
 	
 
 		<div class="post single">
-			<h2 class="title"><a href="">Hello world!</a></h2>
+			<h2 class="title"><a href="">The Datacenter as a Computer Ch. 3, 4, 7 review</a></h2>
 			
-			<p class="meta"><span class="date">March 30, 2011</span></p>
+			<p class="meta"><span class="date">September 7, 2011</span></p>
 			
 			<div class="entry">
 			
@@ -72,11 +72,52 @@
 
 <!-- Hyde::Excerpt::Begin -->
 
-<p>Hello world! This is my new blog and profile site, purely static <span class="caps">HTML</span> hosted out of S3. 
-Since I find this to be a neat trick, I&#8217;m going to make the howto into my second-ever blog post.
-This site is still very much under development, I have lots of ideas for neat features I want to add (comments being the first), but it&#8217;s good enough to put&nbsp;live.</p>
+<p>This is a review of chapters 3, 4, and 7 from &#8220;The Datacenter as a Computer&#8221;. The topics covered are hardware for servers, datacenter basics, and fault-tolerance and&nbsp;recovery. </p>
+<p>Since this is a broad set of topics, the discussion here will be a bit&nbsp;disjointed.</p>
+<p>Main idea
+Problems, are they real?
+fundamental tradeoffs
+long-term&nbsp;impact</p>
 <!-- Hyde::Excerpt::End -->
 
+<h2>Main&nbsp;idea</h2>
+<p>The three chapters here cover essentially how to design the hardware, software, and operational concerns of a&nbsp;datacenter. </p>
+<p>In terms of datacenter hardware, the main concern is choosing the most cost-efficient type of node that still runs your workload sufficiently&nbsp;fast.</p>
+<p>Operationally, the concerns deal with power and cooling of nodes, factors which limit the density of nodes in a datacenter. Cooling can account for a major part of the power cost of a datacenter, and <span class="caps">AC</span> is just as critical a service as power since the datacenter can survive for only a matter of minutes if the <span class="caps">AC</span> unit&nbsp;dies.</p>
+<p>The chapter on fault-tolerance and recovery talks about the different types of faults that can present in hardware and software, and how they might affect service availability. The ultimate goal of the service is to be able to survive faults without significantly affecting availability, either through overprovisioning or graceful degradation of service&nbsp;quality.</p>
+<h2>Problems&nbsp;presented</h2>
+<h4>Hardware/software&nbsp;scaling</h4>
+<ul>
+<li>How low can you go? Small nodes are more cost-efficient than beefy ones in terms of computation-per-watt and price-per-computation, but might start becoming a bottleneck due to the limits of request parallelism. Further parallelization of an application can be really painful, and having to deal with coordination between more nodes has its drawbacks. Never forget Amdahl&#8217;s Law: if the serial parts of your program dominate, and you&#8217;re running that serial code on slow nodes, your program is going to run slowly too. Beefy nodes can run the serial part&nbsp;quickly.</li>
+<li>Another point about small nodes is that they are harder to schedule efficiently. Resources effectively get fragmented; there might not be enough left on a small node to schedule a new task. Big nodes pack more&nbsp;efficiently.</li>
+</ul>
+<h4>Operations</h4>
+<h4>Fault-tolerance</h4>
+<h2>Tradeoffs</h2>
+<ul>
+<li>Programming cost vs. hardware cost. Can speed up either by throwing programmers at a problem (squeeze more parallelism from the code), or by buying better hardware (run the same code faster). This is an economic balancing&nbsp;act.</li>
+<li />
+</ul>
+<h2>Impact</h2>
+<p>Amdahl&#8217;s law and the limits of parallelism
+low end vs. high end server tradeoffs
+<em>   request level parallelism is slower on low end
+</em>   low end is more power efficient, but harder to run at high load
+<em>   low end is more cost effective
+</em>   low end can be better when I/O bound, wider bus
+software/hardware codesign
+fungible resources are the&nbsp;best</p>
+<p>cooling is a major concern
+hot and cold aisles, pressurized cold air in the floor goes through perforated floor tiles
+<span class="caps">UPS</span> are generally not actually on the datacenter floor, they&#8217;re instead external and the power distribution unit (<span class="caps">PDU</span>) is near the racks
+Coolant is cooled back down via a chiller tower, or &#8220;free cooling&#8221; using the external environment
+cooling costs can be really expensive: 40% of load
+in-rack cooling is more effective at increasing power density, but has concerns about spillage of coolant onto the datacenter floor
+container-based datacenters are also really effective at increasing power&nbsp;density</p>
+<p>only need about 4 9s of fault tolerance, since you&#8217;re also subject to internet outages.
+fault tolerance is a nice property to have, since it masks failures and makes upgrades easier
+most faults are caused by software errors, not hardware. machines last 6 years between faults on average.
+being fault-tolerant makes repairs less urgent and uses technicians more&nbsp;efficiently</p>
 <!-- Hyde::Article::End -->
 
 			
@@ -91,8 +132,8 @@ This site is still very much under development, I have lots of ideas for neat fe
     var disqus_shortname = 'umbrant'; // required: replace example with your forum shortname
 
     // The following are highly recommended additional parameters. Remove the slashes in front to use.
-    var disqus_identifier = '/blog/2011/hello_world.html';
-    var disqus_url = 'http://www.umbrant.com/blog/2011/hello_world.html';
+    var disqus_identifier = '/blog/2011/datacenter_as_a_computer_3_4_7_review.html';
+    var disqus_url = 'http://www.umbrant.com/blog/2011/datacenter_as_a_computer_3_4_7_review.html';
     //var disqus_developer = 1;
 
     /* * * DON'T EDIT BELOW THIS LINE * * */
