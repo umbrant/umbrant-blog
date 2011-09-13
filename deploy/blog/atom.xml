@@ -1,5 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>umbrant blog</title><link href="http://www.umbrant.com/blog/atom.xml" rel="self"/><link href="http://www.umbrant.com"/><updated>2011-09-08T20:34:42Z</updated><id>http://www.umbrant.com</id><entry><title>Paper review: The Datacenter as a Computer Ch. 3, 4, 7</title><author><name>Andrew Wang</name></author><link href="http://www.umbrant.com/blog/2011/datacenter_as_a_computer_3_4_7_review.html"/><updated>2011-09-08T20:31:00Z</updated><published>2011-09-08T20:31:00Z</published><id>http://www.umbrant.com/blog/2011/datacenter_as_a_computer_3_4_7_review.html</id><content type="html">
+<feed xmlns="http://www.w3.org/2005/Atom"><title>umbrant blog</title><link href="http://www.umbrant.com/blog/atom.xml" rel="self"/><link href="http://www.umbrant.com"/><updated>2011-09-12T20:26:10Z</updated><id>http://www.umbrant.com</id><entry><title>Paper review: Amdahl&#39;s Law in the Multicore Era</title><author><name>Andrew Wang</name></author><link href="http://www.umbrant.com/blog/2011/amdahls_law_review.html"/><updated>2011-09-11T19:08:00Z</updated><published>2011-09-11T19:08:00Z</published><id>http://www.umbrant.com/blog/2011/amdahls_law_review.html</id><content type="html">
+       
+
+&lt;!-- Hyde::Excerpt::Begin --&gt;
+
+&lt;p&gt;This is a paper review of &amp;#8220;Amdahl&amp;#8217;s Law in the Multicore Era&amp;#8221;, by Hill and&amp;nbsp;Marty.&lt;/p&gt;
+&lt;!-- Hyde::Excerpt::End --&gt;
+
+&lt;h3&gt;Main&amp;nbsp;ideas&lt;/h3&gt;
+&lt;p&gt;There are two important equations in this paper that lay the foundation for the rest of the paper: Amdahl&amp;#8217;s law, and the processor performance&amp;nbsp;law.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;speedup = 1 / ((1-f + f/s)
+perf(r) = sqrt(r)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;These two equations have some deep implications. Starting with the latter, there are diminishing returns from investing more chip resources to single core performance. It&amp;#8217;s the reason why per-core performance has basically peaked in recent years, and everything is moving toward multicore. Adding more cache and beefing up adders can only do so much; since clock rates have peaked because of power limitations, we&amp;#8217;re basically stuck with the per-core performance we&amp;#8217;ve&amp;nbsp;got.&lt;/p&gt;
+&lt;p&gt;Moving on to Amdahl&amp;#8217;s law, &lt;code&gt;f&lt;/code&gt; is the fraction of a program that is parallelizable, and &lt;code&gt;s&lt;/code&gt; is the speedup of the parallelizable part. Interpreting this, we see there are essentially three ways of making your program run&amp;nbsp;faster:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Run the serial part faster (&lt;code&gt;1-f&lt;/code&gt; component)&lt;/li&gt;
+&lt;li&gt;Make &lt;code&gt;s&lt;/code&gt; bigger (increase the granularity of&amp;nbsp;parallelism)&lt;/li&gt;
+&lt;li&gt;Make &lt;code&gt;f&lt;/code&gt; bigger (parallelize serial parts of the&amp;nbsp;code)&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;Combining both equations, what are the limitations we&amp;nbsp;see?&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Running the serial part faster gets expensive quickly in terms of chip&amp;nbsp;resources.&lt;/li&gt;
+&lt;li&gt;Increasing the granularity of parallelism is a great approach, but only works really well for data-parallel tasks like serving webpages. Going beyond this natural parallelism into true fine-grained parallelism is expensive and&amp;nbsp;limited.&lt;/li&gt;
+&lt;li&gt;Parallelizing serial parts of the code is also a great approach, but similarly limited. Some serial code simply can&amp;#8217;t be parallelized, and there&amp;#8217;s the same diminishing returns effect in terms of programmer&amp;nbsp;time.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;The article goes on to talk about different ways of allocating chip resources in light of these two laws, covering the symmetric, asymmetric, and dynamic multicore chips. Basically, favoring bigger cores makes the serial part run faster, but reduces the number of ways you can split the parallel part, with smaller cores having the opposite effect. 
+The net result of the paper is that it all depends on your workload. Asymmetric and dynamic multicore offer better performance characteristics than symmetric since they can better handle both the serial and parallel parts of a program&amp;nbsp;well.&lt;/p&gt;
+&lt;p&gt;Applying this to cloud computing, we see that there are a lot of parallels between multicore and cloud computing. Instead of getting speedup by parallelizing at the level of instructions in a program, web services are typically scaled through request-level parallelism: distributing requests among a cluster of machines. In this case, the &lt;code&gt;1-f&lt;/code&gt; factor in Amdahl&amp;#8217;s law can be effectively zero, since requests can be handled independently by each&amp;nbsp;machine.&lt;/p&gt;
+&lt;p&gt;The ideas of asymmetric cores is also already seen in request-level parallelism since bigger tasks can be allocated to bigger&amp;nbsp;machines.&lt;/p&gt;
+&lt;h3&gt;Future&amp;nbsp;trends&lt;/h3&gt;
+&lt;p&gt;Servers processors are going to be manycore in the future, whether we want it or not. Peak per-core performance is probably not going to increase, and I don&amp;#8217;t hold out much hope for the effectiveness of dynamic multicore, but I think there&amp;#8217;s a strong argument for asymmetric multicore since there are demonstrated benefits over symmetric. Big cores will be used for serial computation, with data-parallel parts off-loaded to small cores as possible. This is also better for the coming scarcity of memory bandwidth; having big cores that can use it more effectively makes&amp;nbsp;sense.&lt;/p&gt;
+&lt;p&gt;This also lends flexibility into request handling, since high-priority tasks can get the big core while latency-tolerant operations can run on a small core. The big problem here is going to be performance isolation for shared resources like mem, disk, and network; with more threads, there&amp;#8217;s more contention, and potentially more variability in performance (which is the killer). Scheduling also becomes more difficult, since &amp;#8220;slots&amp;#8221; on the same machine are now unequal in&amp;nbsp;size.&lt;/p&gt;
+&lt;p&gt;For batch processing (like Hadoop), throughput matters more than latency. Here, &lt;span class=&quot;caps&quot;&gt;SMP&lt;/span&gt; is the name of the game: we want to optimize &lt;code&gt;perf(r)&lt;/code&gt; and have a bunch of wimpy cores. I still worry about I/O demands on durable storage, since &lt;span class=&quot;caps&quot;&gt;HDD&lt;/span&gt; throughput doesn&amp;#8217;t seem to be increasing at the same rate that cores are being&amp;nbsp;added.&lt;/p&gt;
+&lt;p&gt;Software stack&amp;nbsp;predictions:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;We&amp;#8217;re going to see a focus on better asymmetric-aware, load-based cluster scheduling algorithms. This needs to balance out I/O load&amp;nbsp;too.&lt;/li&gt;
+&lt;li&gt;We&amp;#8217;re going to see moderate fine-grained parallelism added to existing request-level parallelism, since it&amp;#8217;s the real only way of reducing&amp;nbsp;latency. &lt;/li&gt;
+&lt;li&gt;As a corollary, I think there&amp;#8217;s going to be a big focus on performance isolation even at the cost of throughput, since variation in latency is the real&amp;nbsp;killer.&lt;/li&gt;
+&lt;li&gt;MapReduce as a programming model and framework probably will not go away, but we&amp;#8217;re going to see mappers making better use of multi-core. Whether this is going to be MapReduce-in-MapReduce or OpenMP-in-MapReduce or Pthreads-in-MapReduce is unclear, but it makes sense to further break down an already data-parallel task into core-sized&amp;nbsp;chunks.&lt;/li&gt;
+&lt;/ul&gt;
+
+   </content></entry><entry><title>Paper review: The Datacenter as a Computer Ch. 3, 4, 7</title><author><name>Andrew Wang</name></author><link href="http://www.umbrant.com/blog/2011/datacenter_as_a_computer_3_4_7_review.html"/><updated>2011-09-08T20:31:00Z</updated><published>2011-09-08T20:31:00Z</published><id>http://www.umbrant.com/blog/2011/datacenter_as_a_computer_3_4_7_review.html</id><content type="html">
        
 
 &lt;!-- Hyde::Excerpt::Begin --&gt;
