@@ -6,7 +6,7 @@
 	<head>
 		<title>
 			
-			Paper review: Warehouse-Scale Computing: Entering the Teenage Decade : umbrant
+			Paper review: Performance Modeling and Analysis of Flash-based Storage Devices : umbrant
 			
 		</title>
 
@@ -61,9 +61,9 @@
 	
 
 		<div class="post single">
-			<h2 class="title"><a href="">Paper review: Warehouse-Scale Computing: Entering the Teenage Decade</a></h2>
+			<h2 class="title"><a href="">Paper review: Performance Modeling and Analysis of Flash-based Storage Devices</a></h2>
 			
-			<p class="meta"><span class="date">September 6, 2011</span></p>
+			<p class="meta"><span class="date">September 12, 2011</span></p>
 			
 			<div class="entry">
 			
@@ -72,23 +72,12 @@
 
 <!-- Hyde::Excerpt::Begin -->
 
-<p>This review is based on a presentation by Luiz Andre Barroso from Google, titled &#8220;Warehouse-Scale Computing: Entering the Teenage Decade&#8221;. I believe it was given this past year (2011) at <span class="caps">FCRC</span>. I really strongly recommend it, since it talks about the operational issues in running a Google datacenter, and also identifies a lot of the research issues surrounding &#8220;warehouse-scale&nbsp;computation&#8221;.</p>
+<p>This is a paper review of &#8220;Performance Modeling and Analysis of Flash-based Storage Devices&#8221; by Huang et al. This paper compares and contrasts three different types of drives: a high-end Intel <span class="caps">SSD</span>, a low-end Samsung <span class="caps">SSD</span>, and a 5400 <span class="caps">RPM</span> Samsung <span class="caps">HDD</span>. My review focuses on the implications for cloud&nbsp;computing.</p>
 <!-- Hyde::Excerpt::End -->
 
-<h3>Key&nbsp;Points</h3>
-<p>There were a couple problems identified in the talk, some of which have been solved, some of which have not&nbsp;been.</p>
-<ul>
-<li>I/O latency variability right now is terrible, with basically all durable storage displaying a long latency tail. Random accesses to spinning disks are slow, flash writes are slow, and these high-latency events muck up the latency for potentially fast&nbsp;events.</li>
-<li>Network I/O suffers a similar problem. Using <span class="caps">TCP</span> and interrupts adds orders of magnitude of latency to network requests, making fast network hardware slow again in&nbsp;software.</li>
-<li>Datacenter power efficiency as defined by <span class="caps">PUE</span> (Power Usage Effectiveness) has gotten pretty good (&lt;10 percent is used on operational overhead). The real problem now is making better use of servers, to get <span class="caps">CPU</span> load up into the 80% range instead of the current&nbsp;30%.</li>
-<li>This leads into the another problem: how do you share all of the resources in a cluster among many different services, while also chopping off the latency&nbsp;tail?</li>
-</ul>
-<p>To summarize, there are two big ideas in the talk. First, latency and variation in latency are the key performance metrics for services these days; today&#8217;s web-based applications demand both to provide a good user experience. This may require reexamination of a lot of fundamental assumptions about <span class="caps">IO</span>. Second, increasing the utilization of resources in a cluster is important from an efficiency and performance standpoint. Server hardware should be a fungible resource that can be easily shared among different&nbsp;services.</p>
-<p>The differences here between warehouse-scale computing and datacenter-scale computing lie in scale and the type of user experience provided. Warehouse-scale computing operates in the many petabyte range, and allows for complete system integration of the hardware, software, power, and cooling of the cluster. The types of services hosted by a warehouse-scale computer are also scaled way up, in terms of the latency requirements and the size of the data that is being&nbsp;crunched.</p>
-<h3>Trade&nbsp;offs</h3>
-<p>One of the key tradeoffs mentioned was between latency and throughput. Most of the software stack for I/O these days is done to optimize throughput, done in response to relatively slow disks or networks. An example of this would be Nagle&#8217;s algorithm in <span class="caps">TCP</span>; small packets are delayed and batched to be sent in bulk, reducing <span class="caps">TCP</span> overhead (fewer bytes need to be sent) but also increasing latency. New technologies like flash and fast networks mean that these assumptions should be&nbsp;reexamined.</p>
-<h3>Long-term&nbsp;impact</h3>
-<p>Web-based services are here to stay, and I feel confident in saying that this is an area that is going to see yet more growth. Large internet companies like Google and Facebook are already dealing with these issues internally, and there are only going to be more warehouse-scale datacenters built. It&#8217;s clear that these are hard problems that aren&#8217;t going away because of some <em>deus ex machina</em> like Moore&#8217;s Law, so any solutions are likely to have a big&nbsp;impact.</p>
+<p>Solid state disks have to be treated kind of like black boxes when it comes to performance modeling. As is evident from comparing the Intel and Samsung SSDs, we can get wildly different performance characteristics depending on how the manufacturer has configured the Flash Translate Layer (<span class="caps">FTL</span>), which maps block requests to actual storage locations. This is important because the <span class="caps">FTL</span> acts as a pseudo-filesystem, and has the ability to decide how data is really laid out on the drive independent of the ordering presented to the operating system. This has deep implications for filesystem design (don&#8217;t bother minimizing seeks with reordering), and other characteristics of SSDs mean that coalescing and batching requests simply aren&#8217;t as&nbsp;effective.</p>
+<p>It seems really worthwhile for <span class="caps">SSD</span> vendors to invest in better <span class="caps">FTL</span> code, since the high-end Intel <span class="caps">SSD</span> appears almost unaffected performance-wise by the randomness of its workload. This indicates to me that it&#8217;s probably doing <span class="caps">LFS</span>-like block placement to try and minimize the number of writes and erases. This is in stark contrast to the Samsung <span class="caps">SSD</span>, which sees its random write performance get trounced by&nbsp;sequential.</p>
+<p>I think there&#8217;s definitely space for SSDs in the storage hierarchy on the cloud. It&#8217;s safe to assume future SSDs will have <span class="caps">FTL</span> firmware with performance similar to the Intel <span class="caps">SSD</span>, so we&#8217;re basically gaining a tier that has strictly better performance characteristics than hard disk drives. It won&#8217;t displace HDDs entirely since the price/<span class="caps">GB</span> is still way higher and the amount of data is only growing, but it does sit sort of nicely between memory and HDDs. There&#8217;s less of a value argument for MapReduce (an application designed specifically to make good use of HDDs by doing large sequential reads), but for more random workloads (thinking of <span class="caps">OLTP</span>, or web caches) SSDs will be a big win. The limitations on the number of write cycles could be a problem, but can be countered through schemes like unbalancing writes to a single <span class="caps">SSD</span> in an array (making it fail first reliably, which is better), or by ironically sticking a <span class="caps">HDD</span> in front to buffer&nbsp;writes.</p>
 <!-- Hyde::Article::End -->
 
 			
@@ -103,8 +92,8 @@
     var disqus_shortname = 'umbrant'; // required: replace example with your forum shortname
 
     // The following are highly recommended additional parameters. Remove the slashes in front to use.
-    var disqus_identifier = '/blog/2011/warehouse_scale_computing_summary.html';
-    var disqus_url = 'http://www.umbrant.com/blog/2011/warehouse_scale_computing_summary.html';
+    var disqus_identifier = '/blog/2011/performance_modeling_and_analysis_of_flash_review.html';
+    var disqus_url = 'http://www.umbrant.com/blog/2011/performance_modeling_and_analysis_of_flash_review.html';
     //var disqus_developer = 1;
 
     /* * * DON'T EDIT BELOW THIS LINE * * */

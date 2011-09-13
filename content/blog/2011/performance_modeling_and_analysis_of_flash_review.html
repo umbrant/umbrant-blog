@@ -1,0 +1,28 @@
+{% extends "_post.html" %}
+
+{%load webdesign %}
+
+{%hyde
+    title: "Paper review: Performance Modeling and Analysis of Flash-based Storage Devices"
+    created: 2011-09-12 23:43:00
+%}
+
+{% block article %}
+
+{%article%}
+
+{% excerpt %}
+
+This is a paper review of "Performance Modeling and Analysis of Flash-based Storage Devices" by Huang et al. This paper compares and contrasts three different types of drives: a high-end Intel SSD, a low-end Samsung SSD, and a 5400 RPM Samsung HDD. My review focuses on the implications for cloud computing.
+
+{%endexcerpt%}
+
+Solid state disks have to be treated kind of like black boxes when it comes to performance modeling. As is evident from comparing the Intel and Samsung SSDs, we can get wildly different performance characteristics depending on how the manufacturer has configured the Flash Translate Layer (FTL), which maps block requests to actual storage locations. This is important because the FTL acts as a pseudo-filesystem, and has the ability to decide how data is really laid out on the drive independent of the ordering presented to the operating system. This has deep implications for filesystem design (don't bother minimizing seeks with reordering), and other characteristics of SSDs mean that coalescing and batching requests simply aren't as effective.
+
+It seems really worthwhile for SSD vendors to invest in better FTL code, since the high-end Intel SSD appears almost unaffected performance-wise by the randomness of its workload. This indicates to me that it's probably doing LFS-like block placement to try and minimize the number of writes and erases. This is in stark contrast to the Samsung SSD, which sees its random write performance get trounced by sequential.
+
+I think there's definitely space for SSDs in the storage hierarchy on the cloud. It's safe to assume future SSDs will have FTL firmware with performance similar to the Intel SSD, so we're basically gaining a tier that has strictly better performance characteristics than hard disk drives. It won't displace HDDs entirely since the price/GB is still way higher and the amount of data is only growing, but it does sit sort of nicely between memory and HDDs. There's less of a value argument for MapReduce (an application designed specifically to make good use of HDDs by doing large sequential reads), but for more random workloads (thinking of OLTP, or web caches) SSDs will be a big win. The limitations on the number of write cycles could be a problem, but can be countered through schemes like unbalancing writes to a single SSD in an array (making it fail first reliably, which is better), or by ironically sticking a HDD in front to buffer writes.
+
+{%endarticle%}
+
+{% endblock %}
