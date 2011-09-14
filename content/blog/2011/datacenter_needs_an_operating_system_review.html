@@ -1,0 +1,43 @@
+{% extends "_post.html" %}
+
+{%load webdesign %}
+
+{%hyde
+    title: "Paper review: The Datacenter Needs an Operating System"
+    created: 2011-09-14 11:40:00
+%}
+
+{% block article %}
+
+{%article%}
+
+{% excerpt %}
+
+This is a paper review of "The Datacenter Needs an Operating System" by Zaharia et al. This is a short 5 page paper published at HotCloud 2011.
+
+{%endexcerpt%}
+
+### Main ideas
+
+This is a high-level ideas paper focusing on the abstractions that should be provided in a cluster programming environment. The authors identify the following as the core traits of traditional operating systems:
+
+* Resource sharing
+* Data sharing between programs
+* Programming abstractions for software development
+* Debugging and monitoring
+
+The authors argue that these same things should be provided to cluster applications as a common layer, instead of having each programming paradigm separately implement them in an adhoc fashion. If I interpret the article correctly, they want to provide a common set of abstractions on top of which programming models like MapReduce or Dryad can be built, benefiting from code sharing as well as more efficient utilization.
+
+### Problems
+
+What I really would have liked to have seen (perhaps in a longer paper) is more of a focus on where the abstractions are going to be drawn between the "datacenter OS" and the "datacenter application". This is a classic problem in traditional OS literature (should it be in the kernel, or in user space?), and I'm betting we'll see the same theme being explored here. Since all these different frameworks already exist, the initial question is figuring out what can actually be pushed down into the OS.
+
+Debugging is one issue raised that none of the computing frameworks have really solved, so that's the least-defined problem on the list in my mind. Scheduling and resource sharing are difficult, but approachable.
+
+### Future impact
+
+Highly relevant. A proper datacenter operating system enables higher utilization, better performance, and an easier programming environment. As stated before, cloud computing is only becoming more prevalent and important.
+
+{%endarticle%}
+
+{% endblock %}

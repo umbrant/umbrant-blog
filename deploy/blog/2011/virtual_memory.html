@@ -72,34 +72,34 @@
 
 <!-- Hyde::Excerpt::Begin -->
 
-<p>I&#8217;m taking the <span class="caps">OS</span> prelim this fall, which means I have to read ~100 papers this summer for background material. Since repetition aids retention, I&#8217;m putting notes for papers I read up on my blog. The topics are wide-ranging, so I&#8217;m trying to start with the fundamentals and then move on up to the whole-system&nbsp;papers.</p>
-<p>I&#8217;m kicking it off with &#8220;Virtual Memory, Processes, and Sharing in <span class="caps">MULTICS</span>&#8221; by Daley and Dennis (1968) and &#8220;The Multics Virtual Memory: Concepts and Design&#8221; by Bensoussan, Clingen, and Daley (1972). Learn about the joys of segmentation and dynamic linking from classic papers from the 70s! These are slightly infamous papers for some systems students here at Berkeley, due to a certain past <span class="caps">OS</span> prelim examiner grilling them on exactly these&nbsp;details.</p>
+<p>I'm taking the OS prelim this fall, which means I have to read ~100 papers this summer for background material. Since repetition aids retention, I'm putting notes for papers I read up on my blog. The topics are wide-ranging, so I'm trying to start with the fundamentals and then move on up to the whole-system&nbsp;papers.</p>
+<p>I'm kicking it off with "Virtual Memory, Processes, and Sharing in MULTICS" by Daley and Dennis (1968) and "The Multics Virtual Memory: Concepts and Design" by Bensoussan, Clingen, and Daley (1972). Learn about the joys of segmentation and dynamic linking from classic papers from the 70s! These are slightly infamous papers for some systems students here at Berkeley, due to a certain past OS prelim examiner grilling them on exactly these&nbsp;details.</p>
 <!-- Hyde::Excerpt::End -->
 
 <h3>Background&nbsp;Review</h3>
-<p>Some people consider <a href="http://en.wikipedia.org/wiki/Memory_segmentation">segmentation</a> to be the most natural way of structuring a program. Most programs are basically a collection of libraries (something really true in modern software engineering). In a segmented virtual memory system, each distinct library is placed in its own separate segment such that it has its own address space. They&#8217;re still all mapped unto the same flat physical memory address space, but through per-segment base and offset&nbsp;addresses.</p>
-<p>This isn&#8217;t actually used much in modern operating systems for reasons I&#8217;m not entirely aware of (I&#8217;d guess simplicity and performance), but it&#8217;s a pleasingly abstract and indirect way of organizing a program (a hallmark of&nbsp;Multics).</p>
-<h3>Virtual Memory, Processes, and Sharing in&nbsp;<span class="caps">MULTICS</span></h3>
-<p>Multics structured its programs in terms of segments, which could be read/write/execute protected. Segmentation is great for doing memory protection (and something that only recently reemerged as the <a href="http://en.wikipedia.org/wiki/NX_bit"><span class="caps">NX</span> bit</a> for flat memory models), since it&#8217;s easy to do a compare on any <code>(base+offset)</code> calculation and see if it falls into a protected range. Segments can still of course be paged, and segmentation and paging are complementary: segmentation for protection, and paging for working set&nbsp;management.</p>
+<p>Some people consider <a href="http://en.wikipedia.org/wiki/Memory_segmentation">segmentation</a> to be the most natural way of structuring a program. Most programs are basically a collection of libraries (something really true in modern software engineering). In a segmented virtual memory system, each distinct library is placed in its own separate segment such that it has its own address space. They're still all mapped unto the same flat physical memory address space, but through per-segment base and offset&nbsp;addresses.</p>
+<p>This isn't actually used much in modern operating systems for reasons I'm not entirely aware of (I'd guess simplicity and performance), but it's a pleasingly abstract and indirect way of organizing a program (a hallmark of&nbsp;Multics).</p>
+<h3>Virtual Memory, Processes, and Sharing in&nbsp;MULTICS</h3>
+<p>Multics structured its programs in terms of segments, which could be read/write/execute protected. Segmentation is great for doing memory protection (and something that only recently reemerged as the <a href="http://en.wikipedia.org/wiki/NX_bit">NX bit</a> for flat memory models), since it's easy to do a compare on any <code>(base+offset)</code> calculation and see if it falls into a protected range. Segments can still of course be paged, and segmentation and paging are complementary: segmentation for protection, and paging for working set&nbsp;management.</p>
 <p>Addressing in Multics is done in terms of a <em>generalized address</em>: <code>(segment num + word num)</code>. The segment number of the currently executing segment is stored in the <em>procedure base register</em>, so most instructions just need to specify a word number. Indirect addressing (i.e. referencing an address stored at an address) is done with a pair of instructions to have enough bits: one for the segment number, one for the word&nbsp;number.</p>
 <p>A <em>descriptor table</em> is kept of all the segments in a program to map them to hardware addresses. This table maps seg nums to a physical address, and then adds the word num as the offset. This is similar to a page table: virtual to physical address translation. A pointer to the descriptor table is saved as part of the context information of the&nbsp;process.</p>
-<p>Now for the complicated bits: dynamic linking. Clearly, we don&#8217;t want each program to have to have its own copy of shared segments (say, libc), and we want some abstraction so we aren&#8217;t hardcoding word numbers into our program. This also needs to work for segments linking to other segments which link to other segments, etc., so it gets a little hairy. We also want this to be reasonably fast, e.g. don&#8217;t do multiple memory accesses for every dynamically linked call, at least after the first time. In list&nbsp;form:</p>
+<p>Now for the complicated bits: dynamic linking. Clearly, we don't want each program to have to have its own copy of shared segments (say, libc), and we want some abstraction so we aren't hardcoding word numbers into our program. This also needs to work for segments linking to other segments which link to other segments, etc., so it gets a little hairy. We also want this to be reasonably fast, e.g. don't do multiple memory accesses for every dynamically linked call, at least after the first time. In list&nbsp;form:</p>
 <ul>
 <li>Dynamically linked accesses are specially marked in the program&nbsp;text</li>
 <li>Dynamically linked segments are present at a well-know <em>path name</em>, e.g. in Linux <code>/usr/lib/ld-linux.so.2</code>, that the system can search for and find (see&nbsp;LD_LIBRARY_PATH).</li>
 <li>Each segments presents a <em>symbol table</em>, which defines the call-in points for the segment (static vars, functions,&nbsp;etc)</li>
-<li>Initially, all calls to an external function are to an indirect reference stored as <em>link data</em> in a per-segment <em>linkage table</em>. This table is initially set to trap to an <span class="caps">OS</span> lookup&nbsp;function. </li>
+<li>Initially, all calls to an external function are to an indirect reference stored as <em>link data</em> in a per-segment <em>linkage table</em>. This table is initially set to trap to an OS lookup&nbsp;function. </li>
 <li>A <em>linkage pointer</em> to the <em>linkage table</em> is maintained to switch around the table as context changes to different&nbsp;segments.</li>
-<li>On the first reference, the <span class="caps">OS</span> lookup function finds the file of the external segment, examines its symbol table, and then <em>links</em> the two segments by updating the link data in the linkage table. Future references use that indirect address to go straight to the external&nbsp;segment.</li>
-<li>A further complication enters when switching the linkage pointers between linked segments. To determine the new value for the linkage pointer, the calling procedure actually calls into the new segment&#8217;s linkage table, which has special instructions to fixup the linkage pointer and then call the called procedure.<ul>
-<li>Thus: Caller -&gt; Caller&#8217;s linkage table ~&gt; Callee&#8217;s linkage table ~&gt;&nbsp;Callee</li>
-<li>This is direct -&gt; indirect -&gt; indirect, plus a fixup, seems&nbsp;expensive&#8230;</li>
+<li>On the first reference, the OS lookup function finds the file of the external segment, examines its symbol table, and then <em>links</em> the two segments by updating the link data in the linkage table. Future references use that indirect address to go straight to the external&nbsp;segment.</li>
+<li>A further complication enters when switching the linkage pointers between linked segments. To determine the new value for the linkage pointer, the calling procedure actually calls into the new segment's linkage table, which has special instructions to fixup the linkage pointer and then call the called procedure.<ul>
+<li>Thus: Caller -&gt; Caller's linkage table ~&gt; Callee's linkage table ~&gt;&nbsp;Callee</li>
+<li>This is direct -&gt; indirect -&gt; indirect, plus a fixup, seems&nbsp;expensive...</li>
 </ul>
 </li>
 </ul>
-<p>This really isn&#8217;t that different from how Linux does it, the basic idea of &#8220;keep a well-known table that fixes itself on the first reference&#8221; is a winner. I feel like there are a lot of memory accesses required to traverse all these layers of indirection, since you are calling through multiple layers of indirect addressing, each of which is a pair of&nbsp;instructions.</p>
+<p>This really isn't that different from how Linux does it, the basic idea of "keep a well-known table that fixes itself on the first reference" is a winner. I feel like there are a lot of memory accesses required to traverse all these layers of indirection, since you are calling through multiple layers of indirect addressing, each of which is a pair of&nbsp;instructions.</p>
 <h3>The Multics Virtual Memory: Concepts and&nbsp;Design</h3>
-<p>It&#8217;s weird to hear that back in the days of yore, files could not be easily loaded as program text, and the idea of virtual memory for protection, abstraction, and programmer benefit was a new idea. Users were just allocated a range of memory, or <em>core image</em>, with no sharing between users; if you wanted to work on a &#8220;shared file&#8221;, that meant doing I/O to copy it into your range, and then another I/O to put it back into the filesystem. Each user&#8217;s core image was also an unstructured jumble of instructions and data, which makes system-level sharing and memory protection basically&nbsp;impossible.</p>
+<p>It's weird to hear that back in the days of yore, files could not be easily loaded as program text, and the idea of virtual memory for protection, abstraction, and programmer benefit was a new idea. Users were just allocated a range of memory, or <em>core image</em>, with no sharing between users; if you wanted to work on a "shared file", that meant doing I/O to copy it into your range, and then another I/O to put it back into the filesystem. Each user's core image was also an unstructured jumble of instructions and data, which makes system-level sharing and memory protection basically&nbsp;impossible.</p>
 <p>These two goals motivated the design of virtual memory in Multics: sharing and protection. This led to the <em>segmentation</em>, where each segment appears as a flat, linear namespace to the user program, with read/write/execute/append access rights attached as metadata to the&nbsp;segment.</p>
 <p>Segments are also paged to ease the allocation problem and to support large segments. <em>Descriptor segments</em> (aka descriptor tables) are also paged for good reason, meaning 4 memory lookups to access a memory location, going through two page tables (one for the descriptor, one for the segment). TLBs work here, but it still sounds slow. Page tables are also a static size, not a&nbsp;tree.</p>
 <p>This paper is a decent overview of Multics, probably would have made sense to read it before the dynamic linking&nbsp;one.</p>
@@ -164,6 +164,10 @@
 					
 					
 						
+						<li><a href="/blog/2011/datacenter_needs_an_operating_system_review.html">Paper review: The Datacenter Needs an Operating System</a></li>
+						
+					
+						
 						<li><a href="/blog/2011/performance_modeling_and_analysis_of_flash_review.html">Paper review: Performance Modeling and Analysis of Flash-based Storage Devices</a></li>
 						
 					
@@ -181,10 +185,6 @@
 					
 						
 						<li><a href="/blog/2011/warehouse_scale_computing_summary.html">Paper review: Warehouse-Scale Computing: Entering the Teenage Decade</a></li>
-						
-					
-						
-						<li><a href="/blog/2011/lottery_stride_scheduling.html">Lottery and stride scheduling</a></li>
 						
 					
 				
