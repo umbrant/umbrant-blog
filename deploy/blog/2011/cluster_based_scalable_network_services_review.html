@@ -6,7 +6,7 @@
 	<head>
 		<title>
 			
-			Paper review: Warehouse-Scale Computing: Entering the Teenage Decade : umbrant
+			Paper review: Cluster-Based Scalable Network Services : umbrant
 			
 		</title>
 
@@ -61,9 +61,9 @@
 	
 
 		<div class="post single">
-			<h2 class="title"><a href="">Paper review: Warehouse-Scale Computing: Entering the Teenage Decade</a></h2>
+			<h2 class="title"><a href="">Paper review: Cluster-Based Scalable Network Services</a></h2>
 			
-			<p class="meta"><span class="date">September 6, 2011</span></p>
+			<p class="meta"><span class="date">September 22, 2011</span></p>
 			
 			<div class="entry">
 			
@@ -72,23 +72,16 @@
 
 <!-- Hyde::Excerpt::Begin -->
 
-<p>This review is based on a presentation by Luiz Andre Barroso from Google, titled "Warehouse-Scale Computing: Entering the Teenage Decade". I believe it was given this past year (2011) at FCRC. I really strongly recommend it, since it talks about the operational issues in running a Google datacenter, and also identifies a lot of the research issues surrounding "warehouse-scale&nbsp;computation".</p>
+<p>This is a paper review of "Cluster-Based Scalable Network Services" by Fox et al., published at SOSP in 1997. It describes an architecture for datacenter services that proved to be prescient, and used the Inktomi as an&nbsp;example.</p>
 <!-- Hyde::Excerpt::End -->
 
-<h3>Key&nbsp;Points</h3>
-<p>There were a couple problems identified in the talk, some of which have been solved, some of which have not&nbsp;been.</p>
-<ul>
-<li>I/O latency variability right now is terrible, with basically all durable storage displaying a long latency tail. Random accesses to spinning disks are slow, flash writes are slow, and these high-latency events muck up the latency for potentially fast&nbsp;events.</li>
-<li>Network I/O suffers a similar problem. Using TCP and interrupts adds orders of magnitude of latency to network requests, making fast network hardware slow again in&nbsp;software.</li>
-<li>Datacenter power efficiency as defined by PUE (Power Usage Effectiveness) has gotten pretty good (&lt;10 percent is used on operational overhead). The real problem now is making better use of servers, to get CPU load up into the 80% range instead of the current&nbsp;30%.</li>
-<li>This leads into the another problem: how do you share all of the resources in a cluster among many different services, while also chopping off the latency&nbsp;tail?</li>
-</ul>
-<p>To summarize, there are two big ideas in the talk. First, latency and variation in latency are the key performance metrics for services these days; today's web-based applications demand both to provide a good user experience. This may require reexamination of a lot of fundamental assumptions about IO. Second, increasing the utilization of resources in a cluster is important from an efficiency and performance standpoint. Server hardware should be a fungible resource that can be easily shared among different&nbsp;services.</p>
-<p>The differences here between warehouse-scale computing and datacenter-scale computing lie in scale and the type of user experience provided. Warehouse-scale computing operates in the many petabyte range, and allows for complete system integration of the hardware, software, power, and cooling of the cluster. The types of services hosted by a warehouse-scale computer are also scaled way up, in terms of the latency requirements and the size of the data that is being&nbsp;crunched.</p>
-<h3>Trade&nbsp;offs</h3>
-<p>One of the key tradeoffs mentioned was between latency and throughput. Most of the software stack for I/O these days is done to optimize throughput, done in response to relatively slow disks or networks. An example of this would be Nagle's algorithm in TCP; small packets are delayed and batched to be sent in bulk, reducing TCP overhead (fewer bytes need to be sent) but also increasing latency. New technologies like flash and fast networks mean that these assumptions should be&nbsp;reexamined.</p>
-<h3>Long-term&nbsp;impact</h3>
-<p>Web-based services are here to stay, and I feel confident in saying that this is an area that is going to see yet more growth. Large internet companies like Google and Facebook are already dealing with these issues internally, and there are only going to be more warehouse-scale datacenters built. It's clear that these are hard problems that aren't going away because of some <em>deus ex machina</em> like Moore's Law, so any solutions are likely to have a big&nbsp;impact.</p>
+<h2>Main&nbsp;ideas</h2>
+<p>This paper has to be put into context. At this point there was still contention whether "clusters of workstations" was the right approach for handling web-sized workloads. Inktomi was at the forefront of saying that yes, clusters were the right choice, and this paper demonstrates why this is true, and how datacenter services can be structured to achieve their key goals: <em>scalability</em>, <em>availability</em>, and <em>cost effectiveness</em> by using consistency semantics weaker than ACID:&nbsp;BASE.</p>
+<p>The advantages of clusters are manyfold. They allow easy incremental scaling and upgrading, they can be build out of commodity parts, and they have natural redundancy through replication. Disadvantages are primarily in the programming model and management; it can be difficult to harness a group of machines to complete a task, and since it's a distributed system, there are issues with data consistency and&nbsp;failures.</p>
+<p>The idea of BASE is a crucial component of this. BASE stands for <strong>B</strong>asically <strong>A</strong>vailable, <strong>S</strong>oft state, <strong>E</strong>ventual consistency. This is a significant relaxation of strict ACID semantics, since it allows servers to temporarily serve stale data while state converges. This is allows better performance, and many applications do not require strict ACID semantics to provide a good user&nbsp;experience.</p>
+<p>The cluster architecture proposed also looks shockingly similar to what is in use today. Within a datacenter, machines are split into two major groups: front-end and workers. Front-ends handle actual client requests from outside the datacenter. To handle a client request, a front-end might harness a number of workers running different services to get data or do computation, before assembling and returning the response. This allows all the front-ends to share from the same pool of stateless workers which is good for utilization, and also allows pools of workers to be scaled up and down in response to&nbsp;overload.</p>
+<h2>Future trends and&nbsp;relevance</h2>
+<p>Seeing how Brewer wrote this paper in 1997 and we're still using roughly the same architecture today in 2011, I don't think there's any doubt that the paper had a lot of future relevance. I think there's still room for improvement in the cluster management side of things (Mesos), but the idea of clusters for datacenters has reached complete acceptance. Interestingly though, we're seeing the return of "big iron" to the datacenter for some applications. People are starting to wonder about the possibilities offered by a machine with 1TB of memory (purchasable today), and the "disk is tape, memory is disk" argument along with a strong focus on latency might lead to further development on the cluster programming model front. SSDs present yet another level in the storage hierarchy with unique cost and performance&nbsp;tradeoffs.</p>
 <!-- Hyde::Article::End -->
 
 			
@@ -103,8 +96,8 @@
     var disqus_shortname = 'umbrant'; // required: replace example with your forum shortname
 
     // The following are highly recommended additional parameters. Remove the slashes in front to use.
-    var disqus_identifier = '/blog/2011/warehouse_scale_computing_summary.html';
-    var disqus_url = 'http://www.umbrant.com/blog/2011/warehouse_scale_computing_summary.html';
+    var disqus_identifier = '/blog/2011/cluster_based_scalable_network_services_review.html';
+    var disqus_url = 'http://www.umbrant.com/blog/2011/cluster_based_scalable_network_services_review.html';
     //var disqus_developer = 1;
 
     /* * * DON'T EDIT BELOW THIS LINE * * */

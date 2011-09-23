@@ -6,7 +6,7 @@
 	<head>
 		<title>
 			
-			Paper review: Warehouse-Scale Computing: Entering the Teenage Decade : umbrant
+			Paper review: Paxos, Paxos, and Chubby : umbrant
 			
 		</title>
 
@@ -61,9 +61,9 @@
 	
 
 		<div class="post single">
-			<h2 class="title"><a href="">Paper review: Warehouse-Scale Computing: Entering the Teenage Decade</a></h2>
+			<h2 class="title"><a href="">Paper review: Paxos, Paxos, and Chubby</a></h2>
 			
-			<p class="meta"><span class="date">September 6, 2011</span></p>
+			<p class="meta"><span class="date">September 22, 2011</span></p>
 			
 			<div class="entry">
 			
@@ -72,23 +72,39 @@
 
 <!-- Hyde::Excerpt::Begin -->
 
-<p>This review is based on a presentation by Luiz Andre Barroso from Google, titled "Warehouse-Scale Computing: Entering the Teenage Decade". I believe it was given this past year (2011) at FCRC. I really strongly recommend it, since it talks about the operational issues in running a Google datacenter, and also identifies a lot of the research issues surrounding "warehouse-scale&nbsp;computation".</p>
+<p>I'm combining my paper reviews this time, since they are pretty closely&nbsp;coupled:</p>
+<ul>
+<li><span class="dquo">"</span>Paxos Made Simple", Lamport,&nbsp;2001</li>
+<li><span class="dquo">"</span>Paxos Made Practical", Mazieres,&nbsp;2007</li>
+<li><span class="dquo">"</span>The Chubby Lock Service for Loosely-coupled Distributed Systems", Burrows,&nbsp;2006</li>
+</ul>
 <!-- Hyde::Excerpt::End -->
 
-<h3>Key&nbsp;Points</h3>
-<p>There were a couple problems identified in the talk, some of which have been solved, some of which have not&nbsp;been.</p>
+<h2>Paxos Made&nbsp;Simple</h2>
+<p>Paxos is a distributed consensus algorithm. At it's essence, it's a quorum-based fault-tolerant way of arriving at a single consistent value among a group of machines. This can be used to do leader election (consensus on who's the master), or synchronous strong consistency (replicating writes in a distributed database). In the case of Chubby, it's used for both: determining who holds a lock (leader election), and serving strongly consistent small&nbsp;files.</p>
+<p>Paxos has two basic types of&nbsp;actors:</p>
 <ul>
-<li>I/O latency variability right now is terrible, with basically all durable storage displaying a long latency tail. Random accesses to spinning disks are slow, flash writes are slow, and these high-latency events muck up the latency for potentially fast&nbsp;events.</li>
-<li>Network I/O suffers a similar problem. Using TCP and interrupts adds orders of magnitude of latency to network requests, making fast network hardware slow again in&nbsp;software.</li>
-<li>Datacenter power efficiency as defined by PUE (Power Usage Effectiveness) has gotten pretty good (&lt;10 percent is used on operational overhead). The real problem now is making better use of servers, to get CPU load up into the 80% range instead of the current&nbsp;30%.</li>
-<li>This leads into the another problem: how do you share all of the resources in a cluster among many different services, while also chopping off the latency&nbsp;tail?</li>
+<li><em>Proposers</em> are nodes that are trying to get a value accepted as the "true" value during a round of consensus. Normally, which node is the proposer is pretty stable, and only changes on&nbsp;failure.</li>
+<li><em>Acceptors</em> receive proposals from proposers, and vote as part of the quorum. They act as replicas for the global state of the&nbsp;system.</li>
 </ul>
-<p>To summarize, there are two big ideas in the talk. First, latency and variation in latency are the key performance metrics for services these days; today's web-based applications demand both to provide a good user experience. This may require reexamination of a lot of fundamental assumptions about IO. Second, increasing the utilization of resources in a cluster is important from an efficiency and performance standpoint. Server hardware should be a fungible resource that can be easily shared among different&nbsp;services.</p>
-<p>The differences here between warehouse-scale computing and datacenter-scale computing lie in scale and the type of user experience provided. Warehouse-scale computing operates in the many petabyte range, and allows for complete system integration of the hardware, software, power, and cooling of the cluster. The types of services hosted by a warehouse-scale computer are also scaled way up, in terms of the latency requirements and the size of the data that is being&nbsp;crunched.</p>
-<h3>Trade&nbsp;offs</h3>
-<p>One of the key tradeoffs mentioned was between latency and throughput. Most of the software stack for I/O these days is done to optimize throughput, done in response to relatively slow disks or networks. An example of this would be Nagle's algorithm in TCP; small packets are delayed and batched to be sent in bulk, reducing TCP overhead (fewer bytes need to be sent) but also increasing latency. New technologies like flash and fast networks mean that these assumptions should be&nbsp;reexamined.</p>
-<h3>Long-term&nbsp;impact</h3>
-<p>Web-based services are here to stay, and I feel confident in saying that this is an area that is going to see yet more growth. Large internet companies like Google and Facebook are already dealing with these issues internally, and there are only going to be more warehouse-scale datacenters built. It's clear that these are hard problems that aren't going away because of some <em>deus ex machina</em> like Moore's Law, so any solutions are likely to have a big&nbsp;impact.</p>
+<p>Paxos also has two rounds of communication. Here I'm showing the basic version. There are four types of messages here: propose, promise, accept, and&nbsp;accepted.</p>
+<ol>
+<li>Propose<ul>
+<li>The proposer sends a <em>proposal</em> to all the acceptors in the system, and waits for a reply. This proposal is tagged with a round number <strong>N</strong>, which has to increase each time this proposer makes a new proposal. A common thing to do is make this number out of the IP address and some local counter, so they are globally&nbsp;unique.</li>
+<li>The acceptors <em>promise</em> to accept the proposal if the proposal's <strong>N</strong> is the highest <strong>N</strong> they've seen from any proposer. A promise indicates that the acceptor will ignore any proposal with a lower number. This is so there's a total ordering on proposals; we don't care which proposer wins, we just want one to&nbsp;win. </li>
+</ul>
+</li>
+<li>Accept<ul>
+<li>If the proposer hears back from a quorum of acceptors, it sends out <em>accept</em> requests to the quorum with the value it wants to&nbsp;set.</li>
+<li>If the acceptor hasn't promised to a higher proposal number in the meantime, it tells the proposer it <em>accepted</em>.</li>
+</ul>
+</li>
+</ol>
+<p>If the proposer gets back a quorum of accepted messages, then it commits. At this point, it can further replicate the value to other nodes, or respond to the client that the operation worked. It's normal for all nodes in the system to in fact fulfill the roles of both proposer and acceptor as&nbsp;needed.</p>
+<p>There is one detail that prevents future proposers from changing the value when issuing a higher number proposal. In the first round, the acceptor promise also sends the number and value of the highest number proposal they've accepted. Then, the proposer uses the value of the highest number proposal it gets back when it commits in the accept&nbsp;round.</p>
+<h2>Paxos Made&nbsp;Practical</h2>
+<h2>Chubby Lock&nbsp;Service</h2>
+<p>This is an engineering industry paper from Google, always interesting reads. The basic idea of Chubby is running Paxos on a small <em>cell</em> of five machines to solve consensus problems. One of the five machines in the cell acts as the master, and runs Paxos to decide writes. Reads are all served from the master. It's accessed essential as a Unix-like filesystem which has the property of atomic whole-file writes. This means it's great for storing things small bits of metadata that need to be kept very consistent, or used as a better version of DNS (no worrying about stale entries and&nbsp;TTLs). </p>
 <!-- Hyde::Article::End -->
 
 			
@@ -103,8 +119,8 @@
     var disqus_shortname = 'umbrant'; // required: replace example with your forum shortname
 
     // The following are highly recommended additional parameters. Remove the slashes in front to use.
-    var disqus_identifier = '/blog/2011/warehouse_scale_computing_summary.html';
-    var disqus_url = 'http://www.umbrant.com/blog/2011/warehouse_scale_computing_summary.html';
+    var disqus_identifier = '/blog/2011/paxos_papers_review.html';
+    var disqus_url = 'http://www.umbrant.com/blog/2011/paxos_papers_review.html';
     //var disqus_developer = 1;
 
     /* * * DON'T EDIT BELOW THIS LINE * * */

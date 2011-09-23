@@ -1,0 +1,37 @@
+{% extends "_post.html" %}
+
+{%load webdesign %}
+
+{%hyde
+    title: "Paper review: Cluster-Based Scalable Network Services"
+    created: 2011-09-22 14:01:00
+    draft: True
+%}
+
+{% block article %}
+
+{%article%}
+
+{% excerpt %}
+
+This is a paper review of "Cluster-Based Scalable Network Services" by Fox et al., published at SOSP in 1997. It describes an architecture for datacenter services that proved to be prescient, and used the Inktomi as an example.
+
+{%endexcerpt%}
+
+## Main ideas
+
+This paper has to be put into context. At this point there was still contention whether "clusters of workstations" was the right approach for handling web-sized workloads. Inktomi was at the forefront of saying that yes, clusters were the right choice, and this paper demonstrates why this is true, and how datacenter services can be structured to achieve their key goals: *scalability*, *availability*, and *cost effectiveness* by using consistency semantics weaker than ACID: BASE.
+
+The advantages of clusters are manyfold. They allow easy incremental scaling and upgrading, they can be build out of commodity parts, and they have natural redundancy through replication. Disadvantages are primarily in the programming model and management; it can be difficult to harness a group of machines to complete a task, and since it's a distributed system, there are issues with data consistency and failures.
+
+The idea of BASE is a crucial component of this. BASE stands for **B**asically **A**vailable, **S**oft state, **E**ventual consistency. This is a significant relaxation of strict ACID semantics, since it allows servers to temporarily serve stale data while state converges. This is allows better performance, and many applications do not require strict ACID semantics to provide a good user experience.
+
+The cluster architecture proposed also looks shockingly similar to what is in use today. Within a datacenter, machines are split into two major groups: front-end and workers. Front-ends handle actual client requests from outside the datacenter. To handle a client request, a front-end might harness a number of workers running different services to get data or do computation, before assembling and returning the response. This allows all the front-ends to share from the same pool of stateless workers which is good for utilization, and also allows pools of workers to be scaled up and down in response to overload.
+
+## Future trends and relevance
+
+Seeing how Brewer wrote this paper in 1997 and we're still using roughly the same architecture today in 2011, I don't think there's any doubt that the paper had a lot of future relevance. I think there's still room for improvement in the cluster management side of things (Mesos), but the idea of clusters for datacenters has reached complete acceptance. Interestingly though, we're seeing the return of "big iron" to the datacenter for some applications. People are starting to wonder about the possibilities offered by a machine with 1TB of memory (purchasable today), and the "disk is tape, memory is disk" argument along with a strong focus on latency might lead to further development on the cluster programming model front. SSDs present yet another level in the storage hierarchy with unique cost and performance tradeoffs.
+
+{%endarticle%}
+
+{% endblock %}
