@@ -80,7 +80,7 @@
 </ul>
 <!-- Hyde::Excerpt::End -->
 
-<h2>Paxos Made&nbsp;Simple</h2>
+<h3>Paxos Made&nbsp;Simple</h3>
 <p>Paxos is a distributed consensus algorithm. At it's essence, it's a quorum-based fault-tolerant way of arriving at a single consistent value among a group of machines. This can be used to do leader election (consensus on who's the master), or synchronous strong consistency (replicating writes in a distributed database). In the case of Chubby, it's used for both: determining who holds a lock (leader election), and serving strongly consistent small&nbsp;files.</p>
 <p>Paxos has two basic types of&nbsp;actors:</p>
 <ul>
@@ -102,9 +102,13 @@
 </ol>
 <p>If the proposer gets back a quorum of accepted messages, then it commits. At this point, it can further replicate the value to other nodes, or respond to the client that the operation worked. It's normal for all nodes in the system to in fact fulfill the roles of both proposer and acceptor as&nbsp;needed.</p>
 <p>There is one detail that prevents future proposers from changing the value when issuing a higher number proposal. In the first round, the acceptor promise also sends the number and value of the highest number proposal they've accepted. Then, the proposer uses the value of the highest number proposal it gets back when it commits in the accept&nbsp;round.</p>
-<h2>Paxos Made&nbsp;Practical</h2>
-<h2>Chubby Lock&nbsp;Service</h2>
-<p>This is an engineering industry paper from Google, always interesting reads. The basic idea of Chubby is running Paxos on a small <em>cell</em> of five machines to solve consensus problems. One of the five machines in the cell acts as the master, and runs Paxos to decide writes. Reads are all served from the master. It's accessed essential as a Unix-like filesystem which has the property of atomic whole-file writes. This means it's great for storing things small bits of metadata that need to be kept very consistent, or used as a better version of DNS (no worrying about stale entries and&nbsp;TTLs). </p>
+<h3>Paxos Made&nbsp;Practical</h3>
+<p>This paper goes into a lot of detail about how to actually implement Paxos, handling nodes leaving and adding a Paxos replicated state machine (ala an RPC server). All nodes run the same deterministic code which transitions based on input. Non-deterministic bits are decided by a single machine externally before being passed into the state machine. One of the machines act as the master (proposer) in Paxos operations, handling a client request, running Paxos, and executing and responding to the client after a majority of nodes have logged the operation. Changes in group membership (the view) are handled by again running Paxos to agree on&nbsp;membership.</p>
+<h3>Chubby Lock&nbsp;Service</h3>
+<p>This is an engineering industry paper from Google, always interesting reads. The basic idea of Chubby is running Paxos on a small <em>cell</em> of five machines to solve consensus problems. One of the five machines in the cell acts as the master, and runs Paxos to decide writes. Reads are all served from the master. This lets Chubby provide <em>coarse-grained</em> locking services, where locks are expected to be held for long periods of time (minutes, hours, days). Finer grained locking is deferred to application-level servers. Chubby's API is through a simple way Unix-like filesystem, upon which clients can open file handles and get and release reader/writer locks. This is also convenient for advertising results, and can be used to store small files in a very consistent manner. A typical use within Google is using it as a better version of DNS (no worrying about stale entries and&nbsp;TTLs).</p>
+<p>The rest of the paper describes other features of Chubby: failover, cache consistency, event notifications. Master failover is handled by leader election in the Chubby cell, with a new node brought online in the background. Client caching is also an essential part of reducing load on the Chubby master, but the master has to synchronously invalidate caches on writes. Invalidation is piggybacked on heartbeat <em>KeepAlive</em> messages (default every 12 seconds), a lease mechanism that keeps client locks and cache alive. Event notifications can also be used to watch files for certain events: modification, master failover, etc. This is most often used to wait for modifications to a file, indicating that a new leader has locked and written its address to the&nbsp;file.</p>
+<h3>Future&nbsp;trends</h3>
+<p>Seeing how this is being used to great extent at Google, it's got great future applicability. Chubby seems to be used mostly for inter-datacenter locking, I wonder if there are any important modifications that have to be done for intra-datacenter locking. The whole space of eventual consistency gives a lot of alternatives to the strong guarantees that Paxos offers, so there are lots of ways to tradeoff availability and performance with&nbsp;consistency.</p>
 <!-- Hyde::Article::End -->
 
 			
@@ -166,7 +170,11 @@
 					
 					
 						
+						<li><a href="/blog/2011/paxos_papers_review.html">Paper review: Paxos, Paxos, and Chubby</a></li>
+						
 					
+						
+						<li><a href="/blog/2011/cluster_based_scalable_network_services_review.html">Paper review: Cluster-Based Scalable Network Services</a></li>
 						
 					
 						
