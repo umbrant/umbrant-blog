@@ -6,7 +6,7 @@
 	<head>
 		<title>
 			
-			Paper review: Data-Level Parallelism in Vector, SIMD, and GPU Architectures : umbrant
+			Hello world! : umbrant
 			
 		</title>
 
@@ -61,9 +61,9 @@
 	
 
 		<div class="post single">
-			<h2 class="title"><a href="">Paper review: Data-Level Parallelism in Vector, SIMD, and GPU Architectures</a></h2>
+			<h2 class="title"><a href="">Hello world!</a></h2>
 			
-			<p class="meta"><span class="date">September 12, 2011</span></p>
+			<p class="meta"><span class="date">January 1, 1911</span></p>
 			
 			<div class="entry">
 			
@@ -72,12 +72,10 @@
 
 <!-- Hyde::Excerpt::Begin -->
 
-<p>This is a review of Chapter 4 from the Hennessy and Patterson book, "Computer Architecture, 5th Edition: A Quantitative Approach". This chapter covers the differences between vector processors, SIMD, and GPU architectures. This writeup focuses entirely on the future hardware trends of data-parallel SIMD hardware in the&nbsp;cloud.</p>
+<p>Excerpt goes&nbsp;here.</p>
 <!-- Hyde::Excerpt::End -->
 
-<p>My claim is that we're going to see GPUs moving on-chip to coexist with normal CPU cores; we're already seeing this happen with the newest processors from Intel and AMD. The reason for this is that the latency cost in shifting computation to a GPU over PCI-E is high, and there isn't any memory coherency. Moving GPU cores on-chip solves both of these problems, though memory coherency still faces the same problems it does among many CPU cores. I can't make any solid predictions about vector processors, but it seems like the momentum is heavily in favor of GPU and SIMD CPU extensions for data-parallel&nbsp;computation.</p>
-<p>How does this relate to cloud computing? GPUs face one major problem in a cloud environment, in that they are currently quite hard to virtualize. Preemption support is nascent, and there's a high cost to context switching a GPU because of the high latency bus. Concurrent sharing might also be difficult. There also aren't well-defined standards for programming a GPU (CUDA and OpenCL being competing&nbsp;examples).</p>
-<p>Putting all of the problems aside as solvable however, GPUs are great for speeding up data-parallel tasks (and GPUs already can run MapReduce). I definitely see them gaining traction for batch processing. For normal web-serving workloads though, I'm not sure where a GPU would be useful. I think it's a lot harder to derive data-parallelism from handling a single request, and the current limitations on multiplexing and latency make it less friendly for this type of&nbsp;work.</p>
+<p>Rest of article goes&nbsp;here.</p>
 <!-- Hyde::Article::End -->
 
 			
@@ -92,8 +90,8 @@
     var disqus_shortname = 'umbrant'; // required: replace example with your forum shortname
 
     // The following are highly recommended additional parameters. Remove the slashes in front to use.
-    var disqus_identifier = '/blog/2011/data-level_parallelism_review.html';
-    var disqus_url = 'http://www.umbrant.com/blog/2011/data-level_parallelism_review.html';
+    var disqus_identifier = '/blog/2011/megastore_review.html';
+    var disqus_url = 'http://www.umbrant.com/blog/2011/megastore_review.html';
     //var disqus_developer = 1;
 
     /* * * DON'T EDIT BELOW THIS LINE * * */

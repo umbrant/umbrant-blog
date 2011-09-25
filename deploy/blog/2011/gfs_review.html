@@ -6,7 +6,7 @@
 	<head>
 		<title>
 			
-			Paper review: Data-Level Parallelism in Vector, SIMD, and GPU Architectures : umbrant
+			Paper review: The Google File System : umbrant
 			
 		</title>
 
@@ -61,9 +61,9 @@
 	
 
 		<div class="post single">
-			<h2 class="title"><a href="">Paper review: Data-Level Parallelism in Vector, SIMD, and GPU Architectures</a></h2>
+			<h2 class="title"><a href="">Paper review: The Google File System</a></h2>
 			
-			<p class="meta"><span class="date">September 12, 2011</span></p>
+			<p class="meta"><span class="date">September 24, 2011</span></p>
 			
 			<div class="entry">
 			
@@ -72,12 +72,23 @@
 
 <!-- Hyde::Excerpt::Begin -->
 
-<p>This is a review of Chapter 4 from the Hennessy and Patterson book, "Computer Architecture, 5th Edition: A Quantitative Approach". This chapter covers the differences between vector processors, SIMD, and GPU architectures. This writeup focuses entirely on the future hardware trends of data-parallel SIMD hardware in the&nbsp;cloud.</p>
+<p>This is a paper review for "The Google File System" by Ghemawat et al., published at SOSP in 2003. This is a fairly important paper, and directly inspired the architecture of&nbsp;HDFS.</p>
 <!-- Hyde::Excerpt::End -->
 
-<p>My claim is that we're going to see GPUs moving on-chip to coexist with normal CPU cores; we're already seeing this happen with the newest processors from Intel and AMD. The reason for this is that the latency cost in shifting computation to a GPU over PCI-E is high, and there isn't any memory coherency. Moving GPU cores on-chip solves both of these problems, though memory coherency still faces the same problems it does among many CPU cores. I can't make any solid predictions about vector processors, but it seems like the momentum is heavily in favor of GPU and SIMD CPU extensions for data-parallel&nbsp;computation.</p>
-<p>How does this relate to cloud computing? GPUs face one major problem in a cloud environment, in that they are currently quite hard to virtualize. Preemption support is nascent, and there's a high cost to context switching a GPU because of the high latency bus. Concurrent sharing might also be difficult. There also aren't well-defined standards for programming a GPU (CUDA and OpenCL being competing&nbsp;examples).</p>
-<p>Putting all of the problems aside as solvable however, GPUs are great for speeding up data-parallel tasks (and GPUs already can run MapReduce). I definitely see them gaining traction for batch processing. For normal web-serving workloads though, I'm not sure where a GPU would be useful. I think it's a lot harder to derive data-parallelism from handling a single request, and the current limitations on multiplexing and latency make it less friendly for this type of&nbsp;work.</p>
+<h3>Main&nbsp;ideas</h3>
+<p>What Google did was look very carefully at their desired workload, and build a distributed filesystem specifically for that. GFS is very much not a general purpose filesystem, and I really like how they lay out quite clearly early on the assumptions they&nbsp;make:</p>
+<ul>
+<li>Files are almost all large, many&nbsp;GBs</li>
+<li>Target throughput, not&nbsp;latency</li>
+<li>Append-only. Cannot overwrite existing&nbsp;data.</li>
+<li>Must be distributed and&nbsp;fault-tolerant</li>
+</ul>
+<p>The problem they were basically trying to solve was doing log analytics at scale, meaning mostly long sequential writes of very large files. Spreading files across multiple disks is crucial to getting enough throughput and getting fault-tolerance. GFS can be viewed sort of like a distributed version of RAID&nbsp;1.</p>
+<p>The architecture is a single GFS master which stores metadata for all the files, and a lot of chunkservers that store chunks (64MB) of files. The master is used to chunk locations for a given range of a file, the actual reads and writes are done by directly accessing the appropriate chunkserver. All chunks are replicated across multiple chunkservers for durability and load balancing. Chunkservers talk to the master via heartbeat messages, upon which the master can piggyback commands like re-replicating or getting chunk&nbsp;lists.</p>
+<p>Data consistency is made a lot easier by not having to worry about overwrites. It also means clients can cache chunk locations, since they change&nbsp;rarely.</p>
+<h3>Future&nbsp;relevance</h3>
+<p>GFS clearly does a good job at the application it was designed for: sequential reads for large files by data-parallel workloads. However, since HDFS has become sort of an industry standard for storing large amounts of data, it's increasingly being used for other types of workloads. HBase is one example of this (a more database-like column store), which definitely does a lot more random I/Os. Facebook also published a paper on doing real-time queries with MapReduce (and thus HDFS). The question is how well HDFS can be squeezed into these roles, and if other storage systems are necessary. For low-latency web serving this is definitely true (memcached and other k-v stores&nbsp;dominate).</p>
+<p>In short, I don't think the MapReduce paradigm is going anywhere, and HDFS already feels like the standard answer to storing big data. I don't think it's going anywhere in the next&nbsp;decade.</p>
 <!-- Hyde::Article::End -->
 
 			
@@ -92,8 +103,8 @@
     var disqus_shortname = 'umbrant'; // required: replace example with your forum shortname
 
     // The following are highly recommended additional parameters. Remove the slashes in front to use.
-    var disqus_identifier = '/blog/2011/data-level_parallelism_review.html';
-    var disqus_url = 'http://www.umbrant.com/blog/2011/data-level_parallelism_review.html';
+    var disqus_identifier = '/blog/2011/gfs_review.html';
+    var disqus_url = 'http://www.umbrant.com/blog/2011/gfs_review.html';
     //var disqus_developer = 1;
 
     /* * * DON'T EDIT BELOW THIS LINE * * */
