@@ -72,16 +72,16 @@
 
 <!-- Hyde::Excerpt::Begin -->
 
-<p>This is a paper review of "Megastore: Providing Scalable, Highly Available Storage for Interactive Services" by Baker et al. This was published at CIDR in 2011. The basic idea is providing ACID semantics across geographically-distant datacenters with highly partitioned datasets and an efficient Paxos replication&nbsp;scheme.</p>
+<p>This is a paper review of &#8220;Megastore: Providing Scalable, Highly Available Storage for Interactive Services&#8221; by Baker et al. This was published at <span class="caps">CIDR</span> in 2011. The basic idea is providing <span class="caps">ACID</span> semantics across geographically-distant datacenters with highly partitioned datasets and an efficient Paxos replication&nbsp;scheme.</p>
 <!-- Hyde::Excerpt::End -->
 
 <h3>Main&nbsp;ideas</h3>
-<p>The basic premise of Megastore is that some applications require strong ACID semantics, while also desiring the fault-tolerance that comes with cross-datacenter replication. They claim that existing solutions (like a heavily sharded MySQL database) do not fill this niche because they are hard to manage and scale, driving a need for Megastore. Megastore does this by asking application developers to partition their data into <em>entity groups</em>, where each group represents a relatively small amount of data: the profile for one user, or a single blog account. Operations within the group get full ACID semantics; cross group operations have to build their own consistency model, perhaps two-phase commit, or something looser. Megastore also allows applications to do less-consistent reads for lower&nbsp;latency.</p>
-<p>The data model and query language for Megastore also differs from traditional RDBMSs. The data model isn't relational since it's built on top of Bigtable (which in turn, is on top of GFS), but is still strongly-typed and consists of properties within tables. The query language is more limited; being based on Bigtable means that there isn't support for joins. This is fixed either by denormalizing the data, or doing it in application code. There seem to be a lot of tricks for creating indexes and doing data placement&nbsp;efficiently.</p>
-<p>Log replication is done by using Paxos to resolve each log entry before applying it. Multiple writers race to get a single leader to accept their write; failed attempts have to be retried. Performance wise, they still have to do an inter-datacenter roundtrip even in the best case of a stable leader and being able to piggyback accepts and prepares. This means that they're never going to do better than a few writes per second; they quote a figure of 100-400ms latency per write. This is okay as long as the entity groups are small and the application write rates are thus low. Reads can be done without a roundtrip by having a special coordinator in each datacenter which tracks when replicas become out of&nbsp;date.</p>
+<p>The basic premise of Megastore is that some applications require strong <span class="caps">ACID</span> semantics, while also desiring the fault-tolerance that comes with cross-datacenter replication. They claim that existing solutions (like a heavily sharded MySQL database) do not fill this niche because they are hard to manage and scale, driving a need for Megastore. Megastore does this by asking application developers to partition their data into <em>entity groups</em>, where each group represents a relatively small amount of data: the profile for one user, or a single blog account. Operations within the group get full <span class="caps">ACID</span> semantics; cross group operations have to build their own consistency model, perhaps two-phase commit, or something looser. Megastore also allows applications to do less-consistent reads for lower&nbsp;latency.</p>
+<p>The data model and query language for Megastore also differs from traditional RDBMSs. The data model isn&#8217;t relational since it&#8217;s built on top of Bigtable (which in turn, is on top of <span class="caps">GFS</span>), but is still strongly-typed and consists of properties within tables. The query language is more limited; being based on Bigtable means that there isn&#8217;t support for joins. This is fixed either by denormalizing the data, or doing it in application code. There seem to be a lot of tricks for creating indexes and doing data placement&nbsp;efficiently.</p>
+<p>Log replication is done by using Paxos to resolve each log entry before applying it. Multiple writers race to get a single leader to accept their write; failed attempts have to be retried. Performance wise, they still have to do an inter-datacenter roundtrip even in the best case of a stable leader and being able to piggyback accepts and prepares. This means that they&#8217;re never going to do better than a few writes per second; they quote a figure of 100-400ms latency per write. This is okay as long as the entity groups are small and the application write rates are thus low. Reads can be done without a roundtrip by having a special coordinator in each datacenter which tracks when replicas become out of&nbsp;date.</p>
 <h3>Future&nbsp;relevance</h3>
-<p>The biggest thing that stuck with me when reading this paper was that as a developer, this sounds really painful to use. Partitioning data that finely is painful, and you have to build inter-group consistency yourself. This indicates to me that schema changes might be common, but that's really painful since data is denormalized and there's all this schema-specific app-level code built on top to do joins and consistency. The claim that there is "predictable performance" from a lack of joins seems unsubstantiated. Building on top of Bigtable which is on top of Megastore means that it's very hard for developers to reason about what is actually going on under the hood. Furthermore, developers have to program around the super slow write rate. Hiding a slow Megastore write behind an asynchronous Javascript call sort of defeats the purpose of having&nbsp;ACID.</p>
-<p>Compared to other Google papers like GFS and MapReduce, Megastore just seems way too complicated. It doesn't convince me that it's chosen the right point in the design space, or that it's fulfilling a particularly pressing need for real applications. I think it's still interesting to hear about, but I wouldn't pick this for a 10 year best paper&nbsp;award.</p>
+<p>The biggest thing that stuck with me when reading this paper was that as a developer, this sounds really painful to use. Partitioning data that finely is painful, and you have to build inter-group consistency yourself. This indicates to me that schema changes might be common, but that&#8217;s really painful since data is denormalized and there&#8217;s all this schema-specific app-level code built on top to do joins and consistency. The claim that there is &#8220;predictable performance&#8221; from a lack of joins seems unsubstantiated. Building on top of Bigtable which is on top of Megastore means that it&#8217;s very hard for developers to reason about what is actually going on under the hood. Furthermore, developers have to program around the super slow write rate. Hiding a slow Megastore write behind an asynchronous Javascript call sort of defeats the purpose of having&nbsp;<span class="caps">ACID</span>.</p>
+<p>Compared to other Google papers like <span class="caps">GFS</span> and MapReduce, Megastore just seems way too complicated. It doesn&#8217;t convince me that it&#8217;s chosen the right point in the design space, or that it&#8217;s fulfilling a particularly pressing need for real applications. I think it&#8217;s still interesting to hear about, but I wouldn&#8217;t pick this for a 10 year best paper&nbsp;award.</p>
 <!-- Hyde::Article::End -->
 
 			
@@ -143,6 +143,12 @@
 					
 					
 						
+						<li><a href="/blog/2011/hive_pig_paper_review.html">Paper review: Hive and Pig</a></li>
+						
+					
+						
+					
+						
 						<li><a href="/blog/2011/dryad_mapreduce_review.html">Paper review: MapReduce and Dryad</a></li>
 						
 					
@@ -156,14 +162,6 @@
 					
 						
 						<li><a href="/blog/2011/paxos_papers_review.html">Paper review: Paxos, Paxos, and Chubby</a></li>
-						
-					
-						
-						<li><a href="/blog/2011/cluster_based_scalable_network_services_review.html">Paper review: Cluster-Based Scalable Network Services</a></li>
-						
-					
-						
-						<li><a href="/blog/2011/datacenter_needs_an_operating_system_review.html">Paper review: The Datacenter Needs an Operating System</a></li>
 						
 					
 				

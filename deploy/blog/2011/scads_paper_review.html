@@ -6,7 +6,7 @@
 	<head>
 		<title>
 			
-			Paper review: Performance Modeling and Analysis of Flash-based Storage Devices : umbrant
+			Paper review: SCADS : umbrant
 			
 		</title>
 
@@ -61,9 +61,9 @@
 	
 
 		<div class="post single">
-			<h2 class="title"><a href="">Paper review: Performance Modeling and Analysis of Flash-based Storage Devices</a></h2>
+			<h2 class="title"><a href="">Paper review: SCADS</a></h2>
 			
-			<p class="meta"><span class="date">September 12, 2011</span></p>
+			<p class="meta"><span class="date">October 9, 2011</span></p>
 			
 			<div class="entry">
 			
@@ -72,12 +72,10 @@
 
 <!-- Hyde::Excerpt::Begin -->
 
-<p>This is a paper review of &#8220;Performance Modeling and Analysis of Flash-based Storage Devices&#8221; by Huang et al. This paper compares and contrasts three different types of drives: a high-end Intel <span class="caps">SSD</span>, a low-end Samsung <span class="caps">SSD</span>, and a 5400 <span class="caps">RPM</span> Samsung <span class="caps">HDD</span>. My review focuses on the implications for cloud&nbsp;computing.</p>
+<p>This is a paper review of &#8220;<span class="caps">SCADS</span>: Scale-Independent Storage for Social Computing Applications&#8221; by Armbrust et al. This was published at <span class="caps">CIDR</span> in 2009. In a nutshell, <span class="caps">SCADS</span> is a key-value store that lets programmers choose their own consistency model and semantics, and restricts queries to be &#8220;scale-independent&#8221;, i.e. requiring a constant amount of&nbsp;work.</p>
 <!-- Hyde::Excerpt::End -->
 
-<p>Solid state disks have to be treated kind of like black boxes when it comes to performance modeling. As is evident from comparing the Intel and Samsung SSDs, we can get wildly different performance characteristics depending on how the manufacturer has configured the Flash Translate Layer (<span class="caps">FTL</span>), which maps block requests to actual storage locations. This is important because the <span class="caps">FTL</span> acts as a pseudo-filesystem, and has the ability to decide how data is really laid out on the drive independent of the ordering presented to the operating system. This has deep implications for filesystem design (don&#8217;t bother minimizing seeks with reordering), and other characteristics of SSDs mean that coalescing and batching requests simply aren&#8217;t as&nbsp;effective.</p>
-<p>It seems really worthwhile for <span class="caps">SSD</span> vendors to invest in better <span class="caps">FTL</span> code, since the high-end Intel <span class="caps">SSD</span> appears almost unaffected performance-wise by the randomness of its workload. This indicates to me that it&#8217;s probably doing <span class="caps">LFS</span>-like block placement to try and minimize the number of writes and erases. This is in stark contrast to the Samsung <span class="caps">SSD</span>, which sees its random write performance get trounced by&nbsp;sequential.</p>
-<p>I think there&#8217;s definitely space for SSDs in the storage hierarchy on the cloud. It&#8217;s safe to assume future SSDs will have <span class="caps">FTL</span> firmware with performance similar to the Intel <span class="caps">SSD</span>, so we&#8217;re basically gaining a tier that has strictly better performance characteristics than hard disk drives. It won&#8217;t displace HDDs entirely since the price/<span class="caps">GB</span> is still way higher and the amount of data is only growing, but it does sit sort of nicely between memory and HDDs. There&#8217;s less of a value argument for MapReduce (an application designed specifically to make good use of HDDs by doing large sequential reads), but for more random workloads (thinking of <span class="caps">OLTP</span>, or web caches) SSDs will be a big win. The limitations on the number of write cycles could be a problem, but can be countered through schemes like unbalancing writes to a single <span class="caps">SSD</span> in an array (making it fail first reliably, which is better), or by ironically sticking a <span class="caps">HDD</span> in front to buffer&nbsp;writes.</p>
+<p>Rest of article goes&nbsp;here.</p>
 <!-- Hyde::Article::End -->
 
 			
@@ -92,8 +90,8 @@
     var disqus_shortname = 'umbrant'; // required: replace example with your forum shortname
 
     // The following are highly recommended additional parameters. Remove the slashes in front to use.
-    var disqus_identifier = '/blog/2011/performance_modeling_and_analysis_of_flash_review.html';
-    var disqus_url = 'http://www.umbrant.com/blog/2011/performance_modeling_and_analysis_of_flash_review.html';
+    var disqus_identifier = '/blog/2011/scads_paper_review.html';
+    var disqus_url = 'http://www.umbrant.com/blog/2011/scads_paper_review.html';
     //var disqus_developer = 1;
 
     /* * * DON'T EDIT BELOW THIS LINE * * */

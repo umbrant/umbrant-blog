@@ -72,16 +72,16 @@
 
 <!-- Hyde::Excerpt::Begin -->
 
-<p>This is a paper review of "Cluster-Based Scalable Network Services" by Fox et al., published at SOSP in 1997. It describes an architecture for datacenter services that proved to be prescient, and used the Inktomi as an&nbsp;example.</p>
+<p>This is a paper review of &#8220;Cluster-Based Scalable Network Services&#8221; by Fox et al., published at <span class="caps">SOSP</span> in 1997. It describes an architecture for datacenter services that proved to be prescient, and used the Inktomi as an&nbsp;example.</p>
 <!-- Hyde::Excerpt::End -->
 
 <h2>Main&nbsp;ideas</h2>
-<p>This paper has to be put into context. At this point there was still contention whether "clusters of workstations" was the right approach for handling web-sized workloads. Inktomi was at the forefront of saying that yes, clusters were the right choice, and this paper demonstrates why this is true, and how datacenter services can be structured to achieve their key goals: <em>scalability</em>, <em>availability</em>, and <em>cost effectiveness</em> by using consistency semantics weaker than ACID:&nbsp;BASE.</p>
-<p>The advantages of clusters are manyfold. They allow easy incremental scaling and upgrading, they can be build out of commodity parts, and they have natural redundancy through replication. Disadvantages are primarily in the programming model and management; it can be difficult to harness a group of machines to complete a task, and since it's a distributed system, there are issues with data consistency and&nbsp;failures.</p>
-<p>The idea of BASE is a crucial component of this. BASE stands for <strong>B</strong>asically <strong>A</strong>vailable, <strong>S</strong>oft state, <strong>E</strong>ventual consistency. This is a significant relaxation of strict ACID semantics, since it allows servers to temporarily serve stale data while state converges. This is allows better performance, and many applications do not require strict ACID semantics to provide a good user&nbsp;experience.</p>
+<p>This paper has to be put into context. At this point there was still contention whether &#8220;clusters of workstations&#8221; was the right approach for handling web-sized workloads. Inktomi was at the forefront of saying that yes, clusters were the right choice, and this paper demonstrates why this is true, and how datacenter services can be structured to achieve their key goals: <em>scalability</em>, <em>availability</em>, and <em>cost effectiveness</em> by using consistency semantics weaker than <span class="caps">ACID</span>:&nbsp;<span class="caps">BASE</span>.</p>
+<p>The advantages of clusters are manyfold. They allow easy incremental scaling and upgrading, they can be build out of commodity parts, and they have natural redundancy through replication. Disadvantages are primarily in the programming model and management; it can be difficult to harness a group of machines to complete a task, and since it&#8217;s a distributed system, there are issues with data consistency and&nbsp;failures.</p>
+<p>The idea of <span class="caps">BASE</span> is a crucial component of this. <span class="caps">BASE</span> stands for <strong>B</strong>asically <strong>A</strong>vailable, <strong>S</strong>oft state, <strong>E</strong>ventual consistency. This is a significant relaxation of strict <span class="caps">ACID</span> semantics, since it allows servers to temporarily serve stale data while state converges. This is allows better performance, and many applications do not require strict <span class="caps">ACID</span> semantics to provide a good user&nbsp;experience.</p>
 <p>The cluster architecture proposed also looks shockingly similar to what is in use today. Within a datacenter, machines are split into two major groups: front-end and workers. Front-ends handle actual client requests from outside the datacenter. To handle a client request, a front-end might harness a number of workers running different services to get data or do computation, before assembling and returning the response. This allows all the front-ends to share from the same pool of stateless workers which is good for utilization, and also allows pools of workers to be scaled up and down in response to&nbsp;overload.</p>
 <h2>Future trends and&nbsp;relevance</h2>
-<p>Seeing how Brewer wrote this paper in 1997 and we're still using roughly the same architecture today in 2011, I don't think there's any doubt that the paper had a lot of future relevance. I think there's still room for improvement in the cluster management side of things (Mesos), but the idea of clusters for datacenters has reached complete acceptance. Interestingly though, we're seeing the return of "big iron" to the datacenter for some applications. People are starting to wonder about the possibilities offered by a machine with 1TB of memory (purchasable today), and the "disk is tape, memory is disk" argument along with a strong focus on latency might lead to further development on the cluster programming model front. SSDs present yet another level in the storage hierarchy with unique cost and performance&nbsp;tradeoffs.</p>
+<p>Seeing how Brewer wrote this paper in 1997 and we&#8217;re still using roughly the same architecture today in 2011, I don&#8217;t think there&#8217;s any doubt that the paper had a lot of future relevance. I think there&#8217;s still room for improvement in the cluster management side of things (Mesos), but the idea of clusters for datacenters has reached complete acceptance. Interestingly though, we&#8217;re seeing the return of &#8220;big iron&#8221; to the datacenter for some applications. People are starting to wonder about the possibilities offered by a machine with <span class="caps">1TB</span> of memory (purchasable today), and the &#8220;disk is tape, memory is disk&#8221; argument along with a strong focus on latency might lead to further development on the cluster programming model front. SSDs present yet another level in the storage hierarchy with unique cost and performance&nbsp;tradeoffs.</p>
 <!-- Hyde::Article::End -->
 
 			
@@ -143,6 +143,12 @@
 					
 					
 						
+						<li><a href="/blog/2011/hive_pig_paper_review.html">Paper review: Hive and Pig</a></li>
+						
+					
+						
+					
+						
 						<li><a href="/blog/2011/dryad_mapreduce_review.html">Paper review: MapReduce and Dryad</a></li>
 						
 					
@@ -156,14 +162,6 @@
 					
 						
 						<li><a href="/blog/2011/paxos_papers_review.html">Paper review: Paxos, Paxos, and Chubby</a></li>
-						
-					
-						
-						<li><a href="/blog/2011/cluster_based_scalable_network_services_review.html">Paper review: Cluster-Based Scalable Network Services</a></li>
-						
-					
-						
-						<li><a href="/blog/2011/datacenter_needs_an_operating_system_review.html">Paper review: The Datacenter Needs an Operating System</a></li>
 						
 					
 				

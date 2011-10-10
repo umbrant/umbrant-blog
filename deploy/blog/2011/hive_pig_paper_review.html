@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+	<head>
+		<title>
+			
+			Paper review: Hive and Pig : umbrant
+			
+		</title>
+
+		<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+		<link rel="icon" type="image/ico" href="/favicon.ico"/>
+
+		
+		<link rel="alternate" type="application/atom+xml" href="http://feeds.feedburner.com/UmbrantBlog" title="umbrant"/>
+		
+
+		
+		<link href="/media/css/style.css" rel="stylesheet" type="text/css" media="screen" />
+		<link href="/media/css/pygments.css" rel="stylesheet" type="text/css" media="screen" />
+		<link href='http://fonts.googleapis.com/css?family=Quattrocento|Droid+Sans|Droid+Sans+Mono' rel='stylesheet' type='text/css'/>
+		
+		
+		
+
+		
+		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js"></script>
+		<script type="text/javascript" src="/media/js/umbrant.js"></script>
+		
+		<script type="text/javascript">
+
+  			var _gaq = _gaq || [];
+  			_gaq.push(['_setAccount', 'UA-4601421-1']);
+  			_gaq.push(['_trackPageview']);
+
+  			(function() {
+    		 var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    		 ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    		 var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  			 })();
+
+		 </script>
+		 
+		 
+	 </head>
+
+	 <body>
+		 <div id="wrapper">
+			<div id="page">
+				<div id="page-bgtop">
+					<div id="page-bgbtm">
+						<div id="content">
+
+							
+
+	
+
+
+	
+
+		<div class="post single">
+			<h2 class="title"><a href="">Paper review: Hive and Pig</a></h2>
+			
+			<p class="meta"><span class="date">October 9, 2011</span></p>
+			
+			<div class="entry">
+			
+
+			<!-- Hyde::Article::Begin -->
+
+<!-- Hyde::Excerpt::Begin -->
+
+<p>This is a paper review of &#8220;Hive: Data Warehousing <span class="amp">&amp;</span> Analytics on Hadoop&#8221; by the Facebook Data Team (a <a href="http://www.slideshare.net/zshao/hive-data-warehousing-analytics-on-hadoop-presentation">set of slides</a>), and &#8220;Pig Latin&#8221; A Not-So-Foreign Language for Data Processing&#8221; by Olston et al. The Hive slide deck I believe is from 2009, and Pig was published at <span class="caps">SIGMOD</span> in 2008. I supplemented this with the Hive paper published at <span class="caps">VLDB</span> in&nbsp;2009.</p>
+<p>These are Facebook and Yahoo&#8217;s approaches to higher-level languages that compile down to MapReduce on Hadoop. Measured by the percentage of Hive and Pig jobs on their production clusters, they have both been extremely successful. Hive takes a traditional <span class="caps">SQL</span>/database-like approach, while Pig looks more imperative. At face value they seem quite different, but there are actually a bunch of underlying&nbsp;similarities.</p>
+<!-- Hyde::Excerpt::End -->
+
+<h3>Hive main&nbsp;ideas</h3>
+<p>Hive is effectively a traditional database that just uses <span class="caps">HDFS</span> and MapReduce for data storage and query execution. Tables are serialized and deserialized to files in <span class="caps">HDFS</span>, and can be partitioned across and within fields. The query language, HiveQL, looks exactly like <span class="caps">SQL</span> minus some of the more complicated operators because of engineering effort and the limitations of MapReduce. UDFs are also supported, meaning that normal MapReduce code can be slid right in. HiveQL is compiled down into a <span class="caps">MR</span> query plan which can consist of multiple <span class="caps">MR</span> jobs. The logical plan is optimized by a rule-based optimizer (future work being an adaptive cost-based&nbsp;optimizer).</p>
+<p>Queries can be fed to the server via a Thrift server, which enables Hive usage from a variety of different programming languages. A small note is that table metadata is stored outside of <span class="caps">HDFS</span>, in a normal database. This is simply because the amount of data is small, and the access pattern is pretty random, making <span class="caps">HDFS</span>&nbsp;ill-suited.</p>
+<h3>Pig main&nbsp;ideas</h3>
+<p>Pig is designed explicitly for ad-hoc data analysis by programmers. The query language looks like Python with operators pulled from <span class="caps">SQL</span>, and instead of tables, users are given more programmer-friendly data structures like maps and lists. UDFs are also first-class citizens in Pig, and can have arbitrary inputs and outputs (non-atomic&nbsp;values).</p>
+<p>All this means that the query language and data format are more flexible. Hive needs to the classic <span class="caps">ETL</span> (extract-transform-load) to get data into tables before it can query it. Pig, you just pass it a file and a function explaining how to interpret it. This likely comes at a performance cost, but using the standard deserializers and a schema would ameliorate this. Pig also allows for more explicit control over the query plan, since each stage in the execution <span class="caps">DAG</span> is as&nbsp;programmed.</p>
+<p>As in Hive, Pig does not provide some operators because of the limitations of MapReduce. Also as in Hive, statements using the <span class="caps">SQL</span>-like operators can be optimized, and multiple MapReduce jobs are chained together for you&nbsp;automatically.</p>
+<p>One thing I really like about Pig is the focus on debugging. Trying to reason about a page of <span class="caps">SQL</span> is really difficult, and it&#8217;s much easier to reason about Pig&#8217;s series of steps. It looks extremely similar to how I do ad-hoc text parsing in Python: gradually applying operators to collections of strings until I get the result I want. Pig also provides an &#8220;example execution table&#8221; that shows what the Pig program does on a small amount of data, which is much quicker than running the actual MapReduce&nbsp;jobs.</p>
+<h3>Analysis</h3>
+<p>It&#8217;s handy that both Hive and Pig automatically string together <span class="caps">MR</span> jobs as part of one program, but you still pay the serialization overhead of writing things into intermediate files between jobs. This is something that isn&#8217;t true with a more general execution framework like Dryad. The move towards more declarative languages, as I&#8217;ve said previously, isn&#8217;t surprising at all, since actually programming a MapReduce job is way more work than using something more high-level and declarative. For ad-hoc queries, it&#8217;s way better to optimize for programmer productivity than try to squeeze out that last 20% of performance from writing it in raw&nbsp;<span class="caps">MR</span>.</p>
+<p>Hive has been extremely popular at Facebook, and I think the same is true of Pig at Yahoo. I think the future is going to be improving the underlying Hadoop execution engine to better support ad-hoc queries by keeping intermediate files in memory, and improving the number of operators and optimizers for both&nbsp;languages.</p>
+<!-- Hyde::Article::End -->
+
+			
+			</div>
+		</div>
+
+
+	
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+    var disqus_shortname = 'umbrant'; // required: replace example with your forum shortname
+
+    // The following are highly recommended additional parameters. Remove the slashes in front to use.
+    var disqus_identifier = '/blog/2011/hive_pig_paper_review.html';
+    var disqus_url = 'http://www.umbrant.com/blog/2011/hive_pig_paper_review.html';
+    //var disqus_developer = 1;
+
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+
+
+						</div>
+						<!-- end #content -->
+
+						<div id="sidebar">
+	<div id="logo">
+		<h1><a href="/">umbrant</a></h1>
+	</div>
+	<div>
+		<p>My name is Andrew Wang. I'm a CS PhD student at UC Berkeley working in distributed systems.</p>
+	</div>
+	<div id="menu">
+		<ul>
+			<li><a href="/">Home</a></li>
+			<li><a href="/about.html">About</a></li>
+			<li><a href="/research.html">Research</a></li>
+			<li><a href="/contact.html">Contact</a></li>
+		</ul>
+	</div>
+	<ul>
+		<li>
+		<h2>Recent Posts</h2>
+		<ul>
+			
+				
+			
+				
+
+					
+					
+						
+						<li><a href="/blog/2011/hive_pig_paper_review.html">Paper review: Hive and Pig</a></li>
+						
+					
+						
+					
+						
+						<li><a href="/blog/2011/dryad_mapreduce_review.html">Paper review: MapReduce and Dryad</a></li>
+						
+					
+						
+						<li><a href="/blog/2011/megastore_review.html">Paper review: Megastore</a></li>
+						
+					
+						
+						<li><a href="/blog/2011/gfs_review.html">Paper review: The Google File System</a></li>
+						
+					
+						
+						<li><a href="/blog/2011/paxos_papers_review.html">Paper review: Paxos, Paxos, and Chubby</a></li>
+						
+					
+				
+			
+				
+			
+				
+			
+				
+			
+		</ul>
+		</li>
+		<li>
+		<h2>Archive</h2>
+		<ul>
+			
+			
+			
+			
+				
+				
+				
+				
+				
+				
+				<li><a href="/blog/2011/2011.html">2011</a></li>
+				
+				
+				
+				
+			
+			
+			
+			
+			
+			
+			
+			
+		</ul>
+		</li>
+	</ul>
+</div>
+
+						<!-- end #sidebar -->
+
+									<div id="footer">
+				<p>Copyright &copy; Andrew Wang, umbrant.com</p>
+				<p>Licensed under <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/">CC BY-NC-SA 3.0</a></p>
+				<br/>
+				<p><a href="http://feeds.feedburner.com/UmbrantBlog"><img src="/media/images/feed-icon-14x14.png" alt="feed"/>&#160; Subscribe to my feed</a></p>
+			</div>
+
+						<!-- end #footer -->
+
+					</div>
+				</div>
+			</div>
+			<!-- end #page -->
+		</div>
+	 </body>
+ </html>
+
+ 

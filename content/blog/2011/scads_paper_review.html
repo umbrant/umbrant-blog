@@ -1,0 +1,25 @@
+{% extends "_post.html" %}
+
+{%load webdesign %}
+
+{%hyde
+    title: "Paper review: SCADS"
+    created: 2011-10-09 17:43:00
+    draft: True
+%}
+
+{% block article %}
+
+{%article%}
+
+{% excerpt %}
+
+This is a paper review of "SCADS: Scale-Independent Storage for Social Computing Applications" by Armbrust et al. This was published at CIDR in 2009. In a nutshell, SCADS is a key-value store that lets programmers choose their own consistency model and semantics, and restricts queries to be "scale-independent", i.e. requiring a constant amount of work.
+
+{%endexcerpt%}
+
+Rest of article goes here.
+
+{%endarticle%}
+
+{% endblock %}
