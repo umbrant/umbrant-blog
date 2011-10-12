@@ -4,7 +4,7 @@
 
 {%hyde
     title: "Paper review: SCADS"
-    created: 2011-10-09 17:43:00
+    created: 2011-10-12 15:51:00
     draft: True
 %}
 
@@ -18,7 +18,16 @@ This is a paper review of "SCADS: Scale-Independent Storage for Social Computing
 
 {%endexcerpt%}
 
-Rest of article goes here.
+### Main idea
+I think SCADS chooses an interesting point in the scalable storage design space to focus on.
+
+* Simple key-value storage interface
+* A query language that only allows constant-time requests (no O(n) operations that fail at scale)
+* Declarative, tunable consistency models, letting the programmer specify consistency at the level of application requirements
+
+This makes me feel the comparison against Facebook's heavily sharded MySQL cluster behind memcached is kind of unfair, but there is still a lot of merit behind these ideas.
+
+
 
 {%endarticle%}
 
