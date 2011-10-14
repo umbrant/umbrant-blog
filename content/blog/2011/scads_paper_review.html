@@ -5,7 +5,6 @@
 {%hyde
     title: "Paper review: SCADS"
     created: 2011-10-12 15:51:00
-    draft: True
 %}
 
 {% block article %}
@@ -24,10 +23,19 @@ I think SCADS chooses an interesting point in the scalable storage design space 
 * Simple key-value storage interface
 * A query language that only allows constant-time requests (no O(n) operations that fail at scale)
 * Declarative, tunable consistency models, letting the programmer specify consistency at the level of application requirements
+* Scale-up/scale-down architecture designed for incremental cloud pricing
 
-This makes me feel the comparison against Facebook's heavily sharded MySQL cluster behind memcached is kind of unfair, but there is still a lot of merit behind these ideas.
+This makes me feel the comparison against Facebook's heavily sharded MySQL cluster behind memcached is kind of unfair because they are pretty different usecases, but there is still a lot of merit behind the ideas in SCADS.
 
+SCADS doesn't seem designed for ad-hoc queries, since handling requests in constant time can require building indexes, which is potentially quite expensive. Updating indexes is also a potentially high cost. I'm not really sure how to keep both reads and writes in constant time here, since denormalizing means writes might require O(n) writes.
 
+I really, really like the idea of declarative specifications for consistency, performance, and other application constraints. I feel like application developers really shouldn't have to reason about the details of replication, data placement, and consistency; they should be able to state what they want at a high level in terms of application requirements, and have the system figure out how to achieve this. This pushes the responsibility down to the people running the storage system, who are hopefully better able to reason about machine failure rates, the types of failures, and the consistency and durability properties of the system.
+
+### Future relevance
+
+As I hinted above, I really like the idea of declarative specification of application requirements. It's not an easy problem to translate this into the low-level SLOs that can actually be enforced by a cluster resource manager, but it's a good one. Providing these guarantees to all the different kinds of applications running on a cluster is the end goal. This is probably hard to do generally without some application-level semantics about the incoming requests (SCADS and it's constant time only requests for instance).
+
+At the very least, I'd like to see this done for a more general purpose storage layer, perhaps something like GFS or Bigtable.
 
 {%endarticle%}
 
