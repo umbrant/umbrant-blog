@@ -4,8 +4,7 @@
 
 {%hyde
     title: "Paper review: Dynamo"
-    created: 1911-01-01 00:00:00
-    draft: True
+    created: 2011-10-27 10:35:00
 %}
 
 {% block article %}
@@ -14,11 +13,25 @@
 
 {% excerpt %}
 
-Excerpt goes here.
+This is a paper review for Dynamo, the tunable consistency/availability/durability key-value store built by Amazon. It's based on the Chord DHT, and was published at SOSP in 2007. It's also one of my favorite papers.
 
 {%endexcerpt%}
 
-Rest of article goes here.
+### Main idea
+This is an industrial paper, so the novelty comes from the engineering effort that goes into making Chord practical for the datacenter. The authors clearly did their homework before building the system, resulting in the practical application of a number of different techniques.
+
+I want to start by talking about the usecase that Dynamo was designed for. A DHT key-value store has the major benefits (generally speaking) of being relatively simple, quite fault-tolerant, good at spreading load, and easy to scale. The downsides (again, generally speaking) are the slightly erratic behavior in terms of consistency and routing performance, and undefined behavior when it comes to actually storing and moving data around. Chord, for instance, defines just a routing protocol. After you finish hopping around to get to the node with a certain key, the data itself isn't necessarily on that node (instead, the true location of the data, meaning one more lookup).
+
+Amazon's primary usecase for Dynamo seems to be for its shopping cart, where it's really important to have highly available, even if slightly inconsistent, writes. This works really well since shopping cart updates are pretty commutative; it's easy to just take the union of divergent shopping carts, and reach a mostly consistent state. There can still be problems (what if the user adds the same item once in each cart? What if they add and delete in one and add in the other?), but these can be kicked up to the user at checkout time and resolved manually. It's not to say that this happens very often at all, but when nodes do fail, almost normal-looking operation can continue.
+
+The secret sauce here is Amazon's tunable R+W&gt;N consistency model. The application programmer using Dynamo specifies the number of replicas that must be updated on a read (R) or write (W). As long as R+W is greater than N, the total number of replicas, we should be able to provide consistency to the user (assuming we can correctly merge writes). This means for a typical replication factor of N=3, the programmer can specify highly available writes and slower but consistent reads (3+1&gt;3), a more balanced approach (2+2&gt;3), or assuming a read-heavy workload (1+3&gt;3). Increasing N increase the replication factor, meaning better durability. Choosing R+W&leq;N lets you play the brave game of eventual consistency, relying on your merge function more to do the right thing.
+
+A couple notes to close out. Amazon's metric for Dynamo was 99.9% percentile latency, the first time it was indicated to me that variation in latency, rather than average latency, is the real killer. Dynamo also utilized the Chord ring-membership protocol, but used O(1) routing instead of Chord routing since it's a datacenter environment where all the nodes are known and presumably long-lived. They used cool things like vector clocks and Merkle trees to do efficient detection and merging of updates. When the vector clocks diverge, the programmer has to provide the merge function (the default, and most heavily used, being last-writer wins). These, and other details, are what made it such a revelation to me.
+
+### Future relevance
+I think all of academia had a love affair with DHTs for a while, because of all the nice probabilistic and mathematical properties that they have. Chord is still one of the coolest papers ever to me. However, for the datacenter environment, we have to wonder if this is the right model. I wonder how many of the properties of a DHT are really necessary. Fault-tolerance via replication is not unique to DHTs, neither is elastic scaling or load balancing. I find the "choose your own consistency" to be cool, but the apparent result was that most programmers just left everything at default. Default R, W, N, default merge function. Eventual consistency is also a weak model, and Dynamo can give you either fully consistent (slow, low availability), consistent if you rely on your merge function (dubious), or eventually consistent (eww).
+
+Thus, I'm making the call that for datacenters, pure DHTs like Dynamo don't really make sense. We need a stronger consistency model, and we need it to be more automatic and easy for programmers to reason about.
 
 {%endarticle%}
 

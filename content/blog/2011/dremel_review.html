@@ -4,8 +4,7 @@
 
 {%hyde
     title: "Paper review: Dremel"
-    created: 1911-01-01 00:00:00
-    draft: True
+    created: 2011-10-31 13:16:00
 %}
 
 {% block article %}
@@ -14,11 +13,23 @@
 
 {% excerpt %}
 
-Excerpt goes here.
+This is a paper review of "Dremel: Interactive Analysis of Web-Scale Datasets", published in short form at VLDB in 2010. This is a large-scale, interactive analytics engine built by Google that handles adhoc queries on terabytes to petabytes of data, returning aggregate results in seconds to minutes (and if that's not cool, I don't know what is). However, the paper didn't cover query execution, and instead talked about the novel, but kind of boring, nested hierarchical storage format. I'm still hoping for a more systems-y paper in the future.
 
 {%endexcerpt%}
 
-Rest of article goes here.
+### Main ideas
+
+Dremel was optimized for one thing: scanning through lots of read-only data really fast, and generating aggregate results that reflect something like 99% or all of the data (99% letting you chop off the latency tail). This makes it great for doing adhoc drilldown analytics, when you're trying to poke at data from many angles to identify what you want, before writing a more involved analytics program in a different language to analyze it. It's really *not* optimized for doing point lookups, updates, or more complicated analytics: big scans that result in aggregate numbers is the name of the game. Unlike Pig or Hive, it does this with its own custom query execution engine, rather than compiling down to the "common substrate" of MapReduce.
+
+The nested data format makes use of "repetition" and "definition" fields to specify at what level in the hierarchy that any given value in the column is. These let us reconstruct the entire nested data structure by storing only the leaves of the tree, but means it has to do scans to find out which record any row belongs to since the position depends on all previous entries in the column. The use of null values and repetition and definition also allows really easy compression of null values and the "wide but sparse" style of BigTable where there are a lot of columns, but not all are are filled out.
+
+The rest is less interesting. Dremel is queried in an SQL-like language, and works best when do aggregation results on a few columns. Doing many columns is expensive because they need to be joined. It also makes good use of multi-level aggregation trees to get better parallelism, since each individual aggregator has to process less data. In-memory caching and prefetching further improve performance. Because of the efficient data storage format, it often can read only an order of magnitude less data than a comparable row-oriented MR job. Going to Dremel's more efficient execution engine results in another order of magnitude speedup.
+
+Fault-tolerance and straggler detection also play in to execution time. When trying to run a 10-sec query on thousands of nodes, it's very likely that you're going to be hitting a slow node or two. This is why Dremel allows for "99.9%" type results, that reflect almost all, but not quite all, of the data.
+
+### Future relevance
+
+I like the idea of custom systems besides MapReduce built for specific tasks like this. Google chose to make a system that does one thing really well, with clear tradeoffs in terms of performance and features. They gave up the ability to modify the data or do point lookups, and resulted in a system that is two orders of magnitude better than MapReduce. There's clearly a need for more interactive query systems than MapReduce, though also clearly not as general purpose and not a complete MR replacement.
 
 {%endarticle%}
 

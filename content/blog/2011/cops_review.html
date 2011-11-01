@@ -1,0 +1,25 @@
+{% extends "_post.html" %}
+
+{%load webdesign %}
+
+{%hyde
+    title: "Paper review: COPS"
+    created: 1911-01-01 00:00:00
+    draft: True
+%}
+
+{% block article %}
+
+{%article%}
+
+{% excerpt %}
+
+This is a paper review of "Don't Settle for Eventual: Scalable Causal Consistency for Wide-Area Storage with COPS", published at SOSP in 2011.
+
+{%endexcerpt%}
+
+Rest of article goes here.
+
+{%endarticle%}
+
+{% endblock %}

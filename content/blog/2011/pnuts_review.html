@@ -1,0 +1,29 @@
+{% extends "_post.html" %}
+
+{%load webdesign %}
+
+{%hyde
+    title: "Paper review: PNUTS"
+    created: 1911-01-01 00:00:00
+    draft: True
+%}
+
+{% block article %}
+
+{%article%}
+
+{% excerpt %}
+
+This is a paper review of "PNUTS: Yahoo!'s Hosted Data Serving Platform", published at VLDB in 2008. This is a distributed, cross-datacenter key-value store that introduces the notion of "timeline consistency" for records, which is stronger than mere eventual consistency, and is still easy for programmers to reason about.
+
+{%endexcerpt%}
+
+Rest of article goes here.
+
+### Future relevance
+
+It's still an open question whether web applications really need multi-record transactions or not, since the claim by Yahoo! and the PNUTS team is that they haven't seen a need from their own developers. Staleness is okay, inconsistency and reordering is not.
+
+{%endarticle%}
+
+{% endblock %}

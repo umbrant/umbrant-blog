@@ -1,0 +1,25 @@
+{% extends "_post.html" %}
+
+{%load webdesign %}
+
+{%hyde
+    title: "Paper review: Bigtable"
+    created: 1911-01-01 00:00:00
+    draft: True
+%}
+
+{% block article %}
+
+{%article%}
+
+{% excerpt %}
+
+This is a paper review of "Bigtable: A Distributed Storage System for Structured Data", published at OSDI in 2006. This is Google's columnar key-value store built on top of GFS, and I believe that it's the preferred storage system within Google. It's also important to remember that even though it has rows, columns, and the word "table" in the name, 
+
+{%endexcerpt%}
+
+Rest of article goes here.
+
+{%endarticle%}
+
+{% endblock %}

@@ -6,7 +6,7 @@
 	<head>
 		<title>
 			
-			Paper review: The Datacenter Needs an Operating System : umbrant
+			Paper review: Dynamo : umbrant
 			
 		</title>
 
@@ -61,9 +61,9 @@
 	
 
 		<div class="post single">
-			<h2 class="title"><a href="">Paper review: The Datacenter Needs an Operating System</a></h2>
+			<h2 class="title"><a href="">Paper review: Dynamo</a></h2>
 			
-			<p class="meta"><span class="date">September 14, 2011</span></p>
+			<p class="meta"><span class="date">October 27, 2011</span></p>
 			
 			<div class="entry">
 			
@@ -72,23 +72,18 @@
 
 <!-- Hyde::Excerpt::Begin -->
 
-<p>This is a paper review of "The Datacenter Needs an Operating System" by Zaharia et al. This is a short 5 page paper published at HotCloud&nbsp;2011.</p>
+<p>This is a paper review for Dynamo, the tunable consistency/availability/durability key-value store built by Amazon. It's based on the Chord DHT, and was published at SOSP in 2007. It's also one of my favorite&nbsp;papers.</p>
 <!-- Hyde::Excerpt::End -->
 
-<h3>Main&nbsp;ideas</h3>
-<p>This is a high-level ideas paper focusing on the abstractions that should be provided in a cluster programming environment. The authors identify the following as the core traits of traditional operating&nbsp;systems:</p>
-<ul>
-<li>Resource&nbsp;sharing</li>
-<li>Data sharing between&nbsp;programs</li>
-<li>Programming abstractions for software&nbsp;development</li>
-<li>Debugging and&nbsp;monitoring</li>
-</ul>
-<p>The authors argue that these same things should be provided to cluster applications as a common layer, instead of having each programming paradigm separately implement them in an adhoc fashion. If I interpret the article correctly, they want to provide a common set of abstractions on top of which programming models like MapReduce or Dryad can be built, benefiting from code sharing as well as more efficient&nbsp;utilization.</p>
-<h3>Problems</h3>
-<p>What I really would have liked to have seen (perhaps in a longer paper) is more of a focus on where the abstractions are going to be drawn between the "datacenter OS" and the "datacenter application". This is a classic problem in traditional OS literature (should it be in the kernel, or in user space?), and I'm betting we'll see the same theme being explored here. Since all these different frameworks already exist, the initial question is figuring out what can actually be pushed down into the&nbsp;OS.</p>
-<p>Debugging is one issue raised that none of the computing frameworks have really solved, so that's the least-defined problem on the list in my mind. Scheduling and resource sharing are difficult, but&nbsp;approachable.</p>
-<h3>Future&nbsp;impact</h3>
-<p>Highly relevant. A proper datacenter operating system enables higher utilization, better performance, and an easier programming environment. As stated before, cloud computing is only becoming more prevalent and&nbsp;important.</p>
+<h3>Main&nbsp;idea</h3>
+<p>This is an industrial paper, so the novelty comes from the engineering effort that goes into making Chord practical for the datacenter. The authors clearly did their homework before building the system, resulting in the practical application of a number of different&nbsp;techniques.</p>
+<p>I want to start by talking about the usecase that Dynamo was designed for. A DHT key-value store has the major benefits (generally speaking) of being relatively simple, quite fault-tolerant, good at spreading load, and easy to scale. The downsides (again, generally speaking) are the slightly erratic behavior in terms of consistency and routing performance, and undefined behavior when it comes to actually storing and moving data around. Chord, for instance, defines just a routing protocol. After you finish hopping around to get to the node with a certain key, the data itself isn't necessarily on that node (instead, the true location of the data, meaning one more&nbsp;lookup).</p>
+<p>Amazon's primary usecase for Dynamo seems to be for its shopping cart, where it's really important to have highly available, even if slightly inconsistent, writes. This works really well since shopping cart updates are pretty commutative; it's easy to just take the union of divergent shopping carts, and reach a mostly consistent state. There can still be problems (what if the user adds the same item once in each cart? What if they add and delete in one and add in the other?), but these can be kicked up to the user at checkout time and resolved manually. It's not to say that this happens very often at all, but when nodes do fail, almost normal-looking operation can&nbsp;continue.</p>
+<p>The secret sauce here is Amazon's tunable R+W&gt;N consistency model. The application programmer using Dynamo specifies the number of replicas that must be updated on a read (R) or write (W). As long as R+W is greater than N, the total number of replicas, we should be able to provide consistency to the user (assuming we can correctly merge writes). This means for a typical replication factor of N=3, the programmer can specify highly available writes and slower but consistent reads (3+1&gt;3), a more balanced approach (2+2&gt;3), or assuming a read-heavy workload (1+3&gt;3). Increasing N increase the replication factor, meaning better durability. Choosing R+W&leq;N lets you play the brave game of eventual consistency, relying on your merge function more to do the right&nbsp;thing.</p>
+<p>A couple notes to close out. Amazon's metric for Dynamo was 99.9% percentile latency, the first time it was indicated to me that variation in latency, rather than average latency, is the real killer. Dynamo also utilized the Chord ring-membership protocol, but used O(1) routing instead of Chord routing since it's a datacenter environment where all the nodes are known and presumably long-lived. They used cool things like vector clocks and Merkle trees to do efficient detection and merging of updates. When the vector clocks diverge, the programmer has to provide the merge function (the default, and most heavily used, being last-writer wins). These, and other details, are what made it such a revelation to&nbsp;me.</p>
+<h3>Future&nbsp;relevance</h3>
+<p>I think all of academia had a love affair with DHTs for a while, because of all the nice probabilistic and mathematical properties that they have. Chord is still one of the coolest papers ever to me. However, for the datacenter environment, we have to wonder if this is the right model. I wonder how many of the properties of a DHT are really necessary. Fault-tolerance via replication is not unique to DHTs, neither is elastic scaling or load balancing. I find the "choose your own consistency" to be cool, but the apparent result was that most programmers just left everything at default. Default R, W, N, default merge function. Eventual consistency is also a weak model, and Dynamo can give you either fully consistent (slow, low availability), consistent if you rely on your merge function (dubious), or eventually consistent&nbsp;(eww).</p>
+<p>Thus, I'm making the call that for datacenters, pure DHTs like Dynamo don't really make sense. We need a stronger consistency model, and we need it to be more automatic and easy for programmers to reason&nbsp;about.</p>
 <!-- Hyde::Article::End -->
 
 			
@@ -103,8 +98,8 @@
     var disqus_shortname = 'umbrant'; // required: replace example with your forum shortname
 
     // The following are highly recommended additional parameters. Remove the slashes in front to use.
-    var disqus_identifier = '/blog/2011/datacenter_needs_an_operating_system_review.html';
-    var disqus_url = 'http://www.umbrant.com/blog/2011/datacenter_needs_an_operating_system_review.html';
+    var disqus_identifier = '/blog/2011/dynamo_review.html';
+    var disqus_url = 'http://www.umbrant.com/blog/2011/dynamo_review.html';
     //var disqus_developer = 1;
 
     /* * * DON'T EDIT BELOW THIS LINE * * */
