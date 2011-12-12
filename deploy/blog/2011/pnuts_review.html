@@ -63,7 +63,7 @@
 		<div class="post single">
 			<h2 class="title"><a href="">Paper review: PNUTS</a></h2>
 			
-			<p class="meta"><span class="date">January 1, 1911</span></p>
+			<p class="meta"><span class="date">November 1, 2011</span></p>
 			
 			<div class="entry">
 			
@@ -72,12 +72,17 @@
 
 <!-- Hyde::Excerpt::Begin -->
 
-<p>This is a paper review of "PNUTS: Yahoo!'s Hosted Data Serving Platform", published at VLDB in 2008. This is a distributed, cross-datacenter key-value store that introduces the notion of "timeline consistency" for records, which is stronger than mere eventual consistency, and is still easy for programmers to reason&nbsp;about.</p>
+<p>This is a paper review of "PNUTS: Yahoo!'s Hosted Data Serving Platform", published at VLDB in 2008. This is a distributed, cross-datacenter key-value store that introduces the notion of "timeline consistency" for records, which is stronger than mere eventual consistency, and is still easy for programmers to reason about. One of my more favorite papers from the reading&nbsp;list.</p>
 <!-- Hyde::Excerpt::End -->
 
-<p>Rest of article goes&nbsp;here.</p>
+<h3>Main&nbsp;ideas</h3>
+<p>I like PNUTS a lot, and it's always a little hard to criticize industry papers that present a real-world production system that is being used by thousands of internal programmers and serves millions of records a day. That said, PNUTS does a better job than others (<em>cough</em> Dremel <em>cough</em>) in presenting where it lies in the great distributed storage system design space. It's got the sweet spot of an architecture that is conceptually simple, a consistency model that is easy to understand, and a complete API. One of the core questions while I was reading Megastore was how application programmers were possibly supposed to possibly design their application and use this complicated system; PNUTS feels comparatively much easier. An easy to understand consistency model and API is actually way more important than slightly stronger guarantees, unless you're only designing for the ubermensch programmer (foolish, even at a place like&nbsp;Google).</p>
+<p>So, lets talk about timeline consistency, the model presented (if not invented) by PNUTS. PNUTS uses a <em>record-level mastering</em> scheme that requires each record to be "owned" by a single replica. All writes to this record have to go through this replica, meaning that we have record-level serializability (the same sort of guarantee given by lots of key-value stores). Write propagation is done asynchronously by using the pub/sub Yahoo! Message Broker to avoid synchronous inter-datacenter roundtrips. This means there is some potential durability/availability loss of writes if the YMB fails, but Raghu in his talk indicated this was a very low probability. There's also an write availability loss if the master replica goes down, since there might be pending writes at the&nbsp;master.</p>
+<p>API wise, we're presented with a "choose your own consistency" model for reads and a test-and-set write operation, besides normal blind reads and writes. Blind reads and writes don't have any special semantics; timeline consistency says that reads are always consistent, just potentially stale. Reads can also specify a minimum version, or ask for a fully up-to-date version. Test-and-set write lets apps do lightweight optimistic concurrency, by doing a read (getting a value), and then doing a test-and-set write to only write if the version matches the version read, abort and retrying if&nbsp;not.</p>
+<p>You can effectively emulate "cross record" transactions by packing all your data into the same PNUTS record or denormalizing (with, of course, a loss in flexibility or consistency), which might be why Raghu says that Yahoo!'s developers don't need cross-record consistency&nbsp;guarantees.</p>
+<p>PNUTS also will dynamically transfer master responsibilities to a geographic replica closer to where writes are being sent, to reduce latency. My impression is that this is a fairly lightweight operation, since all that really needs to happen is transferring the master bit, and delaying writes while waiting for the old master's writes to flush. YMB only gives total ordering on messages sent from the same datacenter, which is why the new master has to&nbsp;wait.</p>
 <h3>Future&nbsp;relevance</h3>
-<p>It's still an open question whether web applications really need multi-record transactions or not, since the claim by Yahoo! and the PNUTS team is that they haven't seen a need from their own developers. Staleness is okay, inconsistency and reordering is&nbsp;not.</p>
+<p>It's still an open question whether web applications really need multi-record transactions or not, since the claim by Yahoo! and the PNUTS team is that they haven't seen a need from their own developers. Staleness is okay, inconsistency and reordering is not. I find the consistency model easy to grok, and Raghu indicated that there's no real desire to significantly change or redesign the system. The paper states "multi-record updates" and "eventual consistency" as future work, but that hasn't happened in the 3 years since the paper was published because of a lack of demand. I find that tremendously interesting, and a very compelling backing for this intermediate kind of consistency&nbsp;model.</p>
 <!-- Hyde::Article::End -->
 
 			
@@ -139,6 +144,14 @@
 					
 					
 						
+						<li><a href="/blog/2011/dryadlinq_flumejava_review.html">Paper review: DryadLINQ and FlumeJava</a></li>
+						
+					
+						
+						<li><a href="/blog/2011/pnuts_review.html">Paper review: PNUTS</a></li>
+						
+					
+						
 						<li><a href="/blog/2011/dremel_review.html">Paper review: Dremel</a></li>
 						
 					
@@ -152,14 +165,6 @@
 					
 						
 						<li><a href="/blog/2011/hive_pig_paper_review.html">Paper review: Hive and Pig</a></li>
-						
-					
-						
-						<li><a href="/blog/2011/dryad_mapreduce_review.html">Paper review: MapReduce and Dryad</a></li>
-						
-					
-						
-						<li><a href="/blog/2011/megastore_review.html">Paper review: Megastore</a></li>
 						
 					
 				

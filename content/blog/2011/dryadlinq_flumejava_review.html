@@ -4,8 +4,7 @@
 
 {%hyde
     title: "Paper review: DryadLINQ and FlumeJava"
-    created: 1911-01-01 00:00:00
-    draft: True
+    created: 2011-11-02 16:57:00
 %}
 
 {% block article %}
@@ -14,11 +13,29 @@
 
 {% excerpt %}
 
-Excerpt goes here.
+I'm combining two paper reviews this time, for "FlumeJava: Easy, Efficient Data-Parallel Pipelines" (PLDI '10) and "DryadLINQ: A System for General-Purpose Distributed Data-Parallel Computing Using a High-Level Language" (OSDI '08). These are both high-level languages that compile down to the MapReduce and Dryad respectively, and I think share a lot of similarities.
 
 {%endexcerpt%}
 
-Rest of article goes here.
+### Main Ideas of DryadLINQ
+
+The basic premise for both FlumeJava and DryadLINQ is that it's hard to write "raw" MapReduce or Dryad programs (especially true for Dryad), and that really, they should be treated as an underlying execution engine for higher-level, declarative DSL embedded directly in a common productivity language. These higher-level languages then compile down into a lower-level execution plan (e.g., MapReduce jobs, or a Dryad DAG). This makes it somewhat analogous to how a database works, especially true since LINQ can use SQL Server as an execution engine. It doesn't enforce a schema or give the other nice properties of a traditional RDBMS, and it lets queries be written in either a more SQL-like or a more object-oriented approach.
+
+Talking a little more about LINQ, it's a query language that can be used directly in .NET languages. Microsoft basically swapped out the normal SQL Server backend for Dryad, meaning that there's excellent language integration because of the maturity of LINQ. The "schema" is thus defined by the application's use of datatypes, rather than enforced by an underlying schema. This abstraction is made even better by the fact that DryadLINQ will automatically partition data across nodes (I think according to access pattern or data type).
+
+Because it compiles down to Dryad (a pretty flexible execution engine), it allows for optimizations beyond what is possible with MapReduce, namely in smartly reusing in-memory data, avoiding disk writes after each stage, more efficient modes of moving data, and more flexible execution DAGs. Furthermore, they can also do runtime optimization for making efficient aggregation trees.
+
+### Main Ideas of FlumeJava
+
+FlumeJava is a pure Java library that provides special Java collections and operations which get translated into MapReduce jobs. It also serves a similar purpose as something like Pig, where one of the primary advantages is transparently chaining together multiple MapReduce jobs into a processing pipeline. FlumeJava also does a bunch of optimizations on the resulting dataflow graph to combine and optimize the different stages, but still has to deal with ultimately reading from and writing to disk between stages (unlike DryadLINQ, which support in-memory transfer). It also takes care of messy things like creating and deleting the inter-stage files, as you'd expect.
+
+The result is something that comes really close to the performance of a hand-optimized MapReduce pipeline, meaning there really isn't much reason for people to write raw MapReduce at Google anymore. Since it's just a library, it's easy to bring the same sort of functionality to other languages. FlumeC++ already exists, and it shouldn't be that hard to make a FlumePython or the like too.
+
+### Future Relevance
+
+Not writing raw MapReduce / Dryad code is a lesson we've learned from all of the higher level languages (Pig, Hive, Spark, and these two). The future definitely looks more declarative, and I like the direct language integration of DryadLINQ and FlumeJava more than introducing a new DSL like Hive or Pig. It makes it effortless to do large scale computation in a language that you already know.
+
+That said, all of these approaches are sort of converging. There really aren't that many types of operations that map well to the MapReduce model, and all the approaches pretty much have all of them. I don't think there's much more to be done here on the research front. It comes down to ease of use and debugging at this point rather than the programming model itself, which is actually one of the big wins of Pig (the debugging console).
 
 {%endarticle%}
 
