@@ -1,0 +1,25 @@
+{% extends "_post.html" %}
+
+{%load webdesign %}
+
+{%hyde
+    title: "Paper review: Piccolo"
+    created: 2011-12-11 22:29:00
+    draft: True
+%}
+
+{% block article %}
+
+{%article%}
+
+{% excerpt %}
+
+This is a paper review for "Piccolo: Building Fast, Distributed Programs with Partitioned Tables" by Power and Li of NYU. It was published at OSDI '10.
+
+{%endexcerpt%}
+
+Rest of article goes here.
+
+{%endarticle%}
+
+{% endblock %}

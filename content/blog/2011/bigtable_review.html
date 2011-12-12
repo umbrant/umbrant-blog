@@ -4,7 +4,7 @@
 
 {%hyde
     title: "Paper review: Bigtable"
-    created: 1911-01-01 00:00:00
+    created: 2011-12-11 21:32:00
     draft: True
 %}
 
@@ -14,11 +14,25 @@
 
 {% excerpt %}
 
-This is a paper review of "Bigtable: A Distributed Storage System for Structured Data", published at OSDI in 2006. This is Google's columnar key-value store built on top of GFS, and I believe that it's the preferred storage system within Google. It's also important to remember that even though it has rows, columns, and the word "table" in the name, 
+This is a paper review of "Bigtable: A Distributed Storage System for Structured Data", published at OSDI in 2006. This is Google's columnar key-value store built on top of GFS, and I believe that it's the preferred storage system within Google. It's also important to remember that even though it has rows, columns, and the word "table" in the name, it's doesn't provide attributed traditionally associated with a database.
 
 {%endexcerpt%}
 
-Rest of article goes here.
+### Highlights
+
+BigTable uses a three-level indexing scheme to resolve a value: `(row, column, time)`. This `time` field is the surprising addition; apparently it's used for versioning and garbage collection of old values (an optional, per-table feature). It also allows multiple values for the same `(row,column)` tuple. Tables in BigTable are also sparse and stored in columnar format, meaning that any given row probably only populates a fraction of the hundreds of columns in a table. The number of columns in a table isn't limited, but columns do each have to belong to a single *column family*, which is a more permanent entity. Column families are used as a means of access control, and maybe also to optimize access patterns.
+
+One thing that kind of threw me at first is how columns are used in BigTable. Unlike traditional RDBMS where the table schema is fairly fixed, BigTable encourages the developer to add lots more columns, in fact storing *data* as a new column. This is demonstrated in their web page example; their schema actually adds a new column for each webpage, and each domain that links to the webpage. It's really best to just think of it as a big, columnar, scalable key-value store.
+
+BigTable also builds heavily on other internal Google systems. It uses GFS for persistent storage of data. Chubby is used heavily for things like bootstrapping connections to BigTable, master election, detecting partitions, storing BigTable schema, and access control. Note that a single BigTable tablet server handles all the reads and writes for a tablet; GFS takes care of durability, so all BigTable has to watch out for is load imbalance (which can be handled by migrating tablets to other tablet servers and caching).
+
+Metadata look ups all happen in memory, meaning reads take just a single disk access if they aren't served from cache. Writes happen to a commit log stored durably in GFS, and kept in memory in a *memtable*. When the memtable fills up, the log gets compacted and then written to disk as an *SSTable* (which is an immutable key-value format). SSTables are merged periodically, otherwise an awful lot of SSTables could have to be read on recovery.
+
+### Analysis
+
+Compactions are expensive and can lead to bursty performance. Tablet servers also aren't necessarily located with the corresponding GFS node that durably stores the tablet, meaning reads often have to go remote. Load imbalances also seem like they'd be a big problem, even with the ability to split and migrate tablets, since only only one node can handle reads and writes (which does simplify consistency).
+
+All that said, it does scale up pretty huge, and sees widespread use within Google. There are lots of good points too. I like their shootdown protocol for maintaining BigTable membership; if the master can't reach a tablet server, it force-removes its Chubby lock to make sure the tablet server kills itself. Masters also kill themselves if they lose their Chubby lock on master-ship. This prevents partitions from leading to divergent state, and is a cute idea (despite the name and terminology). BigTable also shows that a simple design with just row-level transactions can work for a broad array of applications, which is a heartening thought for the systems guy in me. 
 
 {%endarticle%}
 
