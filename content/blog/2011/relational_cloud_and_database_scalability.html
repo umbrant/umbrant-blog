@@ -1,0 +1,47 @@
+{% extends "_post.html" %}
+
+{%load webdesign %}
+
+{%hyde
+    title: Paper review: Relational Cloud, Database Scalability
+    created: 2011-12-11 22:15:00
+    draft: True
+%}
+
+{% block article %}
+
+{%article%}
+
+{% excerpt %}
+
+This is a combined paper review for "Relational Cloud: A Database-as-a-Service for the Cloud", a paper from MIT published at CIDR '11, and "Database Scalability, Elasticity, and Autonomy in the Cloud", an extended abstract from UCSB which appeared in DASFAA '11. These papers deal with the strategies used to transition databases and storage systems to the unique challenges of the cloud environment.
+
+{%endexcerpt%}
+
+### Database Scalability
+
+I'm covering the UCSB paper first, since it's essentially a survey paper. It covers the required properties of a cloud storage system or database, and the different techniques used to achieve these properties. The important thing to remember here is that it's always a game of tradeoffs and choosing your point in the design space; databases (including cloud databases) normally mean ACID properties and an SQL interface, storage systems (BigTable, Dynamo) normally mean a wider array of consistency guarantees and a more programmatic interface. Once you've chosen what exact consistency properties or programming interface you want, the underlying techniques used are about the same.
+
+As is stated in the title, there are some core requirements for any database or storage system in the cloud: scalability, elasticity, and autonomy. Scalability means scale-out, the ability to use multiple nodes to gain increased storage capacity and performance. Elasticity is one of the core selling-points of the cloud: pay-as-you-go pricing as a cloud consumer, adding and removing nodes in response to the load on your service. Autonomy just refers to the ability to do these things automatically and reducing management overhead, since people are expensive, and the cloud means that you could potentially be dealing with lot of nodes (and thus potentially a log of people).
+
+The paper then establishes the design space. Pure key-value stores are an unfriendly programming model (not enough consistency), but you also can't just run MySQL in the cloud, meaning that you want something in between. The authors describe taking a key-value store and providing strong consistency on an entity group (think Megastore) to be *data fusion*, while taking a database and sharding it to be *data fission* (of which Relational Cloud is an example). They both share the same property of intra-group/shard operations being efficient (on the same node), but cross-group/shard operations being expensive (two-phase commit!). Like I said before, they end up sounding about the same once you choose the same point in the design space.
+
+The real difference here is in the provided API. A data fusion approach is more explicit about performance, since going cross-group to do an expensive operation requires more code wrangling (do 2PC yourself). On the other hand, data fission will still run your naughty cross-shard SQL query, it'll just do it slowly. Partitioning data in data fusion is also generally more explicit (Megastore makes you define your entity groups), while data fission tries to do it automatically under-the-hood based on your query access pattern.
+
+### Relational Cloud
+
+This is essentially an implementation of a data fission approach from the MIT databases group. They identify many of the same points brought up in the UCSB paper, and add another of their own: privacy.
+
+Scalability is achieved through data partitioning. Rel Cloud uses a graph partitioning strategy to identify min cuts on a graph representing query execution traces, basically trying to group together data that is used together. The clear problem here is speed. It's slow to turn a cloud database worth of tuples into a graph, run the partitioning algo, and then move the data around. Ideally, the system would be able to do this in reaction to load spikes (on the order of minutes), but that's unlikely. Unless the algo is weighted properly too, it could result in bad "full shuffle" data movement patterns, and the inability to manually tune is classic monolithic "let us handle everything" database thinking.
+
+Rel Cloud introduces *Kairos* to take care of autonomous elasticity. It monitors load and the current working set of the database, and adds or removes nodes in response to this. Kairos also can migrate data partitions to take care of load imbalances. It also does pretty deep modeling of I/O performance to figure out the capacity of the system, which I'd like to hear more about.
+
+The final properties is privacy. This refers to CryptDB, a paper that is also on the reading list for CS294. It essentially is a way of doing a limited subset of SQL operations on encrypted data, where the data is stored in the most secure format that can still support the requested operation. In this way, the database only ever sees encrypted data, though there are some assumptions about keys and the threat model that I find slightly unconvincing.
+
+### Analysis
+
+It's important to realize that there's always going to be a core group of business users who won't want to learn some new API, and for whom a data fission/Rel Cloud approach is the only solution they're ever going to use. SQL, even if the database community disagrees, is one of the defining attributes of a database, and that's a major selling point to some. Data fusion key-value stores are well and fine for hip Ruby-on-Rails hackers and Google, but small or medium sized businesses that don't own their own datacenter but want to use the cloud probably want the Rel Cloud database-as-a-service. They want something that looks just like a normal DBMS, but has the additional scalability, elasticity, and autonomy properties that come with the cloud.
+
+{%endarticle%}
+
+{% endblock %}
