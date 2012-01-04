@@ -6,7 +6,7 @@
 	<head>
 		<title>
 			
-			Paper review: The Datacenter Needs an Operating System : umbrant
+			Paper review: COPS : umbrant
 			
 		</title>
 
@@ -61,9 +61,9 @@
 	
 
 		<div class="post single">
-			<h2 class="title"><a href="">Paper review: The Datacenter Needs an Operating System</a></h2>
+			<h2 class="title"><a href="">Paper review: COPS</a></h2>
 			
-			<p class="meta"><span class="date">September 14, 2011</span></p>
+			<p class="meta"><span class="date">January 1, 1911</span></p>
 			
 			<div class="entry">
 			
@@ -72,23 +72,10 @@
 
 <!-- Hyde::Excerpt::Begin -->
 
-<p>This is a paper review of "The Datacenter Needs an Operating System" by Zaharia et al. This is a short 5 page paper published at HotCloud&nbsp;2011.</p>
+<p>This is a paper review of "Don't Settle for Eventual: Scalable Causal Consistency for Wide-Area Storage with COPS", published at SOSP in&nbsp;2011.</p>
 <!-- Hyde::Excerpt::End -->
 
-<h3>Main&nbsp;ideas</h3>
-<p>This is a high-level ideas paper focusing on the abstractions that should be provided in a cluster programming environment. The authors identify the following as the core traits of traditional operating&nbsp;systems:</p>
-<ul>
-<li>Resource&nbsp;sharing</li>
-<li>Data sharing between&nbsp;programs</li>
-<li>Programming abstractions for software&nbsp;development</li>
-<li>Debugging and&nbsp;monitoring</li>
-</ul>
-<p>The authors argue that these same things should be provided to cluster applications as a common layer, instead of having each programming paradigm separately implement them in an adhoc fashion. If I interpret the article correctly, they want to provide a common set of abstractions on top of which programming models like MapReduce or Dryad can be built, benefiting from code sharing as well as more efficient&nbsp;utilization.</p>
-<h3>Problems</h3>
-<p>What I really would have liked to have seen (perhaps in a longer paper) is more of a focus on where the abstractions are going to be drawn between the "datacenter OS" and the "datacenter application". This is a classic problem in traditional OS literature (should it be in the kernel, or in user space?), and I'm betting we'll see the same theme being explored here. Since all these different frameworks already exist, the initial question is figuring out what can actually be pushed down into the&nbsp;OS.</p>
-<p>Debugging is one issue raised that none of the computing frameworks have really solved, so that's the least-defined problem on the list in my mind. Scheduling and resource sharing are difficult, but&nbsp;approachable.</p>
-<h3>Future&nbsp;impact</h3>
-<p>Highly relevant. A proper datacenter operating system enables higher utilization, better performance, and an easier programming environment. As stated before, cloud computing is only becoming more prevalent and&nbsp;important.</p>
+<p>Rest of article goes&nbsp;here.</p>
 <!-- Hyde::Article::End -->
 
 			
@@ -103,8 +90,8 @@
     var disqus_shortname = 'umbrant'; // required: replace example with your forum shortname
 
     // The following are highly recommended additional parameters. Remove the slashes in front to use.
-    var disqus_identifier = '/blog/2011/datacenter_needs_an_operating_system_review.html';
-    var disqus_url = 'http://www.umbrant.com/blog/2011/datacenter_needs_an_operating_system_review.html';
+    var disqus_identifier = '/blog/2012/cops_review.html';
+    var disqus_url = 'http://www.umbrant.com/blog/2012/cops_review.html';
     //var disqus_developer = 1;
 
     /* * * DON'T EDIT BELOW THIS LINE * * */

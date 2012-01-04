@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>umbrant blog</title><link href="http://www.umbrant.com/blog/atom.xml" rel="self"/><link href="http://www.umbrant.com"/><updated>2011-12-12T11:47:55Z</updated><id>http://www.umbrant.com</id><entry><title>Paper review: Relational Cloud, Database Scalability</title><author><name>Andrew Wang</name></author><link href="http://www.umbrant.com/blog/2011/relational_cloud_and_database_scalability.html"/><updated>2011-12-11T22:15:00Z</updated><published>2011-12-11T22:15:00Z</published><id>http://www.umbrant.com/blog/2011/relational_cloud_and_database_scalability.html</id><content type="html">
+<feed xmlns="http://www.w3.org/2005/Atom"><title>umbrant blog</title><link href="http://www.umbrant.com/blog/atom.xml" rel="self"/><link href="http://www.umbrant.com"/><updated>2012-01-04T00:06:21Z</updated><id>http://www.umbrant.com</id><entry><title>Paper review: Relational Cloud, Database Scalability</title><author><name>Andrew Wang</name></author><link href="http://www.umbrant.com/blog/2011/relational_cloud_and_database_scalability.html"/><updated>2011-12-11T22:15:00Z</updated><published>2011-12-11T22:15:00Z</published><id>http://www.umbrant.com/blog/2011/relational_cloud_and_database_scalability.html</id><content type="html">
        
 
 &lt;!-- Hyde::Excerpt::Begin --&gt;
@@ -714,5 +714,40 @@ Since I find this to be a neat trick, I&#39;m going to make the howto into my se
 This site is still very much under development, I have lots of ideas for neat features I want to add (comments being the first), but it&#39;s good enough to put&amp;nbsp;live.&lt;/p&gt;
 &lt;!-- Hyde::Excerpt::End --&gt;
 
+
+   </content></entry><entry><title>Paper review: Facebook Haystack</title><author><name>Andrew Wang</name></author><link href="http://www.umbrant.com/blog/2012/haystack_review.html"/><updated>2012-01-03T15:44:00Z</updated><published>2012-01-03T15:44:00Z</published><id>http://www.umbrant.com/blog/2012/haystack_review.html</id><content type="html">
+       
+
+&lt;!-- Hyde::Excerpt::Begin --&gt;
+
+&lt;p&gt;This is a review of Facebook&#39;s Haystack storage system, used to store the staggering amount of photos that are uploaded to Facebook everyday. Facebook Photos started out with an NFS appliance, but was forced to move to a custom solution for the reasons of cost, scale, and performance. Haystack is an engineering solution that applies well-known techniques from GFS and log-structured filesystems to their distributed, append-only, key-value blob situation. Metadata management is somewhat novel, as well as their CDN&amp;nbsp;integration.&lt;/p&gt;
+&lt;p&gt;The paper, &quot;Finding a needle in Haystack: Facebook&#39;s photo storage&quot; by Beaver et al., was published at OSDI&amp;nbsp;&#39;10.&lt;/p&gt;
+&lt;!-- Hyde::Excerpt::End --&gt;
+
+&lt;h3&gt;Main&amp;nbsp;ideas&lt;/h3&gt;
+&lt;p&gt;Facebook&#39;s design requirements break down as&amp;nbsp;follows:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Efficient random disk access. Anything that hits Haystack missed in the CDN cache, and there are too many photos to fit it all in memory. Thus, there has to be at least one random disk seek; Haystack makes it just one (most of the&amp;nbsp;time).&lt;/li&gt;
+&lt;li&gt;Efficient use of storage space. Using the normal &quot;one file per image&quot; approach killed the # of disk accesses required to serve an image, but it also required huge amounts of extraneous metadata for things like permissions and filenames that don&#39;t&amp;nbsp;matter.&lt;/li&gt;
+&lt;li&gt;Append-only write semantics. Once a photo is written, it cannot be modified. Application &quot;overwrites&quot; are handled by deleting and adding a new photo with the same key. I assume that this ispretty&amp;nbsp;rare.&lt;/li&gt;
+&lt;li&gt;Fault-tolerance. True of any distributed&amp;nbsp;system.&lt;/li&gt;
+&lt;li&gt;Scalability and elasticity.&amp;nbsp;Ditto.&lt;/li&gt;
+&lt;li&gt;Simplicity. Always good if you can get&amp;nbsp;it.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Efficient disk access and use of storage space are handled by essentially keeping metadata in memory and collapsing many images together into a single file that is preallocated on disk, called a &quot;physical volume&quot;. These physical volumes are on the order of a hundred gigabytes, and function basically like segments (if you think back to the memory management part of your OS class); each photo is referenced as an offset and length within a file. As long as a server can keep this offset+length metadata and the inodes of the huge files in memory, it can do almost every photo read in a single random seek (with the corner case of falling on an extent boundary requiring two). There are also checksums and flags and other metadata that are stored in the file&amp;nbsp;on-disk.&lt;/p&gt;
+&lt;p&gt;Recovery of the memory metadata is done through the use of a checkpoint file, that is then updated by examining the end of each file. This works because new photos are added sequentially, like in a log-structured filesystem. Recovering the &quot;is deleted&quot; flag is done lazily when a read request is made, by checking the flag&#39;s state on-disk (which will be right, due to all writes being synchronous). Synchronous writes and append-only semantics make consistency a&amp;nbsp;non-issue.&lt;/p&gt;
+&lt;p&gt;Haystack combines multiple physical volumes into a single &quot;logical volume&quot;, through which is how photos are actually accessed. Mapping from logical to physical is again done via an in-memory structure. I think this is how they do geographic replication, by mirroring writes across all the physical volumes in a logical volume, which has to contain volumes in multiple&amp;nbsp;locations.&lt;/p&gt;
+&lt;p&gt;Photo writes are optimized pretty heavily. Naturally, they are batched, but there is also some interplay with the Haystack cache (which acts like an internal CDN). Machines are marked as either write-enabled or read-only. Write-enabled machines get to keep their data in the Haystack cache, to reduce their read load moving the disk head excessively. The cache also does prefetching of new photos, since they&#39;re very likely to be accessed soon. Read-only machines with a lot of deleted photos can be compacted and (I assume) toggled back to write-enabled to receive more&amp;nbsp;photos.&lt;/p&gt;
+&lt;p&gt;A few more misc&amp;nbsp;takeaways:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;XFS worked the best for making the large 100GB files used for physical&amp;nbsp;volumes&lt;/li&gt;
+&lt;li&gt;RAID is also used underneath, for added&amp;nbsp;availability&lt;/li&gt;
+&lt;li&gt;Many layers of cache yield diminishing&amp;nbsp;returns&lt;/li&gt;
+&lt;li&gt;The photo URL on FB starts off pointing at a CDN, but gets stripped down successively as it goes further into Haystack. Ex:&amp;nbsp;http://CDN/HayCache/HayMachine/VolumeAndPhoto.&lt;/li&gt;
+&lt;li&gt;Centralized master maintains the logical-to-physical mapping and load balances writes across logical volumes. Seems easy to keep in memory and replicate if&amp;nbsp;necessary.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3&gt;Analysis&lt;/h3&gt;
+&lt;p&gt;This really was a great application to build a new system, since existing stuff wouldn&#39;t do it as well, and the requirements made it relatively easy as distributed systems go. It pulls heavily from GFS with the centralized master and many data node approach, and also uses LFS concepts of a sequentially-written log and keeping filesystem metadata in memory. The &quot;write-enabled&quot; vs. &quot;read-only&quot; business is essentially adding journalling to a distributed filesystem, which of course is just a mini-version of the ideas in LFS. Using giant 100GB files means they were able to make their own super-simple user-level filesystem without writing an actual filesystem, a move I applaud for practical&amp;nbsp;reasons.&lt;/p&gt;
+&lt;p&gt;I can&#39;t say there was much &quot;aha&quot; content in the paper though, and it wasn&#39;t well written. I normally like industrial papers, but this was such a straightforward implementation paper, and it didn&#39;t add anything new in terms of real-world experiences. I don&#39;t think there&#39;s much to be learned if you already understand GFS well. This is noted in their related work section, where it basically says &quot;our usecase was easier than everyone else&#39;s&quot;. Reading it again a year and a half on, I&#39;m kind of disappointed. Good system, but bland research (if you want to even call it&amp;nbsp;that).&lt;/p&gt;
 
    </content></entry></feed>
