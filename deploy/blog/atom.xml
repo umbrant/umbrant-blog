@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>umbrant blog</title><link href="http://www.umbrant.com/blog/atom.xml" rel="self"/><link href="http://www.umbrant.com"/><updated>2012-01-04T00:06:21Z</updated><id>http://www.umbrant.com</id><entry><title>Paper review: Relational Cloud, Database Scalability</title><author><name>Andrew Wang</name></author><link href="http://www.umbrant.com/blog/2011/relational_cloud_and_database_scalability.html"/><updated>2011-12-11T22:15:00Z</updated><published>2011-12-11T22:15:00Z</published><id>http://www.umbrant.com/blog/2011/relational_cloud_and_database_scalability.html</id><content type="html">
+<feed xmlns="http://www.w3.org/2005/Atom"><title>umbrant blog</title><link href="http://www.umbrant.com/blog/atom.xml" rel="self"/><link href="http://www.umbrant.com"/><updated>2012-01-05T21:53:09Z</updated><id>http://www.umbrant.com</id><entry><title>Paper review: Relational Cloud, Database Scalability</title><author><name>Andrew Wang</name></author><link href="http://www.umbrant.com/blog/2011/relational_cloud_and_database_scalability.html"/><updated>2011-12-11T22:15:00Z</updated><published>2011-12-11T22:15:00Z</published><id>http://www.umbrant.com/blog/2011/relational_cloud_and_database_scalability.html</id><content type="html">
        
 
 &lt;!-- Hyde::Excerpt::Begin --&gt;
@@ -714,6 +714,100 @@ Since I find this to be a neat trick, I&#39;m going to make the howto into my se
 This site is still very much under development, I have lots of ideas for neat features I want to add (comments being the first), but it&#39;s good enough to put&amp;nbsp;live.&lt;/p&gt;
 &lt;!-- Hyde::Excerpt::End --&gt;
 
+
+   </content></entry><entry><title>Year in review: 2011 (professional)</title><author><name>Andrew Wang</name></author><link href="http://www.umbrant.com/blog/2012/year_in_review_2011_professional.html"/><updated>2012-01-05T21:44:00Z</updated><published>2012-01-05T21:44:00Z</published><id>http://www.umbrant.com/blog/2012/year_in_review_2011_professional.html</id><content type="html">
+       
+
+&lt;!-- Hyde::Excerpt::Begin --&gt;
+
+&lt;p&gt;I like to take some time every once in a while to think about what I&#39;ve done that I&#39;m proud of, what I&#39;ve learned, and what I want to do. With the beginning of a new year comes the perfect opportunity to reflect on my life in the year&amp;nbsp;past.&lt;/p&gt;
+&lt;p&gt;I&#39;ve split it into two separate blog posts, one &lt;a href=&quot;/blog/2012/year_in_review_2011_professional.html&quot;&gt;professional&lt;/a&gt; (meaning research and grad school life) and one &lt;a href=&quot;year_in_review_2011_personal.html&quot;&gt;personal&lt;/a&gt; (meaning hobbies, self-improvement, life goals). This post covers the former; my life as a grad student in&amp;nbsp;2011.&lt;/p&gt;
+&lt;!-- Hyde::Excerpt::End --&gt;
+
+&lt;p&gt;First, things I&#39;ve done in the past year that I&#39;m proud of. Next, meta-comments related to research. Finally, a section on teaching, since I TA&#39;d CS162 this past semester (my first teaching&amp;nbsp;experience).&lt;/p&gt;
+&lt;h3&gt;Accomplishments&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;Getting an advisor. This was really a major milestone in my grad career, and only happened as of about 4 months&amp;nbsp;ago.&lt;/li&gt;
+&lt;li&gt;Publishing a paper. CrowdDB won best demo at VLDB, and PACMan got into&amp;nbsp;NSDI.&lt;/li&gt;
+&lt;li&gt;Picking a good problem and starting a project I can call my own. Prior stuff was all sort of handed to me, so this is another major&amp;nbsp;milestone.&lt;/li&gt;
+&lt;li&gt;Survived teaching for the first time. I feel pretty good about my own contributions to CS162; it was a lot of blood, sweat, and tears, but I love the students and all my fellow&amp;nbsp;TAs.&lt;/li&gt;
+&lt;li&gt;Worked harder for a prolonged period than I ever have before. This was for Jellyfish, my class project for Ion&#39;s Cloud Computing course. Good to have done it, don&#39;t wish to repeat&amp;nbsp;it.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3&gt;Research-related&amp;nbsp;nuggets&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;Math is really, really useful. I regret not having learned it better in undergrad, since I&#39;m pretty much resigned to taking the stat sequence here at&amp;nbsp;Berkeley.&lt;/li&gt;
+&lt;li&gt;Queuing theory and control theory are basically black magic, and I don&#39;t think I&#39;ll ever grok it rigorously. Fortunately, heuristics and approximations oftentimes work, and are the common &quot;git-er-done&quot; systems&amp;nbsp;solution.&lt;/li&gt;
+&lt;li&gt;Machine learning is an almost mythical solution to some problems (from my perspective). This falls in with my above two points; often I feel like there&#39;s a preexisting approach to the problem I&#39;m staring at, but even when I know vaguely what it is, it&#39;s inaccessible to mere&amp;nbsp;mortals.&lt;/li&gt;
+&lt;li&gt;Start out by doing stupidly simple and unrealistic experiments to make sure you understand what&#39;s going on. We made the mistake of going directly to a very realistic workload, and got overwhelmed by the complexity. Ion very correctly identified some basic experiments that let us test our mental model of the&amp;nbsp;system.&lt;/li&gt;
+&lt;li&gt;Time spent on infrastructure is not time wasted. We spent months automating our experiments, setting up clusters, scripting the graph workflow, generalizing functionality, all in the background while trying to make sense of the data. When it finally clicked, all that infrastructure allowed us to run the graphs we wanted in half a&amp;nbsp;day.&lt;/li&gt;
+&lt;li&gt;Look for fundamental tradeoffs in your problem space (a Ion nugget). It can really clarify the right design&amp;nbsp;choice.&lt;/li&gt;
+&lt;li&gt;Be glad when things are hard, because it means you&#39;ve chosen a good&amp;nbsp;problem.&lt;/li&gt;
+&lt;li&gt;Ask questions. Yes, you might look dumb, but if you don&#39;t ask, it&#39;ll only hold you back from actually understanding what&#39;s going&amp;nbsp;on.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3&gt;Teaching-related&amp;nbsp;nuggets&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;I still like teaching and interacting with students, even after what has been noted as one of the more trying CS classes ever offered at UC&amp;nbsp;Berkeley.&lt;/li&gt;
+&lt;li&gt;Properly preparing an hour of material takes at least two hours, and that&#39;s if you actually know as much about the topic as you think you&amp;nbsp;do.&lt;/li&gt;
+&lt;li&gt;Encouraging participation during section is paramount. I think rewarding interaction with lollipops worked pretty&amp;nbsp;well.&lt;/li&gt;
+&lt;li&gt;Professors are fallible, and have their own weaknesses like anyone. These weaknesses will very rarely affect their performance as a researcher, but can crop up during&amp;nbsp;teaching.&lt;/li&gt;
+&lt;li&gt;Teaching can suck up time like nothing else. There&#39;s always pressure from students and instructors to spend more time on the class, and you really have to draw a line&amp;nbsp;somewhere.&lt;/li&gt;
+&lt;/ul&gt;
+
+   </content></entry><entry><title>Year in review: 2011 (personal)</title><author><name>Andrew Wang</name></author><link href="http://www.umbrant.com/blog/2012/year_in_review_2011_personal.html"/><updated>2012-01-05T21:44:00Z</updated><published>2012-01-05T21:44:00Z</published><id>http://www.umbrant.com/blog/2012/year_in_review_2011_personal.html</id><content type="html">
+       
+
+&lt;!-- Hyde::Excerpt::Begin --&gt;
+
+&lt;p&gt;I like to take some time every once in a while to think about what I&#39;ve done that I&#39;m proud of, what I&#39;ve learned, and what I want to do. With the beginning of a new year comes the perfect opportunity to reflect on my life in the year&amp;nbsp;past.&lt;/p&gt;
+&lt;p&gt;I&#39;ve split it into two separate blog posts, one &lt;a href=&quot;/blog/2012/year_in_review_2011_professional.html&quot;&gt;professional&lt;/a&gt; (meaning research and grad school life) and one &lt;a href=&quot;year_in_review_2011_personal.html&quot;&gt;personal&lt;/a&gt; (meaning hobbies, self-improvement, life goals). This post covers the latter; my personal life in&amp;nbsp;2011.&lt;/p&gt;
+&lt;!-- Hyde::Excerpt::End --&gt;
+
+&lt;p&gt;This post is also split up into different sections. The first is again accomplishments, then I cover time management, my 3 main hobbies these days, and then misc other personal&amp;nbsp;stuff.&lt;/p&gt;
+&lt;h3&gt;Accomplishments&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;Got a bugfix patch into Hadoop. This happened at one of the Cloudera hackathons, I showed up and fixed something off JIRA, and now people are using it. It&#39;s not quite the Linux kernel patch on my &lt;a href=&quot;/bucket.html&quot;&gt;bucket list&lt;/a&gt;, but it&#39;s a&amp;nbsp;step.&lt;/li&gt;
+&lt;li&gt;Bootstrapped myself as a guitarist. Literally just bought one and started playing last January, and it&#39;s worked out&amp;nbsp;okay.&lt;/li&gt;
+&lt;li&gt;Became a better public speaker. I credit the two hours of teaching section every week. I&#39;m not ready to cross it off the bucket list yet (might never), but I think I&#39;ve&amp;nbsp;improved.&lt;/li&gt;
+&lt;li&gt;Can order Indian food reasonably well. Credit here goes to Zaika Tuesdays last&amp;nbsp;semester.&lt;/li&gt;
+&lt;li&gt;I got my RSI under control. I was actually worried in the summer that I&#39;d have to drop out of grad school and find a new profession unrelated to a keyboard, but it turned out okay after physical&amp;nbsp;therapy.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3&gt;Time&amp;nbsp;management&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;Overall, I&#39;m reasonably happy with how much I got done. I&#39;d estimate my productivity these days at somewhere around 70-80%, and there&#39;s always going to be some slop&amp;nbsp;there.&lt;/li&gt;
+&lt;li&gt;Balance. I spent last semester either working furiously or burnt out, and that&#39;s not optimal. Being burnt out basically gives you an excuse to not do anything for an indefinite amount of time, and I hate making excuses to&amp;nbsp;myself.&lt;/li&gt;
+&lt;li&gt;To add to the previous point, I think having regular, recurring events each week will help me stay&amp;nbsp;sane.&lt;/li&gt;
+&lt;li&gt;Intentionally scheduling my meetings early was a great way of forcing myself to work almost a&amp;nbsp;9-to-5.&lt;/li&gt;
+&lt;li&gt;Getting enough sleep actually happened last semester, and it was glorious. This also goes back to not making excuses to myself (about underachieving because I&#39;m&amp;nbsp;tired).&lt;/li&gt;
+&lt;li&gt;I need to make conscious decisions to do less of some things and more of others, since time is&amp;nbsp;precious.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3&gt;Hobbies&lt;/h3&gt;
+&lt;h4&gt;Cooking&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;Cooking has tapered off as an interest, as I&#39;ve achieved some level of optimality in the &quot;effort expended vs. output achieved&quot; metric. I don&#39;t have hours every week to spend cooking up new&amp;nbsp;stuff.&lt;/li&gt;
+&lt;li&gt;I still think it&#39;d be good to do something new once a week, or once a month. I&#39;m going to avoid anything elaborate or complicated though, I&#39;m past that&amp;nbsp;phase.&lt;/li&gt;
+&lt;li&gt;I do want to keep cooking club going this year though, since it fell flat as soon as I got swamped with teaching and research last semester. It fulfills a social niche that isn&#39;t met by weekend parties, and it&#39;s nice to have some continuity with the same group of people.&lt;br /&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4&gt;Guitar&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;Guitar-wise, I need to be more structured about how I practice. Focus on repetition until mastery, not just noodling around for an&amp;nbsp;hour.&lt;/li&gt;
+&lt;li&gt;I want to make it a goal to play more with other people, since doing it over break was a lot of&amp;nbsp;fun.&lt;/li&gt;
+&lt;li&gt;I&#39;m also going to make it a point to improv 12-bar blues as part of my practice&amp;nbsp;sessions.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4&gt;Bicycling&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;Bicycling was something I missed a bunch when I was working furiously, it was a really great way of starting off my&amp;nbsp;Saturdays.&lt;/li&gt;
+&lt;li&gt;I want to find some new rides, since doing 3 Bears is getting a little&amp;nbsp;repetitive.&lt;/li&gt;
+&lt;li&gt;The cycling list died out a bit when I stopped organizing rides; I&#39;d like to get it to the point where it&#39;s stable without&amp;nbsp;me.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3&gt;Personal&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;I&#39;m not convinced I want to stick with the PhD thing all the way through yet. Grad school hasn&#39;t exactly been smooth sailing for me, but it seems to be trending upwards. This will be an important year in making a decision, since the master&#39;s is a good drop-out&amp;nbsp;point.&lt;/li&gt;
+&lt;li&gt;Balance again. I still do believe in work-life integration, but when you&#39;re working 12-16 hours 6 days a week and eating out for every meal because of it, it&#39;s gone too&amp;nbsp;far.&lt;/li&gt;
+&lt;li&gt;I need to write in my journal more, and write more blog posts about things I find&amp;nbsp;interesting.&lt;/li&gt;
+&lt;li&gt;Strangely, I think I need to spend more money. When you&#39;re living on a grad student stipend, that little bit you could save has a high marginal utility if spent&amp;nbsp;instead.&lt;/li&gt;
+&lt;li&gt;I&#39;m looking forward to TGIF with my cube from now on, the one time we did it in December before everyone left was&amp;nbsp;great.&lt;/li&gt;
+&lt;/ul&gt;
 
    </content></entry><entry><title>Paper review: Facebook Haystack</title><author><name>Andrew Wang</name></author><link href="http://www.umbrant.com/blog/2012/haystack_review.html"/><updated>2012-01-03T15:44:00Z</updated><published>2012-01-03T15:44:00Z</published><id>http://www.umbrant.com/blog/2012/haystack_review.html</id><content type="html">
        

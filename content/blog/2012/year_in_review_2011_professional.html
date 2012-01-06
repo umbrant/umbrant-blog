@@ -1,0 +1,56 @@
+{% extends "_post.html" %}
+
+{%load webdesign %}
+
+{%hyde
+    title: "Year in review: 2011 (professional)"
+    created: 2012-01-05 21:44:00
+%}
+
+{% block article %}
+
+{%article%}
+
+{% excerpt %}
+
+I like to take some time every once in a while to think about what I've done that I'm proud of, what I've learned, and what I want to do. With the beginning of a new year comes the perfect opportunity to reflect on my life in the year past.
+
+I've split it into two separate blog posts, one [professional](/blog/2012/year_in_review_2011_professional.html) (meaning research and grad school life) and one [personal](year_in_review_2011_personal.html) (meaning hobbies, self-improvement, life goals). This post covers the former; my life as a grad student in 2011.
+
+{%endexcerpt%}
+
+First, things I've done in the past year that I'm proud of. Next, meta-comments related to research. Finally, a section on teaching, since I TA'd CS162 this past semester (my first teaching experience).
+
+
+### Accomplishments
+
+* Getting an advisor. This was really a major milestone in my grad career, and only happened as of about 4 months ago.
+* Publishing a paper. CrowdDB won best demo at VLDB, and PACMan got into NSDI.
+* Picking a good problem and starting a project I can call my own. Prior stuff was all sort of handed to me, so this is another major milestone.
+* Survived teaching for the first time. I feel pretty good about my own contributions to CS162; it was a lot of blood, sweat, and tears, but I love the students and all my fellow TAs.
+* Worked harder for a prolonged period than I ever have before. This was for Jellyfish, my class project for Ion's Cloud Computing course. Good to have done it, don't wish to repeat it.
+
+
+### Research-related nuggets
+
+* Math is really, really useful. I regret not having learned it better in undergrad, since I'm pretty much resigned to taking the stat sequence here at Berkeley.
+* Queuing theory and control theory are basically black magic, and I don't think I'll ever grok it rigorously. Fortunately, heuristics and approximations oftentimes work, and are the common "git-er-done" systems solution.
+* Machine learning is an almost mythical solution to some problems (from my perspective). This falls in with my above two points; often I feel like there's a preexisting approach to the problem I'm staring at, but even when I know vaguely what it is, it's inaccessible to mere mortals.
+* Start out by doing stupidly simple and unrealistic experiments to make sure you understand what's going on. We made the mistake of going directly to a very realistic workload, and got overwhelmed by the complexity. Ion very correctly identified some basic experiments that let us test our mental model of the system.
+* Time spent on infrastructure is not time wasted. We spent months automating our experiments, setting up clusters, scripting the graph workflow, generalizing functionality, all in the background while trying to make sense of the data. When it finally clicked, all that infrastructure allowed us to run the graphs we wanted in half a day.
+* Look for fundamental tradeoffs in your problem space (a Ion nugget). It can really clarify the right design choice.
+* Be glad when things are hard, because it means you've chosen a good problem.
+* Ask questions. Yes, you might look dumb, but if you don't ask, it'll only hold you back from actually understanding what's going on.
+
+
+### Teaching-related nuggets
+
+* I still like teaching and interacting with students, even after what has been noted as one of the more trying CS classes ever offered at UC Berkeley.
+* Properly preparing an hour of material takes at least two hours, and that's if you actually know as much about the topic as you think you do.
+* Encouraging participation during section is paramount. I think rewarding interaction with lollipops worked pretty well.
+* Professors are fallible, and have their own weaknesses like anyone. These weaknesses will very rarely affect their performance as a researcher, but can crop up during teaching.
+* Teaching can suck up time like nothing else. There's always pressure from students and instructors to spend more time on the class, and you really have to draw a line somewhere.
+
+{%endarticle%}
+
+{% endblock %}
