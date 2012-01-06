@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>umbrant blog</title><link href="http://www.umbrant.com/blog/atom.xml" rel="self"/><link href="http://www.umbrant.com"/><updated>2012-01-05T21:53:09Z</updated><id>http://www.umbrant.com</id><entry><title>Paper review: Relational Cloud, Database Scalability</title><author><name>Andrew Wang</name></author><link href="http://www.umbrant.com/blog/2011/relational_cloud_and_database_scalability.html"/><updated>2011-12-11T22:15:00Z</updated><published>2011-12-11T22:15:00Z</published><id>http://www.umbrant.com/blog/2011/relational_cloud_and_database_scalability.html</id><content type="html">
+<feed xmlns="http://www.w3.org/2005/Atom"><title>umbrant blog</title><link href="http://www.umbrant.com/blog/atom.xml" rel="self"/><link href="http://www.umbrant.com"/><updated>2012-01-05T21:56:00Z</updated><id>http://www.umbrant.com</id><entry><title>Paper review: Relational Cloud, Database Scalability</title><author><name>Andrew Wang</name></author><link href="http://www.umbrant.com/blog/2011/relational_cloud_and_database_scalability.html"/><updated>2011-12-11T22:15:00Z</updated><published>2011-12-11T22:15:00Z</published><id>http://www.umbrant.com/blog/2011/relational_cloud_and_database_scalability.html</id><content type="html">
        
 
 &lt;!-- Hyde::Excerpt::Begin --&gt;
@@ -715,44 +715,6 @@ This site is still very much under development, I have lots of ideas for neat fe
 &lt;!-- Hyde::Excerpt::End --&gt;
 
 
-   </content></entry><entry><title>Year in review: 2011 (professional)</title><author><name>Andrew Wang</name></author><link href="http://www.umbrant.com/blog/2012/year_in_review_2011_professional.html"/><updated>2012-01-05T21:44:00Z</updated><published>2012-01-05T21:44:00Z</published><id>http://www.umbrant.com/blog/2012/year_in_review_2011_professional.html</id><content type="html">
-       
-
-&lt;!-- Hyde::Excerpt::Begin --&gt;
-
-&lt;p&gt;I like to take some time every once in a while to think about what I&#39;ve done that I&#39;m proud of, what I&#39;ve learned, and what I want to do. With the beginning of a new year comes the perfect opportunity to reflect on my life in the year&amp;nbsp;past.&lt;/p&gt;
-&lt;p&gt;I&#39;ve split it into two separate blog posts, one &lt;a href=&quot;/blog/2012/year_in_review_2011_professional.html&quot;&gt;professional&lt;/a&gt; (meaning research and grad school life) and one &lt;a href=&quot;year_in_review_2011_personal.html&quot;&gt;personal&lt;/a&gt; (meaning hobbies, self-improvement, life goals). This post covers the former; my life as a grad student in&amp;nbsp;2011.&lt;/p&gt;
-&lt;!-- Hyde::Excerpt::End --&gt;
-
-&lt;p&gt;First, things I&#39;ve done in the past year that I&#39;m proud of. Next, meta-comments related to research. Finally, a section on teaching, since I TA&#39;d CS162 this past semester (my first teaching&amp;nbsp;experience).&lt;/p&gt;
-&lt;h3&gt;Accomplishments&lt;/h3&gt;
-&lt;ul&gt;
-&lt;li&gt;Getting an advisor. This was really a major milestone in my grad career, and only happened as of about 4 months&amp;nbsp;ago.&lt;/li&gt;
-&lt;li&gt;Publishing a paper. CrowdDB won best demo at VLDB, and PACMan got into&amp;nbsp;NSDI.&lt;/li&gt;
-&lt;li&gt;Picking a good problem and starting a project I can call my own. Prior stuff was all sort of handed to me, so this is another major&amp;nbsp;milestone.&lt;/li&gt;
-&lt;li&gt;Survived teaching for the first time. I feel pretty good about my own contributions to CS162; it was a lot of blood, sweat, and tears, but I love the students and all my fellow&amp;nbsp;TAs.&lt;/li&gt;
-&lt;li&gt;Worked harder for a prolonged period than I ever have before. This was for Jellyfish, my class project for Ion&#39;s Cloud Computing course. Good to have done it, don&#39;t wish to repeat&amp;nbsp;it.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h3&gt;Research-related&amp;nbsp;nuggets&lt;/h3&gt;
-&lt;ul&gt;
-&lt;li&gt;Math is really, really useful. I regret not having learned it better in undergrad, since I&#39;m pretty much resigned to taking the stat sequence here at&amp;nbsp;Berkeley.&lt;/li&gt;
-&lt;li&gt;Queuing theory and control theory are basically black magic, and I don&#39;t think I&#39;ll ever grok it rigorously. Fortunately, heuristics and approximations oftentimes work, and are the common &quot;git-er-done&quot; systems&amp;nbsp;solution.&lt;/li&gt;
-&lt;li&gt;Machine learning is an almost mythical solution to some problems (from my perspective). This falls in with my above two points; often I feel like there&#39;s a preexisting approach to the problem I&#39;m staring at, but even when I know vaguely what it is, it&#39;s inaccessible to mere&amp;nbsp;mortals.&lt;/li&gt;
-&lt;li&gt;Start out by doing stupidly simple and unrealistic experiments to make sure you understand what&#39;s going on. We made the mistake of going directly to a very realistic workload, and got overwhelmed by the complexity. Ion very correctly identified some basic experiments that let us test our mental model of the&amp;nbsp;system.&lt;/li&gt;
-&lt;li&gt;Time spent on infrastructure is not time wasted. We spent months automating our experiments, setting up clusters, scripting the graph workflow, generalizing functionality, all in the background while trying to make sense of the data. When it finally clicked, all that infrastructure allowed us to run the graphs we wanted in half a&amp;nbsp;day.&lt;/li&gt;
-&lt;li&gt;Look for fundamental tradeoffs in your problem space (a Ion nugget). It can really clarify the right design&amp;nbsp;choice.&lt;/li&gt;
-&lt;li&gt;Be glad when things are hard, because it means you&#39;ve chosen a good&amp;nbsp;problem.&lt;/li&gt;
-&lt;li&gt;Ask questions. Yes, you might look dumb, but if you don&#39;t ask, it&#39;ll only hold you back from actually understanding what&#39;s going&amp;nbsp;on.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h3&gt;Teaching-related&amp;nbsp;nuggets&lt;/h3&gt;
-&lt;ul&gt;
-&lt;li&gt;I still like teaching and interacting with students, even after what has been noted as one of the more trying CS classes ever offered at UC&amp;nbsp;Berkeley.&lt;/li&gt;
-&lt;li&gt;Properly preparing an hour of material takes at least two hours, and that&#39;s if you actually know as much about the topic as you think you&amp;nbsp;do.&lt;/li&gt;
-&lt;li&gt;Encouraging participation during section is paramount. I think rewarding interaction with lollipops worked pretty&amp;nbsp;well.&lt;/li&gt;
-&lt;li&gt;Professors are fallible, and have their own weaknesses like anyone. These weaknesses will very rarely affect their performance as a researcher, but can crop up during&amp;nbsp;teaching.&lt;/li&gt;
-&lt;li&gt;Teaching can suck up time like nothing else. There&#39;s always pressure from students and instructors to spend more time on the class, and you really have to draw a line&amp;nbsp;somewhere.&lt;/li&gt;
-&lt;/ul&gt;
-
    </content></entry><entry><title>Year in review: 2011 (personal)</title><author><name>Andrew Wang</name></author><link href="http://www.umbrant.com/blog/2012/year_in_review_2011_personal.html"/><updated>2012-01-05T21:44:00Z</updated><published>2012-01-05T21:44:00Z</published><id>http://www.umbrant.com/blog/2012/year_in_review_2011_personal.html</id><content type="html">
        
 
@@ -807,6 +769,44 @@ This site is still very much under development, I have lots of ideas for neat fe
 &lt;li&gt;I need to write in my journal more, and write more blog posts about things I find&amp;nbsp;interesting.&lt;/li&gt;
 &lt;li&gt;Strangely, I think I need to spend more money. When you&#39;re living on a grad student stipend, that little bit you could save has a high marginal utility if spent&amp;nbsp;instead.&lt;/li&gt;
 &lt;li&gt;I&#39;m looking forward to TGIF with my cube from now on, the one time we did it in December before everyone left was&amp;nbsp;great.&lt;/li&gt;
+&lt;/ul&gt;
+
+   </content></entry><entry><title>Year in review: 2011 (professional)</title><author><name>Andrew Wang</name></author><link href="http://www.umbrant.com/blog/2012/year_in_review_2011_professional.html"/><updated>2012-01-05T21:43:00Z</updated><published>2012-01-05T21:43:00Z</published><id>http://www.umbrant.com/blog/2012/year_in_review_2011_professional.html</id><content type="html">
+       
+
+&lt;!-- Hyde::Excerpt::Begin --&gt;
+
+&lt;p&gt;I like to take some time every once in a while to think about what I&#39;ve done that I&#39;m proud of, what I&#39;ve learned, and what I want to do. With the beginning of a new year comes the perfect opportunity to reflect on my life in the year&amp;nbsp;past.&lt;/p&gt;
+&lt;p&gt;I&#39;ve split it into two separate blog posts, one &lt;a href=&quot;/blog/2012/year_in_review_2011_professional.html&quot;&gt;professional&lt;/a&gt; (meaning research and grad school life) and one &lt;a href=&quot;year_in_review_2011_personal.html&quot;&gt;personal&lt;/a&gt; (meaning hobbies, self-improvement, life goals). This post covers the former; my life as a grad student in&amp;nbsp;2011.&lt;/p&gt;
+&lt;!-- Hyde::Excerpt::End --&gt;
+
+&lt;p&gt;First, things I&#39;ve done in the past year that I&#39;m proud of. Next, meta-comments related to research. Finally, a section on teaching, since I TA&#39;d CS162 this past semester (my first teaching&amp;nbsp;experience).&lt;/p&gt;
+&lt;h3&gt;Accomplishments&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;Getting an advisor. This was really a major milestone in my grad career, and only happened as of about 4 months&amp;nbsp;ago.&lt;/li&gt;
+&lt;li&gt;Publishing a paper. CrowdDB won best demo at VLDB, and PACMan got into&amp;nbsp;NSDI.&lt;/li&gt;
+&lt;li&gt;Picking a good problem and starting a project I can call my own. Prior stuff was all sort of handed to me, so this is another major&amp;nbsp;milestone.&lt;/li&gt;
+&lt;li&gt;Survived teaching for the first time. I feel pretty good about my own contributions to CS162; it was a lot of blood, sweat, and tears, but I love the students and all my fellow&amp;nbsp;TAs.&lt;/li&gt;
+&lt;li&gt;Worked harder for a prolonged period than I ever have before. This was for Jellyfish, my class project for Ion&#39;s Cloud Computing course. Good to have done it, don&#39;t wish to repeat&amp;nbsp;it.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3&gt;Research-related&amp;nbsp;nuggets&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;Math is really, really useful. I regret not having learned it better in undergrad, since I&#39;m pretty much resigned to taking the stat sequence here at&amp;nbsp;Berkeley.&lt;/li&gt;
+&lt;li&gt;Queuing theory and control theory are basically black magic, and I don&#39;t think I&#39;ll ever grok it rigorously. Fortunately, heuristics and approximations oftentimes work, and are the common &quot;git-er-done&quot; systems&amp;nbsp;solution.&lt;/li&gt;
+&lt;li&gt;Machine learning is an almost mythical solution to some problems (from my perspective). This falls in with my above two points; often I feel like there&#39;s a preexisting approach to the problem I&#39;m staring at, but even when I know vaguely what it is, it&#39;s inaccessible to mere&amp;nbsp;mortals.&lt;/li&gt;
+&lt;li&gt;Start out by doing stupidly simple and unrealistic experiments to make sure you understand what&#39;s going on. We made the mistake of going directly to a very realistic workload, and got overwhelmed by the complexity. Ion very correctly identified some basic experiments that let us test our mental model of the&amp;nbsp;system.&lt;/li&gt;
+&lt;li&gt;Time spent on infrastructure is not time wasted. We spent months automating our experiments, setting up clusters, scripting the graph workflow, generalizing functionality, all in the background while trying to make sense of the data. When it finally clicked, all that infrastructure allowed us to run the graphs we wanted in half a&amp;nbsp;day.&lt;/li&gt;
+&lt;li&gt;Look for fundamental tradeoffs in your problem space (a Ion nugget). It can really clarify the right design&amp;nbsp;choice.&lt;/li&gt;
+&lt;li&gt;Be glad when things are hard, because it means you&#39;ve chosen a good&amp;nbsp;problem.&lt;/li&gt;
+&lt;li&gt;Ask questions. Yes, you might look dumb, but if you don&#39;t ask, it&#39;ll only hold you back from actually understanding what&#39;s going&amp;nbsp;on.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3&gt;Teaching-related&amp;nbsp;nuggets&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;I still like teaching and interacting with students, even after what has been noted as one of the more trying CS classes ever offered at UC&amp;nbsp;Berkeley.&lt;/li&gt;
+&lt;li&gt;Properly preparing an hour of material takes at least two hours, and that&#39;s if you actually know as much about the topic as you think you&amp;nbsp;do.&lt;/li&gt;
+&lt;li&gt;Encouraging participation during section is paramount. I think rewarding interaction with lollipops worked pretty&amp;nbsp;well.&lt;/li&gt;
+&lt;li&gt;Professors are fallible, and have their own weaknesses like anyone. These weaknesses will very rarely affect their performance as a researcher, but can crop up during&amp;nbsp;teaching.&lt;/li&gt;
+&lt;li&gt;Teaching can suck up time like nothing else. There&#39;s always pressure from students and instructors to spend more time on the class, and you really have to draw a line&amp;nbsp;somewhere.&lt;/li&gt;
 &lt;/ul&gt;
 
    </content></entry><entry><title>Paper review: Facebook Haystack</title><author><name>Andrew Wang</name></author><link href="http://www.umbrant.com/blog/2012/haystack_review.html"/><updated>2012-01-03T15:44:00Z</updated><published>2012-01-03T15:44:00Z</published><id>http://www.umbrant.com/blog/2012/haystack_review.html</id><content type="html">
