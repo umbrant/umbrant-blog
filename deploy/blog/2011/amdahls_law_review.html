@@ -72,16 +72,16 @@
 
 <!-- Hyde::Excerpt::Begin -->
 
-<p>This is a paper review of "Amdahl's Law in the Multicore Era", by Hill and&nbsp;Marty.</p>
+<p>This is a paper review of &#8220;Amdahl&#8217;s Law in the Multicore Era&#8221;, by Hill and&nbsp;Marty.</p>
 <!-- Hyde::Excerpt::End -->
 
 <h3>Main&nbsp;ideas</h3>
-<p>There are two important equations in this paper that lay the foundation for the rest of the paper: Amdahl's law, and the processor performance&nbsp;law.</p>
+<p>There are two important equations in this paper that lay the foundation for the rest of the paper: Amdahl&#8217;s law, and the processor performance&nbsp;law.</p>
 <pre><code>speedup = 1 / ((1-f + f/s)
 perf(r) = sqrt(r)
 </code></pre>
-<p>These two equations have some deep implications. Starting with the latter, there are diminishing returns from investing more chip resources to single core performance. It's the reason why per-core performance has basically peaked in recent years, and everything is moving toward multicore. Adding more cache and beefing up adders can only do so much; since clock rates have peaked because of power limitations, we're basically stuck with the per-core performance we've&nbsp;got.</p>
-<p>Moving on to Amdahl's law, <code>f</code> is the fraction of a program that is parallelizable, and <code>s</code> is the speedup of the parallelizable part. Interpreting this, we see there are essentially three ways of making your program run&nbsp;faster:</p>
+<p>These two equations have some deep implications. Starting with the latter, there are diminishing returns from investing more chip resources to single core performance. It&#8217;s the reason why per-core performance has basically peaked in recent years, and everything is moving toward multicore. Adding more cache and beefing up adders can only do so much; since clock rates have peaked because of power limitations, we&#8217;re basically stuck with the per-core performance we&#8217;ve&nbsp;got.</p>
+<p>Moving on to Amdahl&#8217;s law, <code>f</code> is the fraction of a program that is parallelizable, and <code>s</code> is the speedup of the parallelizable part. Interpreting this, we see there are essentially three ways of making your program run&nbsp;faster:</p>
 <ol>
 <li>Run the serial part faster (<code>1-f</code> component)</li>
 <li>Make <code>s</code> bigger (increase the granularity of&nbsp;parallelism)</li>
@@ -91,22 +91,22 @@ perf(r) = sqrt(r)
 <ul>
 <li>Running the serial part faster gets expensive quickly in terms of chip&nbsp;resources.</li>
 <li>Increasing the granularity of parallelism is a great approach, but only works really well for data-parallel tasks like serving webpages. Going beyond this natural parallelism into true fine-grained parallelism is expensive and&nbsp;limited.</li>
-<li>Parallelizing serial parts of the code is also a great approach, but similarly limited. Some serial code simply can't be parallelized, and there's the same diminishing returns effect in terms of programmer&nbsp;time.</li>
+<li>Parallelizing serial parts of the code is also a great approach, but similarly limited. Some serial code simply can&#8217;t be parallelized, and there&#8217;s the same diminishing returns effect in terms of programmer&nbsp;time.</li>
 </ul>
 <p>The article goes on to talk about different ways of allocating chip resources in light of these two laws, covering the symmetric, asymmetric, and dynamic multicore chips. Basically, favoring bigger cores makes the serial part run faster, but reduces the number of ways you can split the parallel part, with smaller cores having the opposite effect. 
 The net result of the paper is that it all depends on your workload. Asymmetric and dynamic multicore offer better performance characteristics than symmetric since they can better handle both the serial and parallel parts of a program&nbsp;well.</p>
-<p>Applying this to cloud computing, we see that there are a lot of parallels between multicore and cloud computing. Instead of getting speedup by parallelizing at the level of instructions in a program, web services are typically scaled through request-level parallelism: distributing requests among a cluster of machines. In this case, the <code>1-f</code> factor in Amdahl's law can be effectively zero, since requests can be handled independently by each&nbsp;machine.</p>
+<p>Applying this to cloud computing, we see that there are a lot of parallels between multicore and cloud computing. Instead of getting speedup by parallelizing at the level of instructions in a program, web services are typically scaled through request-level parallelism: distributing requests among a cluster of machines. In this case, the <code>1-f</code> factor in Amdahl&#8217;s law can be effectively zero, since requests can be handled independently by each&nbsp;machine.</p>
 <p>The ideas of asymmetric cores is also already seen in request-level parallelism since bigger tasks can be allocated to bigger&nbsp;machines.</p>
 <h3>Future&nbsp;trends</h3>
-<p>Servers processors are going to be manycore in the future, whether we want it or not. Peak per-core performance is probably not going to increase, and I don't hold out much hope for the effectiveness of dynamic multicore, but I think there's a strong argument for asymmetric multicore since there are demonstrated benefits over symmetric. Big cores will be used for serial computation, with data-parallel parts off-loaded to small cores as possible. This is also better for the coming scarcity of memory bandwidth; having big cores that can use it more effectively makes&nbsp;sense.</p>
-<p>This also lends flexibility into request handling, since high-priority tasks can get the big core while latency-tolerant operations can run on a small core. The big problem here is going to be performance isolation for shared resources like mem, disk, and network; with more threads, there's more contention, and potentially more variability in performance (which is the killer). Scheduling also becomes more difficult, since "slots" on the same machine are now unequal in&nbsp;size.</p>
-<p>For batch processing (like Hadoop), throughput matters more than latency. Here, SMP is the name of the game: we want to optimize <code>perf(r)</code> and have a bunch of wimpy cores. I still worry about I/O demands on durable storage, since HDD throughput doesn't seem to be increasing at the same rate that cores are being&nbsp;added.</p>
+<p>Servers processors are going to be manycore in the future, whether we want it or not. Peak per-core performance is probably not going to increase, and I don&#8217;t hold out much hope for the effectiveness of dynamic multicore, but I think there&#8217;s a strong argument for asymmetric multicore since there are demonstrated benefits over symmetric. Big cores will be used for serial computation, with data-parallel parts off-loaded to small cores as possible. This is also better for the coming scarcity of memory bandwidth; having big cores that can use it more effectively makes&nbsp;sense.</p>
+<p>This also lends flexibility into request handling, since high-priority tasks can get the big core while latency-tolerant operations can run on a small core. The big problem here is going to be performance isolation for shared resources like mem, disk, and network; with more threads, there&#8217;s more contention, and potentially more variability in performance (which is the killer). Scheduling also becomes more difficult, since &#8220;slots&#8221; on the same machine are now unequal in&nbsp;size.</p>
+<p>For batch processing (like Hadoop), throughput matters more than latency. Here, <span class="caps">SMP</span> is the name of the game: we want to optimize <code>perf(r)</code> and have a bunch of wimpy cores. I still worry about I/O demands on durable storage, since <span class="caps">HDD</span> throughput doesn&#8217;t seem to be increasing at the same rate that cores are being&nbsp;added.</p>
 <p>Software stack&nbsp;predictions:</p>
 <ul>
-<li>We're going to see a focus on better asymmetric-aware, load-based cluster scheduling algorithms. This needs to balance out I/O load&nbsp;too.</li>
-<li>We're going to see moderate fine-grained parallelism added to existing request-level parallelism, since it's the real only way of reducing&nbsp;latency. </li>
-<li>As a corollary, I think there's going to be a big focus on performance isolation even at the cost of throughput, since variation in latency is the real&nbsp;killer.</li>
-<li>MapReduce as a programming model and framework probably will not go away, but we're going to see mappers making better use of multi-core. Whether this is going to be MapReduce-in-MapReduce or OpenMP-in-MapReduce or Pthreads-in-MapReduce is unclear, but it makes sense to further break down an already data-parallel task into core-sized&nbsp;chunks.</li>
+<li>We&#8217;re going to see a focus on better asymmetric-aware, load-based cluster scheduling algorithms. This needs to balance out I/O load&nbsp;too.</li>
+<li>We&#8217;re going to see moderate fine-grained parallelism added to existing request-level parallelism, since it&#8217;s the real only way of reducing&nbsp;latency. </li>
+<li>As a corollary, I think there&#8217;s going to be a big focus on performance isolation even at the cost of throughput, since variation in latency is the real&nbsp;killer.</li>
+<li>MapReduce as a programming model and framework probably will not go away, but we&#8217;re going to see mappers making better use of multi-core. Whether this is going to be MapReduce-in-MapReduce or OpenMP-in-MapReduce or Pthreads-in-MapReduce is unclear, but it makes sense to further break down an already data-parallel task into core-sized&nbsp;chunks.</li>
 </ul>
 <!-- Hyde::Article::End -->
 
@@ -169,6 +169,10 @@ The net result of the paper is that it all depends on your workload. Asymmetric 
 					
 					
 						
+						<li><a href="/blog/2012/twitter_jvm_tuning.html">JVM Performance Tuning (notes)</a></li>
+						
+					
+						
 						<li><a href="/blog/2012/year_in_review_2011_personal.html">Year in review: 2011 (personal)</a></li>
 						
 					
@@ -186,10 +190,6 @@ The net result of the paper is that it all depends on your workload. Asymmetric 
 					
 						
 						<li><a href="/blog/2011/bigtable_review.html">Paper review: Bigtable</a></li>
-						
-					
-						
-						<li><a href="/blog/2011/dryadlinq_flumejava_review.html">Paper review: DryadLINQ and FlumeJava</a></li>
 						
 					
 				

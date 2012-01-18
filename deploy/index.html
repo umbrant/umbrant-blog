@@ -70,13 +70,29 @@
 
 			
 			<div class="post">
+				<h2 class="title"><a href="/blog/2012/twitter_jvm_tuning.html">JVM Performance Tuning (notes)</a></h2>
+				<p class="meta"><span class="date">January 18, 2012</span></p>
+				<div class="entry">
+					
+
+<p>A presentation by Attila Szegedi titled <a href="http://www.infoq.com/presentations/JVM-Performance-Tuning-twitter">&#8220;Everything I Ever Learned about <span class="caps">JVM</span> Performance Tuning @twitter&#8221;</a> has been floating around for a few months. I&#8217;ve restructured much of the content into a set of notes. This covers the basics of memory allocation and garbage collection in Java, the different garbage collectors available in HotSpot and how they can be tuned, and finally some anecdotes from Attila&#8217;s experiences at&nbsp;Twitter.</p>
+<p>I&#8217;m still fuzzy on some things, so it&#8217;s not ground truth. If more experienced people weigh in, I&#8217;ll fix things up. The very informative hour-long presentation is still highly&nbsp;recommended.</p>
+
+					<p class="links"><a href="/blog/2012/twitter_jvm_tuning.html">Read More</a>&#160;&#160;&#160;&#160;|&#160;&#160;&#160;&#160;<a href="/blog/2012/twitter_jvm_tuning.html#disqus_thread">Comments</a></p>
+				</div>
+			</div>
+			
+		
+
+			
+			<div class="post">
 				<h2 class="title"><a href="/blog/2012/year_in_review_2011_personal.html">Year in review: 2011 (personal)</a></h2>
 				<p class="meta"><span class="date">January 5, 2012</span></p>
 				<div class="entry">
 					
 
-<p>I like to take some time every once in a while to think about what I've done that I'm proud of, what I've learned, and what I want to do. With the beginning of a new year comes the perfect opportunity to reflect on my life in the year&nbsp;past.</p>
-<p>I've split it into two separate blog posts, one <a href="/blog/2012/year_in_review_2011_professional.html">professional</a> (meaning research and grad school life) and one <a href="year_in_review_2011_personal.html">personal</a> (meaning hobbies, self-improvement, life goals). This post covers the latter; my personal life in&nbsp;2011.</p>
+<p>I like to take some time every once in a while to think about what I&#8217;ve done that I&#8217;m proud of, what I&#8217;ve learned, and what I want to do. With the beginning of a new year comes the perfect opportunity to reflect on my life in the year&nbsp;past.</p>
+<p>I&#8217;ve split it into two separate blog posts, one <a href="/blog/2012/year_in_review_2011_professional.html">professional</a> (meaning research and grad school life) and one <a href="year_in_review_2011_personal.html">personal</a> (meaning hobbies, self-improvement, life goals). This post covers the latter; my personal life in&nbsp;2011.</p>
 
 					<p class="links"><a href="/blog/2012/year_in_review_2011_personal.html">Read More</a>&#160;&#160;&#160;&#160;|&#160;&#160;&#160;&#160;<a href="/blog/2012/year_in_review_2011_personal.html#disqus_thread">Comments</a></p>
 				</div>
@@ -91,8 +107,8 @@
 				<div class="entry">
 					
 
-<p>I like to take some time every once in a while to think about what I've done that I'm proud of, what I've learned, and what I want to do. With the beginning of a new year comes the perfect opportunity to reflect on my life in the year&nbsp;past.</p>
-<p>I've split it into two separate blog posts, one <a href="/blog/2012/year_in_review_2011_professional.html">professional</a> (meaning research and grad school life) and one <a href="year_in_review_2011_personal.html">personal</a> (meaning hobbies, self-improvement, life goals). This post covers the former; my life as a grad student in&nbsp;2011.</p>
+<p>I like to take some time every once in a while to think about what I&#8217;ve done that I&#8217;m proud of, what I&#8217;ve learned, and what I want to do. With the beginning of a new year comes the perfect opportunity to reflect on my life in the year&nbsp;past.</p>
+<p>I&#8217;ve split it into two separate blog posts, one <a href="/blog/2012/year_in_review_2011_professional.html">professional</a> (meaning research and grad school life) and one <a href="year_in_review_2011_personal.html">personal</a> (meaning hobbies, self-improvement, life goals). This post covers the former; my life as a grad student in&nbsp;2011.</p>
 
 					<p class="links"><a href="/blog/2012/year_in_review_2011_professional.html">Read More</a>&#160;&#160;&#160;&#160;|&#160;&#160;&#160;&#160;<a href="/blog/2012/year_in_review_2011_professional.html#disqus_thread">Comments</a></p>
 				</div>
@@ -107,25 +123,10 @@
 				<div class="entry">
 					
 
-<p>This is a review of Facebook's Haystack storage system, used to store the staggering amount of photos that are uploaded to Facebook everyday. Facebook Photos started out with an NFS appliance, but was forced to move to a custom solution for the reasons of cost, scale, and performance. Haystack is an engineering solution that applies well-known techniques from GFS and log-structured filesystems to their distributed, append-only, key-value blob situation. Metadata management is somewhat novel, as well as their CDN&nbsp;integration.</p>
-<p>The paper, "Finding a needle in Haystack: Facebook's photo storage" by Beaver et al., was published at OSDI&nbsp;'10.</p>
+<p>This is a review of Facebook&#8217;s Haystack storage system, used to store the staggering amount of photos that are uploaded to Facebook everyday. Facebook Photos started out with an <span class="caps">NFS</span> appliance, but was forced to move to a custom solution for the reasons of cost, scale, and performance. Haystack is an engineering solution that applies well-known techniques from <span class="caps">GFS</span> and log-structured filesystems to their distributed, append-only, key-value blob situation. Metadata management is somewhat novel, as well as their <span class="caps">CDN</span>&nbsp;integration.</p>
+<p>The paper, &#8220;Finding a needle in Haystack: Facebook&#8217;s photo storage&#8221; by Beaver et al., was published at <span class="caps">OSDI</span>&nbsp;&#8216;10.</p>
 
 					<p class="links"><a href="/blog/2012/haystack_review.html">Read More</a>&#160;&#160;&#160;&#160;|&#160;&#160;&#160;&#160;<a href="/blog/2012/haystack_review.html#disqus_thread">Comments</a></p>
-				</div>
-			</div>
-			
-		
-
-			
-			<div class="post">
-				<h2 class="title"><a href="/blog/2011/relational_cloud_and_database_scalability.html">Paper review: Relational Cloud, Database Scalability</a></h2>
-				<p class="meta"><span class="date">December 11, 2011</span></p>
-				<div class="entry">
-					
-
-<p>This is a combined paper review for "Relational Cloud: A Database-as-a-Service for the Cloud", a paper from MIT published at CIDR '11, and "Database Scalability, Elasticity, and Autonomy in the Cloud", an extended abstract from UCSB which appeared in DASFAA '11. These papers deal with the strategies used to transition databases and storage systems to the unique challenges of the cloud&nbsp;environment.</p>
-
-					<p class="links"><a href="/blog/2011/relational_cloud_and_database_scalability.html">Read More</a>&#160;&#160;&#160;&#160;|&#160;&#160;&#160;&#160;<a href="/blog/2011/relational_cloud_and_database_scalability.html#disqus_thread">Comments</a></p>
 				</div>
 			</div>
 			
@@ -197,6 +198,10 @@
 					
 					
 						
+						<li><a href="/blog/2012/twitter_jvm_tuning.html">JVM Performance Tuning (notes)</a></li>
+						
+					
+						
 						<li><a href="/blog/2012/year_in_review_2011_personal.html">Year in review: 2011 (personal)</a></li>
 						
 					
@@ -214,10 +219,6 @@
 					
 						
 						<li><a href="/blog/2011/bigtable_review.html">Paper review: Bigtable</a></li>
-						
-					
-						
-						<li><a href="/blog/2011/dryadlinq_flumejava_review.html">Paper review: DryadLINQ and FlumeJava</a></li>
 						
 					
 				

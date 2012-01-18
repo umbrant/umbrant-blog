@@ -72,23 +72,23 @@
 
 <!-- Hyde::Excerpt::Begin -->
 
-<p>This is a paper review for "The Google File System" by Ghemawat et al., published at SOSP in 2003. This is a fairly important paper, and directly inspired the architecture of&nbsp;HDFS.</p>
+<p>This is a paper review for &#8220;The Google File System&#8221; by Ghemawat et al., published at <span class="caps">SOSP</span> in 2003. This is a fairly important paper, and directly inspired the architecture of&nbsp;<span class="caps">HDFS</span>.</p>
 <!-- Hyde::Excerpt::End -->
 
 <h3>Main&nbsp;ideas</h3>
-<p>What Google did was look very carefully at their desired workload, and build a distributed filesystem specifically for that. GFS is very much not a general purpose filesystem, and I really like how they lay out quite clearly early on the assumptions they&nbsp;make:</p>
+<p>What Google did was look very carefully at their desired workload, and build a distributed filesystem specifically for that. <span class="caps">GFS</span> is very much not a general purpose filesystem, and I really like how they lay out quite clearly early on the assumptions they&nbsp;make:</p>
 <ul>
 <li>Files are almost all large, many&nbsp;GBs</li>
 <li>Target throughput, not&nbsp;latency</li>
 <li>Append-only. Cannot overwrite existing&nbsp;data.</li>
 <li>Must be distributed and&nbsp;fault-tolerant</li>
 </ul>
-<p>The problem they were basically trying to solve was doing log analytics at scale, meaning mostly long sequential writes of very large files. Spreading files across multiple disks is crucial to getting enough throughput and getting fault-tolerance. GFS can be viewed sort of like a distributed version of RAID&nbsp;1.</p>
-<p>The architecture is a single GFS master which stores metadata for all the files, and a lot of chunkservers that store chunks (64MB) of files. The master is used to chunk locations for a given range of a file, the actual reads and writes are done by directly accessing the appropriate chunkserver. All chunks are replicated across multiple chunkservers for durability and load balancing. Chunkservers talk to the master via heartbeat messages, upon which the master can piggyback commands like re-replicating or getting chunk&nbsp;lists.</p>
+<p>The problem they were basically trying to solve was doing log analytics at scale, meaning mostly long sequential writes of very large files. Spreading files across multiple disks is crucial to getting enough throughput and getting fault-tolerance. <span class="caps">GFS</span> can be viewed sort of like a distributed version of <span class="caps">RAID</span>&nbsp;1.</p>
+<p>The architecture is a single <span class="caps">GFS</span> master which stores metadata for all the files, and a lot of chunkservers that store chunks (<span class="caps">64MB</span>) of files. The master is used to chunk locations for a given range of a file, the actual reads and writes are done by directly accessing the appropriate chunkserver. All chunks are replicated across multiple chunkservers for durability and load balancing. Chunkservers talk to the master via heartbeat messages, upon which the master can piggyback commands like re-replicating or getting chunk&nbsp;lists.</p>
 <p>Data consistency is made a lot easier by not having to worry about overwrites. It also means clients can cache chunk locations, since they change&nbsp;rarely.</p>
 <h3>Future&nbsp;relevance</h3>
-<p>GFS clearly does a good job at the application it was designed for: sequential reads for large files by data-parallel workloads. However, since HDFS has become sort of an industry standard for storing large amounts of data, it's increasingly being used for other types of workloads. HBase is one example of this (a more database-like column store), which definitely does a lot more random I/Os. Facebook also published a paper on doing real-time queries with MapReduce (and thus HDFS). The question is how well HDFS can be squeezed into these roles, and if other storage systems are necessary. For low-latency web serving this is definitely true (memcached and other k-v stores&nbsp;dominate).</p>
-<p>In short, I don't think the MapReduce paradigm is going anywhere, and HDFS already feels like the standard answer to storing big data. I don't think it's going anywhere in the next&nbsp;decade.</p>
+<p><span class="caps">GFS</span> clearly does a good job at the application it was designed for: sequential reads for large files by data-parallel workloads. However, since <span class="caps">HDFS</span> has become sort of an industry standard for storing large amounts of data, it&#8217;s increasingly being used for other types of workloads. HBase is one example of this (a more database-like column store), which definitely does a lot more random I/Os. Facebook also published a paper on doing real-time queries with MapReduce (and thus <span class="caps">HDFS</span>). The question is how well <span class="caps">HDFS</span> can be squeezed into these roles, and if other storage systems are necessary. For low-latency web serving this is definitely true (memcached and other k-v stores&nbsp;dominate).</p>
+<p>In short, I don&#8217;t think the MapReduce paradigm is going anywhere, and <span class="caps">HDFS</span> already feels like the standard answer to storing big data. I don&#8217;t think it&#8217;s going anywhere in the next&nbsp;decade.</p>
 <!-- Hyde::Article::End -->
 
 			
@@ -150,6 +150,10 @@
 					
 					
 						
+						<li><a href="/blog/2012/twitter_jvm_tuning.html">JVM Performance Tuning (notes)</a></li>
+						
+					
+						
 						<li><a href="/blog/2012/year_in_review_2011_personal.html">Year in review: 2011 (personal)</a></li>
 						
 					
@@ -167,10 +171,6 @@
 					
 						
 						<li><a href="/blog/2011/bigtable_review.html">Paper review: Bigtable</a></li>
-						
-					
-						
-						<li><a href="/blog/2011/dryadlinq_flumejava_review.html">Paper review: DryadLINQ and FlumeJava</a></li>
 						
 					
 				

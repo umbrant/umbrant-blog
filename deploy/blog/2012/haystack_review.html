@@ -72,35 +72,35 @@
 
 <!-- Hyde::Excerpt::Begin -->
 
-<p>This is a review of Facebook's Haystack storage system, used to store the staggering amount of photos that are uploaded to Facebook everyday. Facebook Photos started out with an NFS appliance, but was forced to move to a custom solution for the reasons of cost, scale, and performance. Haystack is an engineering solution that applies well-known techniques from GFS and log-structured filesystems to their distributed, append-only, key-value blob situation. Metadata management is somewhat novel, as well as their CDN&nbsp;integration.</p>
-<p>The paper, "Finding a needle in Haystack: Facebook's photo storage" by Beaver et al., was published at OSDI&nbsp;'10.</p>
+<p>This is a review of Facebook&#8217;s Haystack storage system, used to store the staggering amount of photos that are uploaded to Facebook everyday. Facebook Photos started out with an <span class="caps">NFS</span> appliance, but was forced to move to a custom solution for the reasons of cost, scale, and performance. Haystack is an engineering solution that applies well-known techniques from <span class="caps">GFS</span> and log-structured filesystems to their distributed, append-only, key-value blob situation. Metadata management is somewhat novel, as well as their <span class="caps">CDN</span>&nbsp;integration.</p>
+<p>The paper, &#8220;Finding a needle in Haystack: Facebook&#8217;s photo storage&#8221; by Beaver et al., was published at <span class="caps">OSDI</span>&nbsp;&#8216;10.</p>
 <!-- Hyde::Excerpt::End -->
 
 <h3>Main&nbsp;ideas</h3>
-<p>Facebook's design requirements break down as&nbsp;follows:</p>
+<p>Facebook&#8217;s design requirements break down as&nbsp;follows:</p>
 <ul>
-<li>Efficient random disk access. Anything that hits Haystack missed in the CDN cache, and there are too many photos to fit it all in memory. Thus, there has to be at least one random disk seek; Haystack makes it just one (most of the&nbsp;time).</li>
-<li>Efficient use of storage space. Using the normal "one file per image" approach killed the # of disk accesses required to serve an image, but it also required huge amounts of extraneous metadata for things like permissions and filenames that don't&nbsp;matter.</li>
-<li>Append-only write semantics. Once a photo is written, it cannot be modified. Application "overwrites" are handled by deleting and adding a new photo with the same key. I assume that this ispretty&nbsp;rare.</li>
+<li>Efficient random disk access. Anything that hits Haystack missed in the <span class="caps">CDN</span> cache, and there are too many photos to fit it all in memory. Thus, there has to be at least one random disk seek; Haystack makes it just one (most of the&nbsp;time).</li>
+<li>Efficient use of storage space. Using the normal &#8220;one file per image&#8221; approach killed the # of disk accesses required to serve an image, but it also required huge amounts of extraneous metadata for things like permissions and filenames that don&#8217;t&nbsp;matter.</li>
+<li>Append-only write semantics. Once a photo is written, it cannot be modified. Application &#8220;overwrites&#8221; are handled by deleting and adding a new photo with the same key. I assume that this ispretty&nbsp;rare.</li>
 <li>Fault-tolerance. True of any distributed&nbsp;system.</li>
 <li>Scalability and elasticity.&nbsp;Ditto.</li>
 <li>Simplicity. Always good if you can get&nbsp;it.</li>
 </ul>
-<p>Efficient disk access and use of storage space are handled by essentially keeping metadata in memory and collapsing many images together into a single file that is preallocated on disk, called a "physical volume". These physical volumes are on the order of a hundred gigabytes, and function basically like segments (if you think back to the memory management part of your OS class); each photo is referenced as an offset and length within a file. As long as a server can keep this offset+length metadata and the inodes of the huge files in memory, it can do almost every photo read in a single random seek (with the corner case of falling on an extent boundary requiring two). There are also checksums and flags and other metadata that are stored in the file&nbsp;on-disk.</p>
-<p>Recovery of the memory metadata is done through the use of a checkpoint file, that is then updated by examining the end of each file. This works because new photos are added sequentially, like in a log-structured filesystem. Recovering the "is deleted" flag is done lazily when a read request is made, by checking the flag's state on-disk (which will be right, due to all writes being synchronous). Synchronous writes and append-only semantics make consistency a&nbsp;non-issue.</p>
-<p>Haystack combines multiple physical volumes into a single "logical volume", through which is how photos are actually accessed. Mapping from logical to physical is again done via an in-memory structure. I think this is how they do geographic replication, by mirroring writes across all the physical volumes in a logical volume, which has to contain volumes in multiple&nbsp;locations.</p>
-<p>Photo writes are optimized pretty heavily. Naturally, they are batched, but there is also some interplay with the Haystack cache (which acts like an internal CDN). Machines are marked as either write-enabled or read-only. Write-enabled machines get to keep their data in the Haystack cache, to reduce their read load moving the disk head excessively. The cache also does prefetching of new photos, since they're very likely to be accessed soon. Read-only machines with a lot of deleted photos can be compacted and (I assume) toggled back to write-enabled to receive more&nbsp;photos.</p>
+<p>Efficient disk access and use of storage space are handled by essentially keeping metadata in memory and collapsing many images together into a single file that is preallocated on disk, called a &#8220;physical volume&#8221;. These physical volumes are on the order of a hundred gigabytes, and function basically like segments (if you think back to the memory management part of your <span class="caps">OS</span> class); each photo is referenced as an offset and length within a file. As long as a server can keep this offset+length metadata and the inodes of the huge files in memory, it can do almost every photo read in a single random seek (with the corner case of falling on an extent boundary requiring two). There are also checksums and flags and other metadata that are stored in the file&nbsp;on-disk.</p>
+<p>Recovery of the memory metadata is done through the use of a checkpoint file, that is then updated by examining the end of each file. This works because new photos are added sequentially, like in a log-structured filesystem. Recovering the &#8220;is deleted&#8221; flag is done lazily when a read request is made, by checking the flag&#8217;s state on-disk (which will be right, due to all writes being synchronous). Synchronous writes and append-only semantics make consistency a&nbsp;non-issue.</p>
+<p>Haystack combines multiple physical volumes into a single &#8220;logical volume&#8221;, through which is how photos are actually accessed. Mapping from logical to physical is again done via an in-memory structure. I think this is how they do geographic replication, by mirroring writes across all the physical volumes in a logical volume, which has to contain volumes in multiple&nbsp;locations.</p>
+<p>Photo writes are optimized pretty heavily. Naturally, they are batched, but there is also some interplay with the Haystack cache (which acts like an internal <span class="caps">CDN</span>). Machines are marked as either write-enabled or read-only. Write-enabled machines get to keep their data in the Haystack cache, to reduce their read load moving the disk head excessively. The cache also does prefetching of new photos, since they&#8217;re very likely to be accessed soon. Read-only machines with a lot of deleted photos can be compacted and (I assume) toggled back to write-enabled to receive more&nbsp;photos.</p>
 <p>A few more misc&nbsp;takeaways:</p>
 <ul>
-<li>XFS worked the best for making the large 100GB files used for physical&nbsp;volumes</li>
-<li>RAID is also used underneath, for added&nbsp;availability</li>
+<li><span class="caps">XFS</span> worked the best for making the large <span class="caps">100GB</span> files used for physical&nbsp;volumes</li>
+<li><span class="caps">RAID</span> is also used underneath, for added&nbsp;availability</li>
 <li>Many layers of cache yield diminishing&nbsp;returns</li>
-<li>The photo URL on FB starts off pointing at a CDN, but gets stripped down successively as it goes further into Haystack. Ex:&nbsp;http://CDN/HayCache/HayMachine/VolumeAndPhoto.</li>
+<li>The photo <span class="caps">URL</span> on <span class="caps">FB</span> starts off pointing at a <span class="caps">CDN</span>, but gets stripped down successively as it goes further into Haystack. Ex:&nbsp;http://<span class="caps">CDN</span>/HayCache/HayMachine/VolumeAndPhoto.</li>
 <li>Centralized master maintains the logical-to-physical mapping and load balances writes across logical volumes. Seems easy to keep in memory and replicate if&nbsp;necessary.</li>
 </ul>
 <h3>Analysis</h3>
-<p>This really was a great application to build a new system, since existing stuff wouldn't do it as well, and the requirements made it relatively easy as distributed systems go. It pulls heavily from GFS with the centralized master and many data node approach, and also uses LFS concepts of a sequentially-written log and keeping filesystem metadata in memory. The "write-enabled" vs. "read-only" business is essentially adding journalling to a distributed filesystem, which of course is just a mini-version of the ideas in LFS. Using giant 100GB files means they were able to make their own super-simple user-level filesystem without writing an actual filesystem, a move I applaud for practical&nbsp;reasons.</p>
-<p>I can't say there was much "aha" content in the paper though, and it wasn't well written. I normally like industrial papers, but this was such a straightforward implementation paper, and it didn't add anything new in terms of real-world experiences. I don't think there's much to be learned if you already understand GFS well. This is noted in their related work section, where it basically says "our usecase was easier than everyone else's". Reading it again a year and a half on, I'm kind of disappointed. Good system, but bland research (if you want to even call it&nbsp;that).</p>
+<p>This really was a great application to build a new system, since existing stuff wouldn&#8217;t do it as well, and the requirements made it relatively easy as distributed systems go. It pulls heavily from <span class="caps">GFS</span> with the centralized master and many data node approach, and also uses <span class="caps">LFS</span> concepts of a sequentially-written log and keeping filesystem metadata in memory. The &#8220;write-enabled&#8221; vs. &#8220;read-only&#8221; business is essentially adding journalling to a distributed filesystem, which of course is just a mini-version of the ideas in <span class="caps">LFS</span>. Using giant <span class="caps">100GB</span> files means they were able to make their own super-simple user-level filesystem without writing an actual filesystem, a move I applaud for practical&nbsp;reasons.</p>
+<p>I can&#8217;t say there was much &#8220;aha&#8221; content in the paper though, and it wasn&#8217;t well written. I normally like industrial papers, but this was such a straightforward implementation paper, and it didn&#8217;t add anything new in terms of real-world experiences. I don&#8217;t think there&#8217;s much to be learned if you already understand <span class="caps">GFS</span> well. This is noted in their related work section, where it basically says &#8220;our usecase was easier than everyone else&#8217;s&#8221;. Reading it again a year and a half on, I&#8217;m kind of disappointed. Good system, but bland research (if you want to even call it&nbsp;that).</p>
 <!-- Hyde::Article::End -->
 
 			
@@ -162,6 +162,10 @@
 					
 					
 						
+						<li><a href="/blog/2012/twitter_jvm_tuning.html">JVM Performance Tuning (notes)</a></li>
+						
+					
+						
 						<li><a href="/blog/2012/year_in_review_2011_personal.html">Year in review: 2011 (personal)</a></li>
 						
 					
@@ -179,10 +183,6 @@
 					
 						
 						<li><a href="/blog/2011/bigtable_review.html">Paper review: Bigtable</a></li>
-						
-					
-						
-						<li><a href="/blog/2011/dryadlinq_flumejava_review.html">Paper review: DryadLINQ and FlumeJava</a></li>
 						
 					
 				
