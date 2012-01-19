@@ -21,7 +21,7 @@ I'm still fuzzy on some things, so it's not ground truth. If more experienced pe
 
 ### The Price of an Object
 
-Java, as an object-oriented language, naturally results in the creation of a lot of objects. This is one of the things you give up as opposed to a language like C; even basic data-wrapper objects are much heavier weight than structs. The minimal object is **24 bytes**: 16B of object overhead, and 8B for the pointer to that object. This includes arrays, which also incur 24B for an empty array, then per-item costs after that (you only need one pointer).
+Java, as an object-oriented language, naturally results in the creation of a lot of objects. This is one of the things you give up as opposed to a language like C; even basic data-wrapper objects are much heavier weight than structs. The minimal object is **24 bytes**: 16B of object overhead, and 8B for the pointer to that object. This includes arrays, which also incur 24B for an empty array, 4B for the size of the array, then per-item costs after that (you only need one pointer).
 
 Primitive types don't need require the 16B of object overhead, and are thus can be a much more compact representation. However, beware *autoboxing*: many provided data structures will automatically convert your nice compact `int` into a big fat `Integer`. Using plain old arrays of primitive types can be the best choice. It's definitely better than allocating lots of tiny objects which will end up being substantially overhead.
 
@@ -32,11 +32,11 @@ There are two more twists here. First, Java pads out all objects to the nearest 
 
 ### JVM Memory Management 
 
-The JVM heap is split up into two *generations* which are garbage collected at different rates. All objects are allocated in the *young generation*; more specifically, they are allocated within *Eden* in the young generation. Eden is GC'd more frequently than other regions. As objects survive GC rounds, they get *tenured* to the two successive *survivor* regions that are GC'd less and less frequently, before ultimately being tenured to the *old generation*, which very rarely gets GC'd.
+The JVM heap is split up into two *generations* which are garbage collected at different rates. All objects are allocated in the *young generation*; more specifically, they are allocated within *Eden* in the young generation. As objects survive GC rounds, they get copied to the two successive *survivor* regions within the young generation, before ultimately being *tenured* to the *old generation*, which gets GC'd less frequently than the young generation.
 
-This means that Java optimizes for the common case of short-lived trash that can get quickly collected in Eden. Eden allocation and garbage collection is also really cheap. It's treated kind of like stack allocation; creating a new object just requires bumping the pointer that defines the end of Eden. Garbage collection is also simple; live objects get copied out to the first survivor, and then the Eden pointer gets zeroed back to the start of the heap. Trash doesn't need to be explicitly zeroed out, so deallocation is "free".
+This means that Java optimizes for the common case of short-lived trash that can get quickly collected in the young generation. Eden allocation and garbage collection is also really cheap. It's treated kind of like stack allocation; creating a new object usually just requires bumping the pointer that defines the end of Eden. Garbage collection is also simple; live objects get copied out to the first survivor, and then the Eden pointer gets zeroed back to the start of the heap. Trash doesn't need to be explicitly zeroed out, so deallocation is "free". Note that this efficiency is true only for small objects; larger objects (megabytes) are allocated in a different and more expensive way directly to the old generation.
 
-Garbage collection happens when Eden fills up. This might sound bad since young GCs are stop-the-world and happen erratically, but young generation GC time is proportional to the number of live young objects, which is usually small compared to the amount of trash. Concurrent GC can happen in the background, avoiding that nasty stop-the-world pause, but only for the old generation. More on this later.
+Garbage collection happens when Eden fills up. This might sound bad since young GCs are stop-the-world and happen erratically, but young generation GC time is proportional to the number of live young objects, which is usually small compared to the amount of trash. Concurrent GC can happen in the background, avoiding that nasty stop-the-world pause, but only for the old generation, and it's not perfect. More on this later.
 
 ### Garbage Collector Tuning
 
@@ -48,8 +48,8 @@ With this in mind, lets talk about the different garbage collectors available in
 	* SerialGC: Single-threaded garbage collector. Sun probably wrote this one first, and it's around for legacy reasons.
 	* ParallelGC and ParallelOldGC: Multi-threaded garbage collectors. ParallelOldGC is actually better than ParallelGC since it cleans both the young and old generations (rather than just the young generation).
 * Latency: scheduled to run periodically by the JVM when it has spare cycles. Can still result in stop-the-world if the GC can't clean fast enough and memory runs out.
-	* ConcMarkSweepGC (CMS): Concurrent and tries to be "low pause". CMS has a number of caveats though. It kicks in when allocated memory passes a threshold, meaning you need to overprovision memory by 25-33% to give it a buffer to allocate with while it cleans. It also doesn't compact memory, so you can get fragmentation that leads to stop-the-world pauses. As stated earlier, I think it also only cleans the old generation.
-	* G1GC: undocumented black magic that Attila had no experience with, and explicitly didn't not cover in his presentation.
+	* ConcMarkSweepGC (CMS): Concurrent and tries to be "low pause". CMS has a number of caveats though. It kicks in when allocated memory passes a threshold, meaning you need to overprovision memory by 25-33% to give it a buffer to allocate with while it cleans. It also doesn't compact memory, so you can get fragmentation that leads to stop-the-world pauses. As stated earlier, it also only cleans the old generation, and uses a throughput collector for the young generation.
+	* G1GC: undocumented black magic that Attila had no experience with, and explicitly didn't not cover in his presentation. I found [this link to the Oracle documentation](http://www.oracle.com/technetwork/java/javase/tech/g1-intro-jsp-135488.html) though, it's supposed to be a better replacement for CMS.
 
 There are a lot of options here, so Attila breaks it down into some simple heuristics.
 
@@ -57,6 +57,10 @@ There are a lot of options here, so Attila breaks it down into some simple heuri
 1. Try a throughput collector with adaptive sizing turned on, which lets the JVM figure out the best sizes for the different generations. If this works, great! `-XX:+PrintHeapAtGC` can be helpful here.
 1. Next, try ConcMarkSweepGC. `-verbosegc` and `-XX:+PrintGcDetails` are useful here. This is a situation where you might adjust the young generation to reduce the pause from young gen GC time, but also make sure that the survivor regions aren't filling up.
 
+If you're interested, a quick search turned up two links to official Oracle documentation for the HotSpot 1.4.2 garbage collectors. It's a bit dated, but I think most of it still applies.
+
+* [Tuning Garbage Collection with the 1.4.2 Java Virtual Machine](http://java.sun.com/docs/hotspot/gc1.4.2/)
+* [FAQ about Garbage Collection in the Hotspot Java Virtual Machine](http://java.sun.com/docs/hotspot/gc1.4.2/faq.html)
 
 ### Programming Anecdotes
 

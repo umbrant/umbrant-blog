@@ -72,69 +72,74 @@
 
 <!-- Hyde::Excerpt::Begin -->
 
-<p>A presentation by Attila Szegedi titled <a href="http://www.infoq.com/presentations/JVM-Performance-Tuning-twitter">&#8220;Everything I Ever Learned about <span class="caps">JVM</span> Performance Tuning @twitter&#8221;</a> has been floating around for a few months. I&#8217;ve restructured much of the content into a set of notes. This covers the basics of memory allocation and garbage collection in Java, the different garbage collectors available in HotSpot and how they can be tuned, and finally some anecdotes from Attila&#8217;s experiences at&nbsp;Twitter.</p>
-<p>I&#8217;m still fuzzy on some things, so it&#8217;s not ground truth. If more experienced people weigh in, I&#8217;ll fix things up. The very informative hour-long presentation is still highly&nbsp;recommended.</p>
+<p>A presentation by Attila Szegedi titled <a href="http://www.infoq.com/presentations/JVM-Performance-Tuning-twitter">"Everything I Ever Learned about JVM Performance Tuning @twitter"</a> has been floating around for a few months. I've restructured much of the content into a set of notes. This covers the basics of memory allocation and garbage collection in Java, the different garbage collectors available in HotSpot and how they can be tuned, and finally some anecdotes from Attila's experiences at&nbsp;Twitter.</p>
+<p>I'm still fuzzy on some things, so it's not ground truth. If more experienced people weigh in, I'll fix things up. The very informative hour-long presentation is still highly&nbsp;recommended.</p>
 <!-- Hyde::Excerpt::End -->
 
 <h3>The Price of an&nbsp;Object</h3>
-<p>Java, as an object-oriented language, naturally results in the creation of a lot of objects. This is one of the things you give up as opposed to a language like C; even basic data-wrapper objects are much heavier weight than structs. The minimal object is <strong>24 bytes</strong>: 16B of object overhead, and 8B for the pointer to that object. This includes arrays, which also incur 24B for an empty array, then per-item costs after that (you only need one&nbsp;pointer).</p>
-<p>Primitive types don&#8217;t need require the 16B of object overhead, and are thus can be a much more compact representation. However, beware <em>autoboxing</em>: many provided data structures will automatically convert your nice compact <code>int</code> into a big fat <code>Integer</code>. Using plain old arrays of primitive types can be the best choice. It&#8217;s definitely better than allocating lots of tiny objects which will end up being substantially&nbsp;overhead.</p>
-<p>As a side note not mentioned by Attila, also beware the use of the Java <code>String</code> class, since it can <strong>double</strong> your in-memory storage costs. Java internally uses <span class="caps">UTF</span>-16 for its strings, which is a 2-byte character encoding. Compare this to the more common <span class="caps">UTF</span>-8 or <span class="caps">ASCII</span> encodings, which are both 1-byte. This glosses over the details (<span class="caps">UTF</span>-16 and <span class="caps">UTF</span>-8 are variable-length encodings, and can be up to 4 bytes per character), but this doubling holds true for the common&nbsp;case.</p>
-<p>There are two more twists here. First, Java pads out all objects to the nearest 8-byte boundary, which fattens up objects a bit more. This isn&#8217;t all bad though, since it aids the second twist: pointer compression. Beneath <span class="caps">32GB</span> of heap, the <span class="caps">JVM</span> will actually only use 4B per pointer instead of 8B. Why is 4B enough for <span class="caps">32GB</span>? Since everything is padded out to 8B, the pointer can just be left shifted by three bits before doing the normal byte addressing. However, this means if you want a heap bigger than <span class="caps">32GB</span>, you need to jump up a lot; Attila says&nbsp;<span class="caps">48GB</span>.</p>
-<h3><span class="caps">JVM</span> Memory&nbsp;Management</h3>
-<p>The <span class="caps">JVM</span> heap is split up into two <em>generations</em> which are garbage collected at different rates. All objects are allocated in the <em>young generation</em>; more specifically, they are allocated within <em>Eden</em> in the young generation. Eden is <span class="caps">GC</span>&#8217;d more frequently than other regions. As objects survive <span class="caps">GC</span> rounds, they get <em>tenured</em> to the two successive <em>survivor</em> regions that are <span class="caps">GC</span>&#8217;d less and less frequently, before ultimately being tenured to the <em>old generation</em>, which very rarely gets&nbsp;<span class="caps">GC</span>&#8217;d.</p>
-<p>This means that Java optimizes for the common case of short-lived trash that can get quickly collected in Eden. Eden allocation and garbage collection is also really cheap. It&#8217;s treated kind of like stack allocation; creating a new object just requires bumping the pointer that defines the end of Eden. Garbage collection is also simple; live objects get copied out to the first survivor, and then the Eden pointer gets zeroed back to the start of the heap. Trash doesn&#8217;t need to be explicitly zeroed out, so deallocation is&nbsp;&#8220;free&#8221;.</p>
-<p>Garbage collection happens when Eden fills up. This might sound bad since young GCs are stop-the-world and happen erratically, but young generation <span class="caps">GC</span> time is proportional to the number of live young objects, which is usually small compared to the amount of trash. Concurrent <span class="caps">GC</span> can happen in the background, avoiding that nasty stop-the-world pause, but only for the old generation. More on this&nbsp;later.</p>
+<p>Java, as an object-oriented language, naturally results in the creation of a lot of objects. This is one of the things you give up as opposed to a language like C; even basic data-wrapper objects are much heavier weight than structs. The minimal object is <strong>24 bytes</strong>: 16B of object overhead, and 8B for the pointer to that object. This includes arrays, which also incur 24B for an empty array, 4B for the size of the array, then per-item costs after that (you only need one&nbsp;pointer).</p>
+<p>Primitive types don't need require the 16B of object overhead, and are thus can be a much more compact representation. However, beware <em>autoboxing</em>: many provided data structures will automatically convert your nice compact <code>int</code> into a big fat <code>Integer</code>. Using plain old arrays of primitive types can be the best choice. It's definitely better than allocating lots of tiny objects which will end up being substantially&nbsp;overhead.</p>
+<p>As a side note not mentioned by Attila, also beware the use of the Java <code>String</code> class, since it can <strong>double</strong> your in-memory storage costs. Java internally uses UTF-16 for its strings, which is a 2-byte character encoding. Compare this to the more common UTF-8 or ASCII encodings, which are both 1-byte. This glosses over the details (UTF-16 and UTF-8 are variable-length encodings, and can be up to 4 bytes per character), but this doubling holds true for the common&nbsp;case.</p>
+<p>There are two more twists here. First, Java pads out all objects to the nearest 8-byte boundary, which fattens up objects a bit more. This isn't all bad though, since it aids the second twist: pointer compression. Beneath 32GB of heap, the JVM will actually only use 4B per pointer instead of 8B. Why is 4B enough for 32GB? Since everything is padded out to 8B, the pointer can just be left shifted by three bits before doing the normal byte addressing. However, this means if you want a heap bigger than 32GB, you need to jump up a lot; Attila says&nbsp;48GB.</p>
+<h3>JVM Memory&nbsp;Management</h3>
+<p>The JVM heap is split up into two <em>generations</em> which are garbage collected at different rates. All objects are allocated in the <em>young generation</em>; more specifically, they are allocated within <em>Eden</em> in the young generation. As objects survive GC rounds, they get copied to the two successive <em>survivor</em> regions within the young generation, before ultimately being <em>tenured</em> to the <em>old generation</em>, which gets GC'd less frequently than the young&nbsp;generation.</p>
+<p>This means that Java optimizes for the common case of short-lived trash that can get quickly collected in the young generation. Eden allocation and garbage collection is also really cheap. It's treated kind of like stack allocation; creating a new object usually just requires bumping the pointer that defines the end of Eden. Garbage collection is also simple; live objects get copied out to the first survivor, and then the Eden pointer gets zeroed back to the start of the heap. Trash doesn't need to be explicitly zeroed out, so deallocation is "free". Note that this efficiency is true only for small objects; larger objects (megabytes) are allocated in a different and more expensive way directly to the old&nbsp;generation.</p>
+<p>Garbage collection happens when Eden fills up. This might sound bad since young GCs are stop-the-world and happen erratically, but young generation GC time is proportional to the number of live young objects, which is usually small compared to the amount of trash. Concurrent GC can happen in the background, avoiding that nasty stop-the-world pause, but only for the old generation, and it's not perfect. More on this&nbsp;later.</p>
 <h3>Garbage Collector&nbsp;Tuning</h3>
-<p>Attila iterates multiple times that the more memory you can give the young generation, the better, since allocation and deallocation is so cheap. I think he then backpedaled a bit though, because really big young generations can lead to long pauses while the live objects are copied around. What you want is a young generation big enough to hold active and tenuring objects, and for long-lived objects to quickly tenure and reach the old generation. However, you also don&#8217;t want survivors to get forced to the old generation early by memory pressure on the young&nbsp;generation.</p>
+<p>Attila iterates multiple times that the more memory you can give the young generation, the better, since allocation and deallocation is so cheap. I think he then backpedaled a bit though, because really big young generations can lead to long pauses while the live objects are copied around. What you want is a young generation big enough to hold active and tenuring objects, and for long-lived objects to quickly tenure and reach the old generation. However, you also don't want survivors to get forced to the old generation early by memory pressure on the young&nbsp;generation.</p>
 <p>With this in mind, lets talk about the different garbage collectors available in HotSpot. They can be divided into two categories, throughput and&nbsp;latency:</p>
 <ul>
-<li>Throughput: scheduled to run when the <span class="caps">JVM</span> runs out of memory. Stop-the-world operation.<ul>
-<li>SerialGC: Single-threaded garbage collector. Sun probably wrote this one first, and it&#8217;s around for legacy&nbsp;reasons.</li>
+<li>Throughput: scheduled to run when the JVM runs out of memory. Stop-the-world operation.<ul>
+<li>SerialGC: Single-threaded garbage collector. Sun probably wrote this one first, and it's around for legacy&nbsp;reasons.</li>
 <li>ParallelGC and ParallelOldGC: Multi-threaded garbage collectors. ParallelOldGC is actually better than ParallelGC since it cleans both the young and old generations (rather than just the young&nbsp;generation).</li>
 </ul>
 </li>
-<li>Latency: scheduled to run periodically by the <span class="caps">JVM</span> when it has spare cycles. Can still result in stop-the-world if the <span class="caps">GC</span> can&#8217;t clean fast enough and memory runs out.<ul>
-<li>ConcMarkSweepGC (<span class="caps">CMS</span>): Concurrent and tries to be &#8220;low pause&#8221;. <span class="caps">CMS</span> has a number of caveats though. It kicks in when allocated memory passes a threshold, meaning you need to overprovision memory by 25-33% to give it a buffer to allocate with while it cleans. It also doesn&#8217;t compact memory, so you can get fragmentation that leads to stop-the-world pauses. As stated earlier, I think it also only cleans the old&nbsp;generation.</li>
-<li><span class="caps">G1GC</span>: undocumented black magic that Attila had no experience with, and explicitly didn&#8217;t not cover in his&nbsp;presentation.</li>
+<li>Latency: scheduled to run periodically by the JVM when it has spare cycles. Can still result in stop-the-world if the GC can't clean fast enough and memory runs out.<ul>
+<li>ConcMarkSweepGC (CMS): Concurrent and tries to be "low pause". CMS has a number of caveats though. It kicks in when allocated memory passes a threshold, meaning you need to overprovision memory by 25-33% to give it a buffer to allocate with while it cleans. It also doesn't compact memory, so you can get fragmentation that leads to stop-the-world pauses. As stated earlier, it also only cleans the old generation, and uses a throughput collector for the young&nbsp;generation.</li>
+<li>G1GC: undocumented black magic that Attila had no experience with, and explicitly didn't not cover in his presentation. I found <a href="http://www.oracle.com/technetwork/java/javase/tech/g1-intro-jsp-135488.html">this link to the Oracle documentation</a> though, it's supposed to be a better replacement for&nbsp;CMS.</li>
 </ul>
 </li>
 </ul>
 <p>There are a lot of options here, so Attila breaks it down into some simple&nbsp;heuristics.</p>
 <ol>
-<li>Look for ways to reduce the application&#8217;s memory consumption. Less memory pressure means less garbage&nbsp;collection.</li>
-<li>Try a throughput collector with adaptive sizing turned on, which lets the <span class="caps">JVM</span> figure out the best sizes for the different generations. If this works, great! <code>-XX:+PrintHeapAtGC</code> can be helpful&nbsp;here.</li>
-<li>Next, try ConcMarkSweepGC. <code>-verbosegc</code> and <code>-XX:+PrintGcDetails</code> are useful here. This is a situation where you might adjust the young generation to reduce the pause from young gen <span class="caps">GC</span> time, but also make sure that the survivor regions aren&#8217;t filling&nbsp;up.</li>
+<li>Look for ways to reduce the application's memory consumption. Less memory pressure means less garbage&nbsp;collection.</li>
+<li>Try a throughput collector with adaptive sizing turned on, which lets the JVM figure out the best sizes for the different generations. If this works, great! <code>-XX:+PrintHeapAtGC</code> can be helpful&nbsp;here.</li>
+<li>Next, try ConcMarkSweepGC. <code>-verbosegc</code> and <code>-XX:+PrintGcDetails</code> are useful here. This is a situation where you might adjust the young generation to reduce the pause from young gen GC time, but also make sure that the survivor regions aren't filling&nbsp;up.</li>
 </ol>
+<p>If you're interested, a quick search turned up two links to official Oracle documentation for the HotSpot 1.4.2 garbage collectors. It's a bit dated, but I think most of it still&nbsp;applies.</p>
+<ul>
+<li><a href="http://java.sun.com/docs/hotspot/gc1.4.2/">Tuning Garbage Collection with the 1.4.2 Java Virtual&nbsp;Machine</a></li>
+<li><a href="http://java.sun.com/docs/hotspot/gc1.4.2/faq.html">FAQ about Garbage Collection in the Hotspot Java Virtual&nbsp;Machine</a></li>
+</ul>
 <h3>Programming&nbsp;Anecdotes</h3>
-<p>These are miscellaneous tips pulled from the talk. Most of them boil down to using less memory, which is a much better solution than trying to tune the <span class="caps">GC</span>. There were some out-of-the-box solutions, and some Twitter-specific things&nbsp;too.</p>
+<p>These are miscellaneous tips pulled from the talk. Most of them boil down to using less memory, which is a much better solution than trying to tune the GC. There were some out-of-the-box solutions, and some Twitter-specific things&nbsp;too.</p>
 <ul>
 <li>Get used to profiling your code, especially third party libraries.<ul>
-<li>For instance, Guava sucks up <span class="caps">2KB</span> each time you make a map by default to handle concurrency&nbsp;cases.</li>
-<li>Don&#8217;t use Thrift&#8217;s <span class="caps">RPC</span> classes as your domain objects, deserialize rather than keeping them around. They have extra overhead compared to normal&nbsp;objects.</li>
+<li>For instance, Guava sucks up 2KB each time you make a map by default to handle concurrency&nbsp;cases.</li>
+<li>Don't use Thrift's RPC classes as your domain objects, deserialize rather than keeping them around. They have extra overhead compared to normal&nbsp;objects.</li>
 </ul>
 </li>
 <li>Normalize your data when possible. If some data is shared between multiple objects, have them all point to the same instance instead of each having their own&nbsp;copy.</li>
-<li>Beware of worker thread pools sharing connections to many storage servers; this can result in <code>m * n</code> cached connection objects if you&#8217;re using thread locals.<ul>
-<li>It&#8217;s better to instead use fewer threads and asynchronous&nbsp;I/O.</li>
-<li>Also, don&#8217;t be afraid of just creating a new object on demand. It&#8217;s cheap in Eden, just a single pointer&nbsp;bump!</li>
+<li>Beware of worker thread pools sharing connections to many storage servers; this can result in <code>m * n</code> cached connection objects if you're using thread locals.<ul>
+<li>It's better to instead use fewer threads and asynchronous&nbsp;I/O.</li>
+<li>Also, don't be afraid of just creating a new object on demand. It's cheap in Eden, just a single pointer&nbsp;bump!</li>
 <li>Synchronized objects are another alternative to thread&nbsp;locals.</li>
 </ul>
 </li>
 <li>
-<p>If you&#8217;re having trouble packing it all into one <span class="caps">JVM</span>, try using&nbsp;multiple!</p>
+<p>If you're having trouble packing it all into one JVM, try using&nbsp;multiple!</p>
 </li>
-<li>Twitter had a service that would have a terrible <span class="caps">GC</span> pause every three days. Solution: just bounce the machine after less than three&nbsp;days.</li>
-<li>Don&#8217;t write your own memory manager, and stop if you find yourself doing something ugly with byte buffers.<ul>
-<li>The one notable exception is if you need it for a very limited and simple case. Cassandra has its own slab allocator with fixed size slabs that are flushed to disk when memory is full. This is so simple that it&#8217;s&nbsp;okay.</li>
+<li>Twitter had a service that would have a terrible GC pause every three days. Solution: just bounce the machine after less than three&nbsp;days.</li>
+<li>Don't write your own memory manager, and stop if you find yourself doing something ugly with byte buffers.<ul>
+<li>The one notable exception is if you need it for a very limited and simple case. Cassandra has its own slab allocator with fixed size slabs that are flushed to disk when memory is full. This is so simple that it's&nbsp;okay.</li>
 </ul>
 </li>
-<li>Oracle told Twitter that the garbage collector isn&#8217;t actually complained about that much, since people have figured out how to engineer around&nbsp;it.</li>
+<li>Oracle told Twitter that the garbage collector isn't actually complained about that much, since people have figured out how to engineer around&nbsp;it.</li>
 <li>You should never have to call the garbage collector yourself in&nbsp;code.</li>
 </ul>
 <h3>Conclusion</h3>
-<p>This is far from a complete discussion on memory management in Java, but it&#8217;s got some easy and immediately applicable findings, and I hope these notes help direct further reading. I want to give Bill Pugh&#8217;s super detailed <a href="http://www.cs.umd.edu/~pugh/java/memoryModel/">&#8220;The Java Memory Model&#8221;</a> a read, and there are a few Java performance tuning books on my Amazon wishlist&nbsp;too.</p>
-<p>Again, leave a comment if something is unclear or incorrect, and I&#8217;ll do my best to fix it&nbsp;up.</p>
+<p>This is far from a complete discussion on memory management in Java, but it's got some easy and immediately applicable findings, and I hope these notes help direct further reading. I want to give Bill Pugh's super detailed <a href="http://www.cs.umd.edu/~pugh/java/memoryModel/">"The Java Memory Model"</a> a read, and there are a few Java performance tuning books on my Amazon wishlist&nbsp;too.</p>
+<p>Again, leave a comment if something is unclear or incorrect, and I'll do my best to fix it&nbsp;up.</p>
 <!-- Hyde::Article::End -->
 
 			
