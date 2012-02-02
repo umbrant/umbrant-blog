@@ -1,0 +1,31 @@
+{% extends "_post.html" %}
+
+{%load webdesign %}
+
+{%hyde
+    title: Writing a Fast Matrix Multiplication Kernel
+    created: 2012-02-02 00:00:00
+    draft: True
+%}
+
+{% block article %}
+
+{%article%}
+
+{% excerpt %}
+
+Breaking down the problem: the matrix multiply kernels
+
+L1, L2, L3?
+Cache blocking
+TLB blocking, it's just as expensive a miss as a data cache miss (worse, maybe)
+Repacking arrays for TLB and contiguous access
+Block sizing and autotuning
+
+{%endexcerpt%}
+
+Rest of article goes here.
+
+{%endarticle%}
+
+{% endblock %}
