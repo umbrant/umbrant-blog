@@ -6,7 +6,7 @@
 	<head>
 		<title>
 			
-			Paper review: SCADS : umbrant
+			Writing a Fast Matrix Multiplication Kernel : umbrant
 			
 		</title>
 
@@ -61,9 +61,9 @@
 	
 
 		<div class="post single">
-			<h2 class="title"><a href="">Paper review: SCADS</a></h2>
+			<h2 class="title"><a href="">Writing a Fast Matrix Multiplication Kernel</a></h2>
 			
-			<p class="meta"><span class="date">October 12, 2011</span></p>
+			<p class="meta"><span class="date">February 2, 2012</span></p>
 			
 			<div class="entry">
 			
@@ -72,23 +72,15 @@
 
 <!-- Hyde::Excerpt::Begin -->
 
-<p>This is a paper review of "SCADS: Scale-Independent Storage for Social Computing Applications" by Armbrust et al. This was published at CIDR in 2009. In a nutshell, SCADS is a key-value store that lets programmers choose their own consistency model and semantics, and restricts queries to be "scale-independent", i.e. requiring a constant amount of&nbsp;work.</p>
+<p>Breaking down the problem: the matrix multiply&nbsp;kernels</p>
+<p>L1, L2, L3?
+Cache blocking
+TLB blocking, it's just as expensive a miss as a data cache miss (worse, maybe)
+Repacking arrays for TLB and contiguous access
+Block sizing and&nbsp;autotuning</p>
 <!-- Hyde::Excerpt::End -->
 
-<h3>Main&nbsp;idea</h3>
-<p>I think SCADS chooses an interesting point in the scalable storage design space to focus&nbsp;on.</p>
-<ul>
-<li>Simple key-value storage&nbsp;interface</li>
-<li>A query language that only allows constant-time requests (no O(n) operations that fail at&nbsp;scale)</li>
-<li>Declarative, tunable consistency models, letting the programmer specify consistency at the level of application&nbsp;requirements</li>
-<li>Scale-up/scale-down architecture designed for incremental cloud&nbsp;pricing</li>
-</ul>
-<p>This makes me feel the comparison against Facebook's heavily sharded MySQL cluster behind memcached is kind of unfair because they are pretty different usecases, but there is still a lot of merit behind the ideas in&nbsp;SCADS.</p>
-<p>SCADS doesn't seem designed for ad-hoc queries, since handling requests in constant time can require building indexes, which is potentially quite expensive. Updating indexes is also a potentially high cost. I'm not really sure how to keep both reads and writes in constant time here, since denormalizing means writes might require O(n)&nbsp;writes.</p>
-<p>I really, really like the idea of declarative specifications for consistency, performance, and other application constraints. I feel like application developers really shouldn't have to reason about the details of replication, data placement, and consistency; they should be able to state what they want at a high level in terms of application requirements, and have the system figure out how to achieve this. This pushes the responsibility down to the people running the storage system, who are hopefully better able to reason about machine failure rates, the types of failures, and the consistency and durability properties of the&nbsp;system.</p>
-<h3>Future&nbsp;relevance</h3>
-<p>As I hinted above, I really like the idea of declarative specification of application requirements. It's not an easy problem to translate this into the low-level SLOs that can actually be enforced by a cluster resource manager, but it's a good one. Providing these guarantees to all the different kinds of applications running on a cluster is the end goal. This is probably hard to do generally without some application-level semantics about the incoming requests (SCADS and it's constant time only requests for&nbsp;instance).</p>
-<p>At the very least, I'd like to see this done for a more general purpose storage layer, perhaps something like GFS or&nbsp;Bigtable.</p>
+<p>Rest of article goes&nbsp;here.</p>
 <!-- Hyde::Article::End -->
 
 			
@@ -103,8 +95,8 @@
     var disqus_shortname = 'umbrant'; // required: replace example with your forum shortname
 
     // The following are highly recommended additional parameters. Remove the slashes in front to use.
-    var disqus_identifier = '/blog/2011/scads_paper_review.html';
-    var disqus_url = 'http://www.umbrant.com/blog/2011/scads_paper_review.html';
+    var disqus_identifier = '/blog/2012/dgemm_demystified.html';
+    var disqus_url = 'http://www.umbrant.com/blog/2012/dgemm_demystified.html';
     //var disqus_developer = 1;
 
     /* * * DON'T EDIT BELOW THIS LINE * * */

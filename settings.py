@@ -113,6 +113,7 @@ CONTEXT = {
         'contact' : '/contact.html',
         'bucket_list': '/bucket.html',
         'atom': 'http://feeds.feedburner.com/UmbrantBlog',
+        'external_sort': '/blog/2011/external_sorting.html',
     },
     'links' : {
         'twitter_umbrant': 'http://twitter.com/umbrant',

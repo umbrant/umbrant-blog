@@ -70,6 +70,26 @@
 
 			
 			<div class="post">
+				<h2 class="title"><a href="/blog/2012/flat_datacenter_storage.html">MinuteSort with Flat Datacenter Storage</a></h2>
+				<p class="meta"><span class="date">July 2, 2012</span></p>
+				<div class="entry">
+					
+
+<p>Microsoft Research recently crushed the <a href="http://sortbenchmark.org/">world record for MinuteSort</a>, sorting 1.4TB in a minute. This replaces the former record held by Yahoo's 1406 node Hadoop cluster in the Daytona MinuteSort category, and means that Hadoop no longer holds any world sorting record&nbsp;titles.</p>
+<p>I found MSR's approach of "<a href="http://sortbenchmark.org/FlatDatacenterStorage2012.pdf">MinuteSort with Flat Datacenter Storage</a>" (FDS) to be intriguing. Most of the prior sort winners (e.g. Hadoop, TritonSort) try to colocate computation and data, since you normally pay a throughput (and thus latency) cost to go over the network. FDS separates out compute from storage, heavily provisioning a full bisection bandwidth network to match the I/O rate of the hard disks on storage&nbsp;nodes.</p>
+<p>I'm going to give a rundown of the paper, and then pull out salient points for Hadoop at the&nbsp;end.</p>
+
+					<p class="links"><a href="/blog/2012/flat_datacenter_storage.html">Read More</a>&#160;&#160;&#160;&#160;|&#160;&#160;&#160;&#160;<a href="/blog/2012/flat_datacenter_storage.html#disqus_thread">Comments</a></p>
+				</div>
+			</div>
+			
+		
+
+			
+		
+
+			
+			<div class="post">
 				<h2 class="title"><a href="/blog/2012/twitter_jvm_tuning.html">JVM Performance Tuning (notes)</a></h2>
 				<p class="meta"><span class="date">January 18, 2012</span></p>
 				<div class="entry">
@@ -99,38 +119,6 @@
 			</div>
 			
 		
-
-			
-			<div class="post">
-				<h2 class="title"><a href="/blog/2012/year_in_review_2011_professional.html">Year in review: 2011 (professional)</a></h2>
-				<p class="meta"><span class="date">January 5, 2012</span></p>
-				<div class="entry">
-					
-
-<p>I like to take some time every once in a while to think about what I've done that I'm proud of, what I've learned, and what I want to do. With the beginning of a new year comes the perfect opportunity to reflect on my life in the year&nbsp;past.</p>
-<p>I've split it into two separate blog posts, one <a href="/blog/2012/year_in_review_2011_professional.html">professional</a> (meaning research and grad school life) and one <a href="year_in_review_2011_personal.html">personal</a> (meaning hobbies, self-improvement, life goals). This post covers the former; my life as a grad student in&nbsp;2011.</p>
-
-					<p class="links"><a href="/blog/2012/year_in_review_2011_professional.html">Read More</a>&#160;&#160;&#160;&#160;|&#160;&#160;&#160;&#160;<a href="/blog/2012/year_in_review_2011_professional.html#disqus_thread">Comments</a></p>
-				</div>
-			</div>
-			
-		
-
-			
-			<div class="post">
-				<h2 class="title"><a href="/blog/2012/haystack_review.html">Paper review: Facebook Haystack</a></h2>
-				<p class="meta"><span class="date">January 3, 2012</span></p>
-				<div class="entry">
-					
-
-<p>This is a review of Facebook's Haystack storage system, used to store the staggering amount of photos that are uploaded to Facebook everyday. Facebook Photos started out with an NFS appliance, but was forced to move to a custom solution for the reasons of cost, scale, and performance. Haystack is an engineering solution that applies well-known techniques from GFS and log-structured filesystems to their distributed, append-only, key-value blob situation. Metadata management is somewhat novel, as well as their CDN&nbsp;integration.</p>
-<p>The paper, "Finding a needle in Haystack: Facebook's photo storage" by Beaver et al., was published at OSDI&nbsp;'10.</p>
-
-					<p class="links"><a href="/blog/2012/haystack_review.html">Read More</a>&#160;&#160;&#160;&#160;|&#160;&#160;&#160;&#160;<a href="/blog/2012/haystack_review.html#disqus_thread">Comments</a></p>
-				</div>
-			</div>
-			
-		
 		
 	
 		
@@ -148,7 +136,7 @@
 	
 		
 		
-		<a href="/blog/2011/2011.html"><< Older posts</a>
+		<a href="/blog/2012/2012.html"><< Older posts</a>
 		
 	
 	
@@ -198,6 +186,12 @@
 					
 					
 						
+						<li><a href="/blog/2012/flat_datacenter_storage.html">MinuteSort with Flat Datacenter Storage</a></li>
+						
+					
+						
+					
+						
 						<li><a href="/blog/2012/twitter_jvm_tuning.html">JVM Performance Tuning (notes)</a></li>
 						
 					
@@ -211,14 +205,6 @@
 					
 						
 						<li><a href="/blog/2012/haystack_review.html">Paper review: Facebook Haystack</a></li>
-						
-					
-						
-						<li><a href="/blog/2011/relational_cloud_and_database_scalability.html">Paper review: Relational Cloud, Database Scalability</a></li>
-						
-					
-						
-						<li><a href="/blog/2011/bigtable_review.html">Paper review: Bigtable</a></li>
 						
 					
 				
