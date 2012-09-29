@@ -72,20 +72,20 @@
 
 <!-- Hyde::Excerpt::Begin -->
 
-<p>This is a paper review of "Hive: Data Warehousing <span class="amp">&amp;</span> Analytics on Hadoop" by the Facebook Data Team (a <a href="http://www.slideshare.net/zshao/hive-data-warehousing-analytics-on-hadoop-presentation">set of slides</a>), and "Pig Latin" A Not-So-Foreign Language for Data Processing" by Olston et al. The Hive slide deck I believe is from 2009, and Pig was published at SIGMOD in 2008. I supplemented this with the Hive paper published at VLDB in&nbsp;2009.</p>
-<p>These are Facebook and Yahoo's approaches to higher-level languages that compile down to MapReduce on Hadoop. Measured by the percentage of Hive and Pig jobs on their production clusters, they have both been extremely successful. Hive takes a traditional SQL/database-like approach, while Pig looks more imperative. At face value they seem quite different, but there are actually a bunch of underlying&nbsp;similarities.</p>
+<p>This is a paper review of &#8220;Hive: Data Warehousing <span class="amp">&amp;</span> Analytics on Hadoop&#8221; by the Facebook Data Team (a <a href="http://www.slideshare.net/zshao/hive-data-warehousing-analytics-on-hadoop-presentation">set of slides</a>), and &#8220;Pig Latin&#8221; A Not-So-Foreign Language for Data Processing&#8221; by Olston et al. The Hive slide deck I believe is from 2009, and Pig was published at <span class="caps">SIGMOD</span> in 2008. I supplemented this with the Hive paper published at <span class="caps">VLDB</span> in&nbsp;2009.</p>
+<p>These are Facebook and Yahoo&#8217;s approaches to higher-level languages that compile down to MapReduce on Hadoop. Measured by the percentage of Hive and Pig jobs on their production clusters, they have both been extremely successful. Hive takes a traditional <span class="caps">SQL</span>/database-like approach, while Pig looks more imperative. At face value they seem quite different, but there are actually a bunch of underlying&nbsp;similarities.</p>
 <!-- Hyde::Excerpt::End -->
 
 <h3>Hive main&nbsp;ideas</h3>
-<p>Hive is effectively a traditional database that just uses HDFS and MapReduce for data storage and query execution. Tables are serialized and deserialized to files in HDFS, and can be partitioned across and within fields. The query language, HiveQL, looks exactly like SQL minus some of the more complicated operators because of engineering effort and the limitations of MapReduce. UDFs are also supported, meaning that normal MapReduce code can be slid right in. HiveQL is compiled down into a MR query plan which can consist of multiple MR jobs. The logical plan is optimized by a rule-based optimizer (future work being an adaptive cost-based&nbsp;optimizer).</p>
-<p>Queries can be fed to the server via a Thrift server, which enables Hive usage from a variety of different programming languages. A small note is that table metadata is stored outside of HDFS, in a normal database. This is simply because the amount of data is small, and the access pattern is pretty random, making HDFS&nbsp;ill-suited.</p>
+<p>Hive is effectively a traditional database that just uses <span class="caps">HDFS</span> and MapReduce for data storage and query execution. Tables are serialized and deserialized to files in <span class="caps">HDFS</span>, and can be partitioned across and within fields. The query language, HiveQL, looks exactly like <span class="caps">SQL</span> minus some of the more complicated operators because of engineering effort and the limitations of MapReduce. UDFs are also supported, meaning that normal MapReduce code can be slid right in. HiveQL is compiled down into a <span class="caps">MR</span> query plan which can consist of multiple <span class="caps">MR</span> jobs. The logical plan is optimized by a rule-based optimizer (future work being an adaptive cost-based&nbsp;optimizer).</p>
+<p>Queries can be fed to the server via a Thrift server, which enables Hive usage from a variety of different programming languages. A small note is that table metadata is stored outside of <span class="caps">HDFS</span>, in a normal database. This is simply because the amount of data is small, and the access pattern is pretty random, making <span class="caps">HDFS</span>&nbsp;ill-suited.</p>
 <h3>Pig main&nbsp;ideas</h3>
-<p>Pig is designed explicitly for ad-hoc data analysis by programmers. The query language looks like Python with operators pulled from SQL, and instead of tables, users are given more programmer-friendly data structures like maps and lists. UDFs are also first-class citizens in Pig, and can have arbitrary inputs and outputs (non-atomic&nbsp;values).</p>
-<p>All this means that the query language and data format are more flexible. Hive needs to the classic ETL (extract-transform-load) to get data into tables before it can query it. Pig, you just pass it a file and a function explaining how to interpret it. This likely comes at a performance cost, but using the standard deserializers and a schema would ameliorate this. Pig also allows for more explicit control over the query plan, since each stage in the execution DAG is as&nbsp;programmed.</p>
-<p>As in Hive, Pig does not provide some operators because of the limitations of MapReduce. Also as in Hive, statements using the SQL-like operators can be optimized, and multiple MapReduce jobs are chained together for you&nbsp;automatically.</p>
-<p>One thing I really like about Pig is the focus on debugging. Trying to reason about a page of SQL is really difficult, and it's much easier to reason about Pig's series of steps. It looks extremely similar to how I do ad-hoc text parsing in Python: gradually applying operators to collections of strings until I get the result I want. Pig also provides an "example execution table" that shows what the Pig program does on a small amount of data, which is much quicker than running the actual MapReduce&nbsp;jobs.</p>
+<p>Pig is designed explicitly for ad-hoc data analysis by programmers. The query language looks like Python with operators pulled from <span class="caps">SQL</span>, and instead of tables, users are given more programmer-friendly data structures like maps and lists. UDFs are also first-class citizens in Pig, and can have arbitrary inputs and outputs (non-atomic&nbsp;values).</p>
+<p>All this means that the query language and data format are more flexible. Hive needs to the classic <span class="caps">ETL</span> (extract-transform-load) to get data into tables before it can query it. Pig, you just pass it a file and a function explaining how to interpret it. This likely comes at a performance cost, but using the standard deserializers and a schema would ameliorate this. Pig also allows for more explicit control over the query plan, since each stage in the execution <span class="caps">DAG</span> is as&nbsp;programmed.</p>
+<p>As in Hive, Pig does not provide some operators because of the limitations of MapReduce. Also as in Hive, statements using the <span class="caps">SQL</span>-like operators can be optimized, and multiple MapReduce jobs are chained together for you&nbsp;automatically.</p>
+<p>One thing I really like about Pig is the focus on debugging. Trying to reason about a page of <span class="caps">SQL</span> is really difficult, and it&#8217;s much easier to reason about Pig&#8217;s series of steps. It looks extremely similar to how I do ad-hoc text parsing in Python: gradually applying operators to collections of strings until I get the result I want. Pig also provides an &#8220;example execution table&#8221; that shows what the Pig program does on a small amount of data, which is much quicker than running the actual MapReduce&nbsp;jobs.</p>
 <h3>Analysis</h3>
-<p>It's handy that both Hive and Pig automatically string together MR jobs as part of one program, but you still pay the serialization overhead of writing things into intermediate files between jobs. This is something that isn't true with a more general execution framework like Dryad. The move towards more declarative languages, as I've said previously, isn't surprising at all, since actually programming a MapReduce job is way more work than using something more high-level and declarative. For ad-hoc queries, it's way better to optimize for programmer productivity than try to squeeze out that last 20% of performance from writing it in raw&nbsp;MR.</p>
+<p>It&#8217;s handy that both Hive and Pig automatically string together <span class="caps">MR</span> jobs as part of one program, but you still pay the serialization overhead of writing things into intermediate files between jobs. This is something that isn&#8217;t true with a more general execution framework like Dryad. The move towards more declarative languages, as I&#8217;ve said previously, isn&#8217;t surprising at all, since actually programming a MapReduce job is way more work than using something more high-level and declarative. For ad-hoc queries, it&#8217;s way better to optimize for programmer productivity than try to squeeze out that last 20% of performance from writing it in raw&nbsp;<span class="caps">MR</span>.</p>
 <p>Hive has been extremely popular at Facebook, and I think the same is true of Pig at Yahoo. I think the future is going to be improving the underlying Hadoop execution engine to better support ad-hoc queries by keeping intermediate files in memory, and improving the number of operators and optimizers for both&nbsp;languages.</p>
 <!-- Hyde::Article::End -->
 
@@ -148,6 +148,8 @@
 					
 					
 						
+					
+						
 						<li><a href="/blog/2012/twitter_jvm_tuning.html">JVM Performance Tuning (notes)</a></li>
 						
 					
@@ -165,10 +167,6 @@
 					
 						
 						<li><a href="/blog/2011/relational_cloud_and_database_scalability.html">Paper review: Relational Cloud, Database Scalability</a></li>
-						
-					
-						
-						<li><a href="/blog/2011/bigtable_review.html">Paper review: Bigtable</a></li>
 						
 					
 				
