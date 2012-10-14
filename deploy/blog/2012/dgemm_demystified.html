@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+	<head>
+		<title>
+			
+			Writing a Fast Matrix Multiplication Kernel : umbrant
+			
+		</title>
+
+		<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+		<link rel="icon" type="image/ico" href="/favicon.ico"/>
+
+		
+		<link rel="alternate" type="application/atom+xml" href="http://feeds.feedburner.com/UmbrantBlog" title="umbrant"/>
+		
+
+		
+		<link href="/media/css/style.css" rel="stylesheet" type="text/css" media="screen" />
+		<link href="/media/css/pygments.css" rel="stylesheet" type="text/css" media="screen" />
+		<link href='http://fonts.googleapis.com/css?family=Quattrocento|Droid+Sans|Droid+Sans+Mono' rel='stylesheet' type='text/css'/>
+		
+		
+		
+
+		
+		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js"></script>
+		<script type="text/javascript" src="/media/js/umbrant.js"></script>
+		
+		<script type="text/javascript">
+
+  			var _gaq = _gaq || [];
+  			_gaq.push(['_setAccount', 'UA-4601421-1']);
+  			_gaq.push(['_trackPageview']);
+
+  			(function() {
+    		 var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    		 ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    		 var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  			 })();
+
+		 </script>
+		 
+		 
+	 </head>
+
+	 <body>
+		 <div id="wrapper">
+			<div id="page">
+				<div id="page-bgtop">
+					<div id="page-bgbtm">
+						<div id="content">
+
+							
+
+	
+
+
+	
+
+		<div class="post single">
+			<h2 class="title"><a href="">Writing a Fast Matrix Multiplication Kernel</a></h2>
+			
+			<p class="meta"><span class="date">February 2, 2012</span></p>
+			
+			<div class="entry">
+			
+
+			<!-- Hyde::Article::Begin -->
+
+<!-- Hyde::Excerpt::Begin -->
+
+<p>Breaking down the problem: the matrix multiply&nbsp;kernels</p>
+<p>L1, L2, L3?
+Cache blocking
+TLB blocking, it's just as expensive a miss as a data cache miss (worse, maybe)
+Repacking arrays for TLB and contiguous access
+Block sizing and&nbsp;autotuning</p>
+<!-- Hyde::Excerpt::End -->
+
+<p>Rest of article goes&nbsp;here.</p>
+<!-- Hyde::Article::End -->
+
+			
+			</div>
+		</div>
+
+
+	
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+    var disqus_shortname = 'umbrant'; // required: replace example with your forum shortname
+
+    // The following are highly recommended additional parameters. Remove the slashes in front to use.
+    var disqus_identifier = '/blog/2012/dgemm_demystified.html';
+    var disqus_url = 'http://www.umbrant.com/blog/2012/dgemm_demystified.html';
+    //var disqus_developer = 1;
+
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+
+
+						</div>
+						<!-- end #content -->
+
+						<div id="sidebar">
+	<div id="logo">
+		<h1><a href="/">umbrant</a></h1>
+	</div>
+	<div>
+		<p>My name is Andrew Wang. I'm a CS PhD student at UC Berkeley working in distributed systems.</p>
+	</div>
+	<div id="menu">
+		<ul>
+			<li><a href="/">Home</a></li>
+			<li><a href="/about.html">About</a></li>
+			<li><a href="/research.html">Research</a></li>
+			<li><a href="/contact.html">Contact</a></li>
+		</ul>
+	</div>
+	<ul>
+		<li>
+		<h2>Recent Posts</h2>
+		<ul>
+			
+				
+			
+				
+
+					
+					
+						
+						<li><a href="/blog/2012/flat_datacenter_storage.html">MinuteSort with Flat Datacenter Storage</a></li>
+						
+					
+						
+					
+						
+						<li><a href="/blog/2012/twitter_jvm_tuning.html">JVM Performance Tuning (notes)</a></li>
+						
+					
+						
+						<li><a href="/blog/2012/year_in_review_2011_personal.html">Year in review: 2011 (personal)</a></li>
+						
+					
+						
+						<li><a href="/blog/2012/year_in_review_2011_professional.html">Year in review: 2011 (professional)</a></li>
+						
+					
+						
+						<li><a href="/blog/2012/haystack_review.html">Paper review: Facebook Haystack</a></li>
+						
+					
+				
+			
+				
+			
+				
+			
+				
+			
+				
+			
+		</ul>
+		</li>
+		<li>
+		<h2>Archive</h2>
+		<ul>
+			
+			
+			
+			
+				
+				
+				<li><a href="/blog/2012/2012.html">2012</a></li>
+				
+				
+				
+				
+				
+				
+				
+				<li><a href="/blog/2011/2011.html">2011</a></li>
+				
+				
+				
+				
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+		</ul>
+		</li>
+	</ul>
+</div>
+
+						<!-- end #sidebar -->
+
+									<div id="footer">
+				<p>Copyright &copy; Andrew Wang, umbrant.com</p>
+				<p>Licensed under <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/">CC BY-NC-SA 3.0</a></p>
+				<br/>
+				<p><a href="http://feeds.feedburner.com/UmbrantBlog"><img src="/media/images/feed-icon-14x14.png" alt="feed"/>&#160; Subscribe to my feed</a></p>
+			</div>
+
+						<!-- end #footer -->
+
+					</div>
+				</div>
+			</div>
+			<!-- end #page -->
+		</div>
+	 </body>
+ </html>
+
+ 
