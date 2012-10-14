@@ -86,6 +86,8 @@ CONTENT_PROCESSORS = {
     '*':{
         '.ico':(
                 'hydeengine.content_processors.PassthroughProcessor',),
+        '.pdf':(
+                'hydeengine.content_processors.PassthroughProcessor',),
         '.png':(
                 'hydeengine.content_processors.PassthroughProcessor',),
     },
