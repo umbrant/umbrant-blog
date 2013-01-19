@@ -1,0 +1,27 @@
+{% extends "_post.html" %}
+
+{%load webdesign %}
+
+{%hyde
+    title: "Cake presented at SoCC"
+    created: 2012-10-15 14:00:00
+%}
+
+{% block article %}
+
+{%article%}
+
+{% excerpt %}
+
+I just presented some of our work at Berkeley at SoCC, on "Cake: Enabling High-Level SLOs on Shared Storage."
+It's a coordinated, multi-resource scheduler for storage workloads, which enables consolidation of front-end and backend workloads while meeting high-level performance requirements of the front-end workload. 
+Consolidation has advantages in terms of economic costs (reducing overprovisioning and underutilization), and also significantly reducing the latency of traditional unconsolidated copy-then-process analytics cycles.
+
+A [PDF of the paper](/papers/socc12-cake.pdf) and the [slides from my presentation](/papers/socc12-cake-slides-awang.pptx) are available on my [research page](/research.html).
+
+{%endexcerpt%}
+
+
+{%endarticle%}
+
+{% endblock %}

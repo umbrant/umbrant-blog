@@ -79,19 +79,21 @@ MEDIA_PROCESSORS = {
                 'hydeengine.media_processors.JSmin',),
         '.png':(
                 'hydeengine.content_processors.PassthroughProcessor',),
-    }
+    },
 }
 
 CONTENT_PROCESSORS = {
     '*':{
         '.ico':(
                 'hydeengine.content_processors.PassthroughProcessor',),
-        '.pdf':(
-                'hydeengine.content_processors.PassthroughProcessor',),
         '.png':(
                 'hydeengine.content_processors.PassthroughProcessor',),
     },
     'prerendered/': {
+        '*.*' :
+            ('hydeengine.content_processors.PassthroughProcessor',)
+    },
+    'papers/': {
         '*.*' :
             ('hydeengine.content_processors.PassthroughProcessor',)
     }
