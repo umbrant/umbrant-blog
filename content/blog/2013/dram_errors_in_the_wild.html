@@ -4,8 +4,7 @@
 
 {%hyde
     title: "Paper review: DRAM errors in the wild"
-    created: 2013-02-03 18:00:00
-    draft: True
+    created: 2013-02-05 22:00:00
 %}
 
 {% block article %}
@@ -14,27 +13,29 @@
 
 {% excerpt %}
 
-Today, I'm looking at an excellent study by Schroeder et al., ["DRAM errors in the wild: A Large-Scale Field Study."](http://www.cs.toronto.edu/~bianca/papers/sigmetrics09.pdf) This is the definitive paper on the subject, covering two years, thousands of machines, and millions of DIMM hours. This is particularly important as cluster sizes increase; after all, one-in-a-million errors are common if you have a million DIMMs.
+Today, I'm looking at an excellent study by Schroeder et al., ["DRAM errors in the wild: A Large-Scale Field Study"](http://www.cs.toronto.edu/~bianca/papers/sigmetrics09.pdf). This is the definitive paper on the subject, covering two years, thousands of machines, and millions of DIMM hours. Memory errors are particularly important in the context of growing cluster sizes; one-in-a-million errors become common at scale.
 
 {%endexcerpt%}
 
-## Background
+### ECC and memory errors
 
-Schroeder and her Google co-authors lead with an overview of DRAM errors and the countermeasures present in today's hardware. Most all server-grade memory is [ECC](http://en.wikipedia.org/wiki/ECC_memory), meaning it can detect double bit errors and correct single bit errors (via something like a 7-4 Hamming code). More advanced ["chipkill"](http://en.wikipedia.org/wiki/Chipkill) schemes can also correct some multi-bit errors. These errors are detected on read; an uncorrectable errors normally result in a system reboot, while correctable errors are fixed through parity on-the-go. Some systems also have a *hardware scrubber*, which periodically checks and rewrites errors (at the rate of 1GB every 45 minutes). This is important since it can prevent correctable errors from accumulating and becoming uncorrectable.
+Schroeder and her Google co-authors lead with an overview of DRAM errors and the countermeasures present in today's hardware. Almost all server-grade memory is [ECC](http://en.wikipedia.org/wiki/ECC_memory), meaning it can detect double-bit errors and correct single-bit errors (via something like a 7-4 Hamming code). More advanced ["chipkill"](http://en.wikipedia.org/wiki/Chipkill) schemes can also correct some multi-bit errors. These errors are detected on read; uncorrectable errors (UEs) normally result in a system reboot, while correctable errors (CEs) are fixed up on-the-go. Some systems also have a *hardware scrubber*, which periodically checks and rewrites errors (at the rate of 1GB every 45 minutes). This is important since it can prevent correctable errors from accumulating and becoming uncorrectable.
 
-Errors are also divided into hard and soft errors. *Soft errors* are the famed cosmic ray flipping a bit; a random, one-off fault caused by the environment. These are the types of errors that checksums and hardware scrubbers are designed for. *Hard errors* are structural, and more difficult to deal with. These emerge as a "stuck bit" which can't be rewritten and fixed, and are caused by things like hardware faults or buggy firmware.
+Errors are also divided into hard and soft errors. *Soft errors* are the famed cosmic ray flipping a bit; a random, one-off fault caused by the environment. These are the errors that countermeasures like checksums and hardware scrubbers are designed for. *Hard errors* are structural, and more difficult to deal with. In practice, these emerge as "stuck bits" which can't be rewritten and fixed, and are caused by things like hardware faults or buggy firmware.
 
-## Failure rates
+### Failure rates
 
-The biggest takeaway is that correctable errors are very common, far more so than previously thought. One third of machines experience a correctable error in a year, and uncorrectable errors aren't uncommon either. Breaking it down, there's a 1.29\% incidence per DIMM-year of a CE, and a 0.22\% incidence per DIMM-year of a UE.
+The biggest takeaway from their study is that correctable errors are far more common than previously thought. One third of machines experienced a correctable error in a year. Breaking it down, there's a 1.29% incidence per DIMM-year of a CE. Another important note is that errors are strongly correlated by node; 20% of machines cause 90% of errors. These errors are also strongly correlated by age; a DIMM that experiences 1 error in a month typically experiences 10-100 errors the following month. I think aligning with the aging hypothesis, the authors found that hard errors were much more likely than soft errors.
 
-These errors are strongly correlated by node; 20\% of machines cause 90\% of errors, meaning finding and replacing these machines is quite important. Age is very strongly correlated with errors; DIMMs that experience an error one month experience 10-100 faults in the next month. The per-machine correlation is less strong, and the authors' analysis is that temperature might not be a major cause of errors as previously thought. Error rates are correlated with utilization though; perhaps higher utilization leads to more memory usage, more reads, and thus more errors. Their data also shows that hard errors are much more likely than soft errors, which seems to correspond with the aging hypothesis.
+One surprising data point was that they did not find temperature and error rates to be correlated, once normalized for utilization. Error rates were correlated with utilization though, and utilization is correlated with temperature. I hypothesize that more heavily utilized machines are using more memory and doing more reads, and thus are more prone to errors (else, the random bit flip might just happen in an unused portion of memory and never be encountered).
+
+The uncorrectable error rates plateau over time because Google aggressively decommissions machines that experience UEs. All said, their trace shows a 0.22% incidence per DIMM-year of a UE. Based on this, I don't think there's much danger of undetected errors (should be extremely rare).
 
 In terms of technology, they found no differences between DDR1, DDR2, and FBDIMM. Furthermore, they did not find significant differences between manufacturers. Chipkill is seen as an extremely beneficial technology though, since hardware platforms with chipkill experienced far fewer uncorrectable errors.
 
-## Conclusion
+### Conclusion
 
-Memory errors are scary, and they happen with some frequency. The analysis isn't dire, but it does strongly advocate for ECC memory, chipkill, and hardware scrubbers. Getting proper monitoring to quickly detect and decommission machines with uncorrectable errors is also important. This paper was a great introduction to the topic of memory errors, and will probably remain the gold standard for some time.
+Memory errors are scary, and they happen with some frequency. However, the situation seems to be manageable. The study is a strong advocate for ECC memory, chipkill, and hardware scrubbers. Getting proper monitoring to quickly detect and decommission machines with uncorrectable errors is also important. Overall, this paper was a very readable and thorough analysis of memory errors, and will probably remain the gold standard on the topic for some time.
 
 {%endarticle%}
 
