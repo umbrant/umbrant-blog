@@ -3,9 +3,8 @@
 {%load webdesign %}
 
 {%hyde
-    title: Introducing the next generation in highly-available, distributed audio listening
+    title: Highly-available audio in HDFS
     created: 2013-04-01 18:00:00
-    draft: True
 %}
 
 {% block article %}
@@ -14,24 +13,27 @@
 
 {% excerpt %}
 
-Here on the HDFS team at Cloudera, we believe in eating our own dogfood. Since we value our (substantial) MP3 collections quite dearly, it's only natural to store them in a high performance, highly-available, fault-tolerant, distributed filesystem like HDFS. Today, I'm announcing the next generation in aural HDFS enjoyment: listening to music directly from the Namenode web UI.
+Here on the HDFS team at [Cloudera](http://www.cloudera.com/), we believe in [eating our own dogfood](http://en.wikipedia.org/wiki/Eating_your_own_dog_food). Since we value our (substantial) MP3 collections quite dearly, it's only natural to store them in a high performance, highly-available, enterprise-quality distributed filesystem like HDFS. Today, I'm announcing the next generation in aural HDFS enjoyment: listening to music directly from the Namenode web UI.
 
 {%endexcerpt%}
 
-It's easy to use existing music players with HDFS through [FUSE](http://wiki.apache.org/hadoop/MountableHDFS) or the [NFS proxy](https://github.com/cloudera/hdfs-nfs-proxy), but what if you want a zero-configuration way of listening to your tunes *now*? This is the target market for my newest project, `hdfs-player.js`:
+It's easy to use existing music players with HDFS through [FUSE-DFS](http://wiki.apache.org/hadoop/MountableHDFS) or Cloudera's [NFS proxy](https://github.com/cloudera/hdfs-nfs-proxy), but what if you want a zero-configuration way of listening to your tunes *now*? This is the goal of my new pet project, `hdfs-player.js`:
 
-[hdfs-player.js](javascript:(function(){javascript:(function(){function parseUri(str){var o=parseUri.options,m=o.parser[o.strictMode?"strict":"loose"].exec(str),uri={},i=14;while(i--)uri[o.key[i]]=m[i]||"";uri[o.q.name]={};uri[o.key[12]].replace(o.q.parser,function($0,$1,$2){if($1)uri[o.q.name][$1]=$2;});return uri;};parseUri.options={strictMode:false,key:["source","protocol","authority","userInfo","user","password","host","port","relative","path","directory","file","query","anchor"],q:{name:"queryKey",parser:/(?:^|&)([^&=]*)=?([^&]*)/g},parser:{strict:/^(?:([^:\/?#]+):)?(?:\/\/((?:(([^:@]*)(?::([^:@]*))?)?@)?([^:\/?#]*)(?::(\d*))?))?((((?:[^?#\/]*\/)*)([^?#]*))(?:\?([^#]*))?(?:#(.*))?)/,loose:/^(?:(?![^:@]+:[^:@\/]*@)([^:\/?#.]+):)?(?:\/\/)?((?:(([^:@]*)(?::([^:@]*))?)?@)?([^:\/?#]*)(?::(\d*))?)(((\/(?:[^?#](?![^?#\/]*\.[^?#\/.]+(?:[?#]|$)))*\/?)?([^?#\/]*))(?:\?([^#]*))?(?:#(.*))?)/}};function makeUrl(p){var path="/streamFile"+decodeURIComponent(p.queryKey["dir"]);return p.protocol+"://"+p.authority+path+"?nnaddr="+p.queryKey["nnaddr"];};console.log("start");var elements=document.getElementsByTagName("a");for(var i=0;i<elements.length;i++){var e=elements[i];if(e.href.indexOf("browseDirectory.jsp")!==-1){var p=parseUri(e.href);var dir=p.queryKey["dir"];var type="";if(dir.indexOf(".ogg")!==-1){type="audio/ogg";}else if(dir.indexOf(".mp3")!==-1){type="audio/mpeg";}else if(dir.indexOf(".wav")!==-1){type="audio/wav";}if(type==""){continue;}var url=makeUrl(p);var audio=new Audio();audio.setAttribute("controls","");audio.load();var source=document.createElement("source");console.log(url);source.setAttribute("src",url);source.setAttribute("type",type);audio.appendChild(source);e.parentNode.appendChild(audio);}}console.log("done");})();})();)
-[source code](https://gist.github.com/umbrant/5289176)
+[Source code](https://gist.github.com/umbrant/5289176)
 
-Simply drag the bookmarklet into your toolbar, browse to the directory containing your music in the web UI, and prepare for excitement. Transform this boring old web UI:
+[Bookmarklet maker](http://ted.mielczarek.org/code/mozilla/bookmarklet.html)
 
-<img alt="Before" src="hdfs-player/nn_before.png"/>
+Copy paste the source code into the bookmarklet maker, drag the bookmarklet into your toolbar, browse to the directory containing your music in the web UI, and prepare for excitement. Transform this boring old web UI:
 
-Into the spectacular this :
+<img width=559px" alt="Before" src="hdfs-player/nn_before.png"/>
 
-<img alt="After" src="hdfs-player/nn_after.png"/>
+Into the spectacular this:
 
-Use Chrome for MP3 playback, FF only supports Ogg and wav. Happy listening, everyone!
+<img width=559px" alt="After" src="hdfs-player/nn_after.png"/>
+
+Use Chrome for MP3 playback, FF only supports Ogg and wav.
+
+Happy listening, everyone!
 
 {%endarticle%}
 
