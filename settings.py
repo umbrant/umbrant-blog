@@ -96,6 +96,10 @@ CONTENT_PROCESSORS = {
     'papers/': {
         '*.*' :
             ('hydeengine.content_processors.PassthroughProcessor',)
+    },
+    'presentations/': {
+        '*.*' :
+            ('hydeengine.content_processors.PassthroughProcessor',)
     }
 }
 

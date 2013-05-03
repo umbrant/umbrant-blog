@@ -1,0 +1,26 @@
+{% extends "_post.html" %}
+
+{%load webdesign %}
+
+{%hyde
+    title: Hadoop 101 slides
+    created: 2013-05-02 20:25:00
+%}
+
+{% block article %}
+
+{%article%}
+
+{% excerpt %}
+
+I gave a guest lecture on the Hadoop stack last week at Tapan Parikh's [INFO 206: Distributed Computing Applications and Infrastructure](http://blogs.ischool.berkeley.edu/i206s13/) course at Berkeley. I took a more academic approach than most, talking about the original motivating problem of Google search before moving into a deep dive of HDFS and MapReduce and an overview of the rest of the Hadoop ecosystem.
+
+A couple students came up afterwards to say they enjoyed the talk, so I think it was well-received.
+
+Slides: [PPTX with animations](/presentations/hadoop-overview-awang-2013.pptx) and [PDF](/presentations/hadoop-overview-awang-2013.pdf).
+
+{%endexcerpt%}
+
+{%endarticle%}
+
+{% endblock %}
