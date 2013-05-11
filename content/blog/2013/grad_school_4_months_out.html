@@ -1,0 +1,77 @@
+{% extends "_post.html" %}
+
+{%load webdesign %}
+
+{%hyde
+    title: "Grad school four months out"
+    created: 2013-05-06 21:38:00
+    draft: True
+%}
+
+{% block article %}
+
+{%article%}
+
+{% excerpt %}
+
+Here's my account of leaving the PhD program at Berkeley to work at Cloudera. I make no claim that my experiences are representative or generalize beyond my own situation, but I'm writing it up because a lot of people ask me about the differences between grad school and working in industry. Each has its own pluses and minuses, and I appreciate both. Choosing to leave Berkeley was a very personal and subjective decision, but fortunately I'm happy with how it's turned out.
+
+This also serves as my "Year in review: 2012" post, since this was the major change in my life last year.
+
+{%endexcerpt%}
+
+## Background
+
+Last summer, I interned with Cloudera and had a very positive experience. I clicked with the team, enjoyed working on open source and the product, and felt that I could turn some of my research into shipping production code. So, at the end of my internship, I asked for an offer and got it. Before making a decision, I talked with my advisor and my grad student friends who had previously worked in industry, but I was fairly sure I was leaving. Berkeley has a very lenient policy when it comes to this, in that all you need is your advisor's signature to leave and later your advisor's signature to return. Theoretically, my progress toward the PhD remains good forever, so I always have the option of going back (assuming Ion or another professor will take me :).
+
+Cloudera graciously let me defer by a semester while I finished my masters, which I really appreciate, and then gave me another few weeks off in January so I could relax and go on long bike rides before starting work proper. Logistically, both Berkeley and Cloudera made the transition very easy (but no such favors from the ridiculous SF housing market, ouch!).
+
+## Day-to-day
+
+Day-to-day work is quite different.
+
+In grad school, I worked fewer median hours per day (probably 7) but with high variance and more than 5 days per week. Class or paper deadlines can mean consecutive 16 hour days with no weekends, with my record being three weeks of that in a row. Not something I enjoyed, but I'm glad it's something I did. On the flip side, the entire lab would empty out for a few days after a grueling deadline. I'd also sometimes skip out early on a Friday if the weather was particularly nice. Taking a longer vacation consisted of telling your advisor and booking your flights. As long as it avoided any major deadlines, it was easy to take off weeks at a time.
+
+A typical day in grad school would be getting into the lab around 10:30 or 11 (normal), talking about big research ideas with my cubicle mates for a while, and then going to some lunch seminar (either a student presentation or an external researcher). These talks were normally high quality and engaging, academics are trained how to give talks. After that, I'd do some work in the afternoon (coding, reading papers, homework, more chatting about research ideas), then probably another meeting in the evening (research group, advisor, project group). Group meetings were often scheduled late since things were so hectic during the day. It wasn't uncommon to get takeout to bring back to the lab for a meeting. The first two years of grad school, your time is sliced quite finely because of classes and TA responsibilities in addition to research. It was hard to find solid blocks of time every day to do work. This gets much better in year 3 and onward.
+
+In industry, I consistently work 5 days a week, 8-9 hours per day. Initially I was working about 8 hours per week more than this, but I was getting burned out and that wasn't doing anyone any favors. I find I'm more productive on a regular schedule. Software progresses during moments of clarity, and for me, the way to maximize those moments is to stay rested and happy. One thing I do miss though is the ability to take random days off. Vacation days are now a scarce commodity and have to be planned months in advance. My commute is also about 20 minutes longer each way, which adds up.
+
+One major Cloudera-specific bonus is that engineers get to work from home on Wednesdays. This is just enough flexibility to let me go to the dentist or get my haircut when it's not too busy, and it's nice having a bit of a break in the middle of the week where you can code interruption-free.
+
+A typical day for me at Cloudera is getting in around 10 or 10:30 (normal) and clearing out my email inbox. There's a lot more email that has to be sifted: bug reports, user mailing lists, JIRA traffic, on-going discussion threads. That's normally about 0.5-1 hour, so I can normally get some coding in before lunch. Lunch is a quick affair, normally 30 mins, thanks to catering delivered right to the office. There's a high probability of at least one meeting per day, otherwise it's free development time (coding, testing, email, JIRA). I normally take a break around 3 to avail myself of the free snacks and drinks. I like to leave around 6 or 7, but I'll stay longer if I have a nice flow going. After I go home though, I'm usually tired and just cook dinner and relax.
+
+## Interpersonal
+
+Socially, grad school is like a more grown-up continuation of undergrad. Most people are in their mid-twenties, and everyone shares the qualities of being smart, motivated, and hard-working. But, it's hardly a monoculture in terms of background. People come from all over geographically, and many have worked before coming back to school. Computer science is also a very broad field; I know barely anything about graphics, AI, and theory, so it's always interesting to hear from people in those areas.
+
+I made a lot of friends in grad school. You end up working closely with a lot of different people through group projects, and there's a lot of bonding from shared suffering around deadlines. Collaboration is heavily encouraged at Berkeley, so you meet a lot of people through talks, meetings, and random hallway chats. There's also a new crop of graduate students every year, so more people to meet.
+
+Thus, grad school provides a nice social structure. You end up interacting with a lot of active, interesting people.
+
+Cloudera is definitely a contrast. The biggest change is that I'm interacting with far fewer people on a day-to-day basis. Fortunately I really like my coworkers, but I'm interacting face-to-face with pretty much the same ~5 people every day. I'll note this is far better than other places I've worked, where I'd only *see* 3 people the entire day, but it's not the same level of collaboration and fraternization.
+
+I think this is just part of transitioning to working life. For a company our size, I don't think you can do better. Cloudera has put substantial effort into instilling a flat, open culture from the top down. We have a cubicle-free workspace and a single lunch room where everyone (CEOs, VPs, sales, engineering) eats. Our CEO also makes a real effort to make us all feel onboard through all-hands meetings and weekly company-wide updates, and he speaks with every new employee one-on-one.
+
+Ultimately, I think this comes down to the nature of the work and difference in priorities. Software development is a more well-defined and thus less collaborative process than research. I spend comparatively more time mangling code and less time hashing out ideas on a whiteboard. Professional developers also tend to go home after 8 hours since they have responsibilities at home, while grad students don't work 9 to 5 and are more willing to hang out.
+
+## Problem scope and purpose
+
+This gets down to why I decided to leave grad school in the first place: to be one hop closer to real-world problems, and to get perspective on what is actually important. I went to grad school directly from undergrad, so I didn't have any prior industry experience besides internships. So, to find cool research problems to work on, I'd talk to people from Microsoft, or Google, or Facebook, hear what they thought was important, then try and turn that into a research paper. The main issue was that I never crisply understood all the use-cases and requirements for the systems I was building. I felt weird making assertions about how people wanted to use something, when I had never operated or used it in the real world!
+
+This is why I chose to join Cloudera, and why Cloudera is basically the best place in the world for me to work. We're growing fast and very customer-driven when deciding what to work on. Customer needs directly guide new features and are distilled into design-time requirements. I'm also forced to think more generally about the full breadth of use-cases because of the variety of our downstream users. Yes, this can be frustrating and can pollute the purity of your design, but I can be assured that I'm solving a real, pressing need. I'm fortunate in that I get to work on many of the same problems I was interested in at Berkeley. The separation between industry and academia isn't that large in systems.
+
+Of course, it's not all unicorns and rainbows. While new feature development is fun and great, I spend probably 70% of my time working on bug fixes, backports, customer support tickets, and other etcetera that does not exist in grad school. There are more unplanned interruptions and my todo list is constantly backlogged. It requires strong focus and triaging skills to prioritize what's important and get things done.
+
+I'll add that it's been a life ambition of mine to work on an open-source software platform. Originally, I thought I'd go into operating systems (i.e. Linux kernel development), but I really believe it when I say Hadoop is an operating system for datacenters. That's just the coolest thing to me. We're making previously unthinkable amounts of computational resources accessible to the average programmer, solving problems that were once economically infeasible.
+
+## Fin
+
+There is no simple takeaway where I state that one is better than the other. I like working at Cloudera, but I think there's more for me to learn about research too.
+
+The purpose of writing this post was actually two-fold. Yes, to serve as a reference for others making a similar choice, but also as a way for me to introspect and assess the outcome of my decision. External to this discussion of industry vs. academia, I'm still learning how to maximize my own happiness and productivity, which happens regardless of where I am.
+
+So, read and draw your own conclusions. I'd be happy if even a single person read this and found it useful in their decision-making. I'm also more than willing to talk one-on-one if you want advice; just leave a comment or shoot me an email.
+
+{%endarticle%}
+
+{% endblock %}
