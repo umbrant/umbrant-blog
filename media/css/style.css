@@ -172,7 +172,7 @@ div#menu li {
 }
 
 .post {
-    margin-bottom:26px;
+    margin-bottom:33px;
 }
 
 /*
@@ -218,8 +218,7 @@ div#menu li {
 }
 
 .post .entry {
-    padding:0 0px 25px 0px;
-    /*border-bottom:1px dashed #DCD4A7;*/
+    padding:0 0px 18px 0px;
     border-bottom:1px dashed #ad981d;
     text-align:justify;
     -webkit-hyphens: auto;
@@ -284,7 +283,6 @@ body,
 }
 
 #sidebar li ul {
-    margin:13px 0 0 0;
 }
 
 #sidebar li ul li {
@@ -301,9 +299,9 @@ body,
 }
 
 #sidebar h2 {
-    padding-top:39px;
-    height:26px;
-    line-height:1em;
+    padding-top:13px;
+    height:39px;
+    line-height:1.5em;
     letter-spacing:-.5px;
     font-size:26px;
     color:#FFF;
