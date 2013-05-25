@@ -218,6 +218,9 @@ div#menu li {
 	/*border-bottom:1px dashed #DCD4A7;*/
 	border-bottom:1px dashed #ad981d;
 	text-align:justify;
+	-webkit-hyphens: auto;
+	-moz-hyphens: auto;
+	hyphens: auto;
 }
 
 .post.single .entry {
