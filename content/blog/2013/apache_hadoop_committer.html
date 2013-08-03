@@ -1,0 +1,26 @@
+{% extends "_post.html" %}
+
+{%load webdesign %}
+
+{%hyde
+    title: Apache Hadoop committer
+    created: 2013-08-03 12:52:00
+%}
+
+{% block article %}
+
+{%article%}
+
+{% excerpt %}
+
+A quick post celebrating that I recently was made a [committer](http://hadoop.apache.org/who.html) on the [Apache Hadoop](http://hadoop.apache.org/) project. I owe a big thanks to everyone who's reviewed my patches and helped me along the way (especially my colleagues ATM, Todd, and Colin here at Cloudera).
+
+My very first patch was [HDFS-1952](https://issues.apache.org/jira/browse/HDFS-1952) in May 2011, via a Hadoop hackathon hosted at Cloudera. It was the most promising [newbie HDFS JIRA](https://issues.apache.org/jira/issues/?jql=labels%20%3D%20newbie%20AND%20project%20%3D%22Hadoop%20HDFS%22) on the list, and I still remember all the basic issues I had checking out the repo, setting up Eclipse, using Ant, and generating the diff. Two years later, these things have gotten easier :)
+
+Here's to many more contributions in the future!
+
+{%endexcerpt%}
+
+{%endarticle%}
+
+{% endblock %}
