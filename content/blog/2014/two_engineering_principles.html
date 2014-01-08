@@ -1,0 +1,25 @@
+{% extends "_post.html" %}
+
+{%load webdesign %}
+
+{%hyde
+    title: Two engineering principles
+    created: 2014-01-08 13:15:00
+%}
+
+{% block article %}
+
+{%article%}
+
+{% excerpt %}
+
+I received two interesting pieces of advice at the AMP Lab retreat this past week, which concisely state some of my favorite software engineering principles:
+
+1. Don't be a zealot. Understand in technical detail *why* a given language, framework, or design should be preferred, not because of technological fascination or fanboy-ism. The canonical examples here are programming language flamewars, e.g. Java vs. C++.
+1. Ruthlessly optimize for your requirements. This means first, carefully defining said requirements, but then being completely unafraid to buck conventional wisdom if it's not a good match. This often means intentionally pruning out features, even common ones implemented by other systems.
+
+{%endexcerpt%}
+
+{%endarticle%}
+
+{% endblock %}
