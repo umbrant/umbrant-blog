@@ -1,0 +1,22 @@
+{% extends "_post.html" %}
+
+{%load webdesign %}
+
+{%hyde
+    title: "In-memory Caching in HDFS: Lower latency, same great taste"
+    created: 2014-05-03 18:27:00
+%}
+
+{% block article %}
+
+{%article%}
+
+{% excerpt %}
+
+My coworker Colin McCabe and I recently gave a talk at [Hadoop Summit Amsterdam](http://hadoopsummit.org/amsterdam/) titled "In-memory Caching in HDFS: Lower latency, same great taste." I'm very pleased with how this feature turned out, since it was approximately a year-long effort going from initial design to production system. Combined with Impala, we showed up to a 6x performance improvement by running on cached data, and that number will only improve with time. [Slides](/presentations/in-memory-caching-in-hdfs-awang-cmccabe-2014-03-26.pptx) and [video of our presentation](https://www.youtube.com/watch?v=t4AyNZMCSTw&list=PLSAiKuajRe2kIxG-WKmTOZNlDpSgYwEBs&index=10) are available online.
+
+{%endexcerpt%}
+
+{%endarticle%}
+
+{% endblock %}
