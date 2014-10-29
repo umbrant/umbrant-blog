@@ -50,7 +50,7 @@ A few more misc takeaways:
 
 This really was a great application to build a new system, since existing stuff wouldn't do it as well, and the requirements made it relatively easy as distributed systems go. It pulls heavily from GFS with the centralized master and many data node approach, and also uses LFS concepts of a sequentially-written log and keeping filesystem metadata in memory. The "write-enabled" vs. "read-only" business is essentially adding journalling to a distributed filesystem, which of course is just a mini-version of the ideas in LFS. Using giant 100GB files means they were able to make their own super-simple user-level filesystem without writing an actual filesystem, a move I applaud for practical reasons.
 
-I can't say there was much "aha" content in the paper though, and it wasn't well written. I normally like industrial papers, but this was such a straightforward implementation paper, and it didn't add anything new in terms of real-world experiences. I don't think there's much to be learned if you already understand GFS well. This is noted in their related work section, where it basically says "our usecase was easier than everyone else's". Reading it again a year and a half on, I'm kind of disappointed. Good system, but bland research (if you want to even call it that).
+I can't say there was much "aha" content in the paper though. I normally like industrial papers because of the real-world experiences, but this was a straightforward implementation paper. Their system bears many resemblances to GFS, and being tailored for a single usecase allowed them to greatly simplify the design. I'm a bit disappointed, in that this is a clearly impressive system, but didn't relay any interesting tidbits.
 
 {%endarticle%}
 
