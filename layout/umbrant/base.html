@@ -5,73 +5,73 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 
-	<head>
-		<title>
-			{% block title %}
-			{{page.title}} : {{site.name}}
-			{% endblock %}
-		</title>
+    <head>
+        <title>
+            {% block title %}
+            {{page.title}} : {{site.name}}
+            {% endblock %}
+        </title>
 
-		<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
-		<link rel="icon" type="image/ico" href="/favicon.ico"/>
+        <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+        <link rel="icon" type="image/ico" href="/favicon.ico"/>
 
-		{% block feeds %}
-		<link rel="alternate" type="application/atom+xml" href="{{nav_links.atom}}" title="{{site.name}}"/>
-		{% endblock %}
+        {% block feeds %}
+        <link rel="alternate" type="application/atom+xml" href="{{nav_links.atom}}" title="{{site.name}}"/>
+        {% endblock %}
 
-		{% block css %}
-		<link href="{{site.url}}/media/css/style.css" rel="stylesheet" type="text/css" media="screen" />
-		<link href="{{site.url}}/media/css/pygments.css" rel="stylesheet" type="text/css" media="screen" />
-		<link href='http://fonts.googleapis.com/css?family=Quattrocento|Droid+Sans|Droid+Sans+Mono' rel='stylesheet' type='text/css'/>
-		{% block extra_css %}
-		{% endblock %}
-		{% endblock %}
+        {% block css %}
+        <link href="{{site.url}}/media/css/style.css" rel="stylesheet" type="text/css" />
+        <link href="{{site.url}}/media/css/pygments.css" rel="stylesheet" type="text/css" media="screen" />
+        <link href='http://fonts.googleapis.com/css?family=Quattrocento|Droid+Sans|Droid+Sans+Mono' rel='stylesheet' type='text/css'/>
+        {% block extra_css %}
+        {% endblock %}
+        {% endblock %}
 
-		{% block js %}
-		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js"></script>
-		<script type="text/javascript" src="{{site.url}}/media/js/umbrant.js"></script>
-		{% block extra_js %}
-		<script type="text/javascript">
+        {% block js %}
+        <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js"></script>
+        <script type="text/javascript" src="{{site.url}}/media/js/umbrant.js"></script>
+        {% block extra_js %}
+        <script type="text/javascript">
 
-  			var _gaq = _gaq || [];
-  			_gaq.push(['_setAccount', 'UA-4601421-1']);
-  			_gaq.push(['_trackPageview']);
+            var _gaq = _gaq || [];
+            _gaq.push(['_setAccount', 'UA-4601421-1']);
+            _gaq.push(['_trackPageview']);
 
-  			(function() {
-    		 var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-    		 ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-    		 var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-  			 })();
+            (function() {
+             var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+             ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+             var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+             })();
 
-		 </script>
-		 {% endblock %}
-		 {% endblock %}
-	 </head>
+         </script>
+         {% endblock %}
+         {% endblock %}
+     </head>
 
-	 <body>
-		 <div id="wrapper">
-			<div id="page">
-				<div id="page-bgtop">
-					<div id="page-bgbtm">
-						<div id="content">
+     <body>
+         <div id="wrapper">
+            <div id="page">
+                <div id="page-bgtop">
+                    <div id="page-bgbtm">
+                        <div id="content">
 
-							{% block content %}{% endblock %}
+                            {% block content %}{% endblock %}
 
-						</div>
-						<!-- end #content -->
+                        </div>
+                        <!-- end #content -->
 
-						{% include "umbrant/sidebar.html" %}
-						<!-- end #sidebar -->
+                        {% include "umbrant/sidebar.html" %}
+                        <!-- end #sidebar -->
 
-						{% include "umbrant/footer.html" %}
-						<!-- end #footer -->
+                        {% include "umbrant/footer.html" %}
+                        <!-- end #footer -->
 
-					</div>
-				</div>
-			</div>
-			<!-- end #page -->
-		</div>
-	 </body>
+                    </div>
+                </div>
+            </div>
+            <!-- end #page -->
+        </div>
+     </body>
  </html>
 
  {% endblock %}
