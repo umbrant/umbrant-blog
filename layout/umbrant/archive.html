@@ -8,44 +8,44 @@
 {% block content_body %}
 
 {% block meta %}
-    <ul class="archive-years">
-    {% for module in site.children %}
-    {% ifequal module.name "blog" %}
-    <li><a {% ifnotequal module.listing_url page.url %}href="{{module.listing_url}}"{% endifnotequal %}>All</a></li>
-        {% for year in module.walk %}
-            {% if year.listing_page.url and year.name != "blog" %}
-                <li><a {% ifnotequal year.listing_url page.url %}href="{{year.listing_url}}"{% endifnotequal %}>{{year.name}}{{year.next.name}}</a></li>
-            {% endif %}
-        {% endfor %}
-    {% endifequal %}
-    {% endfor %}
-    </ul>
+	<ul class="archive-years">
+	{% for module in site.children %}
+	{% ifequal module.name "blog" %}
+	<li><a {% ifnotequal module.listing_url page.url %}href="{{module.listing_url}}"{% endifnotequal %}>All</a></li>
+		{% for year in module.walk %}
+			{% if year.listing_page.url and year.name != "blog" %}
+				<li><a {% ifnotequal year.listing_url page.url %}href="{{year.listing_url}}"{% endifnotequal %}>{{year.name}}{{year.next.name}}</a></li>
+			{% endif %}
+		{% endfor %}
+	{% endifequal %}
+	{% endfor %}
+	</ul>
 {% endblock %}
 
 
 <div class="page-listing">
 
-    {% for node in page.node.walk_reverse %}
-    {% if node.listing_page.url and node.name != "blog" %}
-    <h3>{{ node.name }}</h3>
-        <ul>
+	{% for node in page.node.walk_reverse %}
+	{% if node.listing_page.url and node.name != "blog" %}
+	<h3>{{ node.name }}</h3>
+		<ul>
 
-    {% for list_page in node.pages|dictsort:"created" reversed %}
-        {% ifnotequal list_page node.listing_page %}
-            {% if list_page.display_in_list and not list_page.draft %}
-                <li>
-                    <span>{{list_page.created|date:"F j" }} &mdash; </span>
-                    <a href="{{list_page.url}}">
-                    {% with list_page.name_without_extension|remove_date_prefix|unslugify as default_title %}
-                        {{list_page.title|default_if_none:default_title }}
-                    {%endwith%}</a>
-                </li>
-            {% endif %}
-        {% endifnotequal %}
-    {% endfor %}
-        </ul>
-    {% endif %}
-    {% endfor %}
+	{% for list_page in node.pages|dictsort:"created" reversed %}
+		{% ifnotequal list_page node.listing_page %}
+			{% if list_page.display_in_list and not list_page.draft %}
+				<li>
+					<span>{{list_page.created|date:"F j" }} &mdash; </span>
+					<a href="{{list_page.url}}">
+					{% with list_page.name_without_extension|remove_date_prefix|unslugify as default_title %}
+						{{list_page.title|default_if_none:default_title }}
+					{%endwith%}</a>
+				</li>
+			{% endif %}
+		{% endifnotequal %}
+	{% endfor %}
+		</ul>
+	{% endif %}
+	{% endfor %}
 </div>
 
 <div class="clear"></div>
