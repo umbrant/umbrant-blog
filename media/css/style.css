@@ -132,8 +132,8 @@ div#menu li {
     padding:0 0 6px 0;*/
 }
 
-#sidebar li li.first a,
-#menu li.first a {
+#sidebar li li:first-child a,
+#menu li:first-child a {
     padding-top:0px;
 }
 
@@ -226,6 +226,10 @@ div#menu li {
     -webkit-hyphens: auto;
     -moz-hyphens: auto;
     hyphens: auto;
+}
+
+.post:last-of-type .entry {
+    border-bottom:0;
 }
 
 .post.single .entry {
