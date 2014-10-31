@@ -11,10 +11,12 @@
 	{% for page in site.walk %}
 		{% ifequal page.name "blog" %}
 
-		{% recent_posts recents 4 page  %}
+		{% recent_posts recents 5 page  %}
 		{% for post in recents %}
 
-			{% if not post.draft %}
+			{% if post == recents|last %}
+			<a href="{{ l.node.listing_url }}">{{ "<<"|escape}} Older posts</a>
+			{% elif not post.draft %}
 			<div class="post">
 				<h2 class="title"><a href="{{post.url}}">{{post.title}}</a></h2>
 				<p class="meta"><span class="date">{{post.created|date:"F j, Y"}}</span></p>
@@ -27,14 +29,4 @@
 		{% endfor %}
 		{% endifequal %}
 	{% endfor %}
-
-	{% for page in site.walk %}
-	{% ifequal page.name "blog" %}
-		{% recent_posts recents 5 page %}
-		{% with recents|last as l %}
-		<a href="{{ l.node.listing_url }}">{{ "<<"|escape}} Older posts</a>
-		{% endwith %}
-	{% endifequal %}
-	{% endfor %}
-
 {%endblock%}
