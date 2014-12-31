@@ -79,6 +79,8 @@ MEDIA_PROCESSORS = {
                 'hydeengine.media_processors.JSmin',),
         '.png':(
                 'hydeengine.content_processors.PassthroughProcessor',),
+        '.jpg':(
+                'hydeengine.content_processors.PassthroughProcessor',),
     },
 }
 
@@ -87,6 +89,8 @@ CONTENT_PROCESSORS = {
         '.ico':(
                 'hydeengine.content_processors.PassthroughProcessor',),
         '.png':(
+                'hydeengine.content_processors.PassthroughProcessor',),
+        '.jpg':(
                 'hydeengine.content_processors.PassthroughProcessor',),
     },
     'prerendered/': {
@@ -122,6 +126,7 @@ CONTEXT = {
         'bucket_list': '/bucket.html',
         'atom': 'http://feeds.feedburner.com/UmbrantBlog',
         'external_sort': '/blog/2011/external_sorting.html',
+        'external_sort': '/blog/2014/bucket_list_fish.html',
     },
     'links' : {
         'twitter_umbrant': 'http://twitter.com/umbrant',
