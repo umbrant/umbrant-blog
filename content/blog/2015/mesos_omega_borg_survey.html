@@ -73,7 +73,7 @@ Unaddressed / unknown resolution:
 
 ### Omega
 
-Omega is sort of a successor to Mesos, and in fact shares an author (Andy Konwinski). I suspect it also was not actually built beyond the simulation results mentioned in the paper, and the ideas were rolled into the next generation of Borg.
+Omega is sort of a successor to Mesos, and in fact shares an author. Since the paper uses simulated results for its evaluation, I suspect it never went into production at Google, and the ideas were rolled into the next generation of Borg. Rewriting the API is probably too invasive of a change, even for Google.
 
 Omega takes the resource offers one degree further. In Mesos, resource offers are *pessimistic* or *exclusive*. If a resource has been offered to an app, the same resource won't be offered to another app until the offer times out. In Omega, resource offers are *optimistic*. Every application is offered all the available resources on the cluster, and conflicts are resolved at commit time. Omega's resource manager is essentially just a relational database of all the per-node state with different types of optimistic concurrency control to resolve conflicts. The upside of this is vastly increased scheduler performance (full parallelism) and better utilization.
 
@@ -85,17 +85,16 @@ Most of the paper talks about how this optimistic allocation scheme works with c
 * Omega can probably scale up to 10s but not 100s of schedulers, due to the overhead of distributing the full cluster state.
 * Scheduling times of a few seconds is typical. They also compare up to 10s and 100s of seconds, which is where the benefits of two-level scheduling really kick in. Not sure how common this is, maybe for service jobs?
 * Typical cluster utilization is about 60%.
-* Conflicts are pretty rare! So OCC works, and keeps working even as they go to 6x more batch workload.
+* Conflicts are rare enough that OCC works in practice. They were able to go up to 6x their normal batch workload before the scheduler fell apart.
 * Incremental scheduling is very important. Gang-scheduling is significantly more expensive to implement due to increased conflicts. Apparently most applications can do incremental okay, and can just do a couple partial allocations to get up to their total desired amount.
 * Even for complicated schedulers (10s per-job overheads), Omega can still schedule a mixed workload with reasonable wait times.
 * Experimenting with a new MapReduce scheduler was empirically easy with Omega
 
 #### Open questions
 
-* How does Omega do at higher cluster utilization? At some point, optimistic concurrency control breaks down because of a high conflict rate and the duplicated work from retries. Seems like there must be worst-case scenarios.
-* Is a lack of global policies really okay? Fairness, preemption, etc.
+* At some point, optimistic concurrency control breaks down because of a high conflict rate and the duplicated work from retries. It seems like they won't run into this in practice, but I wonder if there are worst-case scenarios with oddly-shaped tasks. Is this affected by the mix of service and batch jobs? Is this something that is tuned in practice?
+* Is a lack of global policies really acceptable? Fairness, preemption, etc.
 * What's the scheduling time like for different types of jobs? Have people written very complicated schedulers?
-* How does the mix of service and batch jobs affect scheduling? Want to know more about worst-case scenarios experienced in production, and how jobs are spread across clusters to avoid this.
 
 ### Borg
 
@@ -105,7 +104,7 @@ This is a production experience paper. It's the same workload as Omega since it'
 
 * Everything runs within Borg, including the storage systems like CFS and BigTable.
 * Median cluster size is 10K nodes, though some are much bigger.
-* Nodes can be very hetergeneous
+* Nodes can be very heterogeneous.
 * Linux process isolation is used (essentially containers), since Borg predates modern virtual machine infrastructure. Efficiency and launch time were important.
 * All jobs are statically linked binaries.
 * Very complicated, very rich resource specification language available
@@ -157,11 +156,13 @@ This is a production experience paper. It's the same workload as Omega since it'
 The issues listed here are pretty much fixed in Kubernetes, their public, open-source container scheduler.
 
 Bad:
+
 * Would be nice to schedule multi-job workflows rather than single joba, for tracking and management. This also requires more flexible ways of referring to components of a workflow. This is solved by attaching arbitrary key-value pairs to each task and allowing users to query against them.
 * One IP per machine. This leads to port conflicts on a single machine and complicates binding and service discovery. This is solved by Linux namespaces, IPv6, SDN.
 * Complicated specification language. Lots of knobs to turn, which makes it hard to get started as a casual user. Some work on automatically determining resource requirements.
 
 Good:
+
 * Allocs are great! Allows helper services to be easily placed next to the main task.
 * Baking in services like load balancing and naming is very useful.
 * Metrics, debugging, web UIs are very important so users can solve their own problems.
