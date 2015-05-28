@@ -3,9 +3,8 @@
 {%load webdesign %}
 
 {%hyde
-    title: Mesos, Omega, Borg: A Survey
+    title: "Mesos, Omega, Borg: A Survey"
     created: 2015-05-27 13:57:00
-    draft: True
 %}
 
 {% block article %}
@@ -15,9 +14,9 @@
 {% excerpt %}
 
 Google recently unveiled one of their crown jewels of system infrastructure: [Borg](http://research.google.com/pubs/pub43438.html), their cluster scheduler.
-This prompted me to re-read the Mesos and Omega papers, which are two more academic papers that deal with the same topic.
+This prompted me to re-read the [Mesos](https://www.cs.berkeley.edu/~alig/papers/mesos.pdf) and [Omega](http://research.google.com/pubs/pub41684.html) papers, which deal with the same topic.
 I thought it'd be interested to do a compare and contrast of these systems.
-Mesos gets credit for the groundbreaking idea of two-level scheduling, Omega improved upon this with an analogy from databases, and Borg can sort of be seen as the synthesis of all these ideas.
+Mesos gets credit for the groundbreaking idea of two-level scheduling, Omega improved upon this with an analogy from databases, and Borg can sort of be seen as the culmination of all these ideas.
 
 {%endexcerpt%}
 
@@ -70,7 +69,7 @@ Some concerns and how they were addressed:
 Unaddressed / unknown resolution:
 
 * Gang scheduling. I think this is impossible to do with high utilization without either knowing task lengths or preempting. Incrementally hoarding resources works with low utilization, but can result in deadlock.
-* Cross-application preemption is also hard. The resource offer API has no way of saying "here are some low-priority tasks I could kill if you want them".
+* Cross-application preemption is also hard. The resource offer API has no way of saying "here are some low-priority tasks I could kill if you want them". Mesos depends on tasks being short to achieve fairness.
 
 ### Omega
 
@@ -93,14 +92,16 @@ Most of the paper talks about how this optimistic allocation scheme works with c
 
 #### Open questions
 
-* How does Omega do at higher cluster utilization? At some point, optimistic concurrency control breaks down because of a high conflict rate and the duplicated work from retries.
+* How does Omega do at higher cluster utilization? At some point, optimistic concurrency control breaks down because of a high conflict rate and the duplicated work from retries. Seems like there must be worst-case scenarios.
 * Is a lack of global policies really okay? Fairness, preemption, etc.
 * What's the scheduling time like for different types of jobs? Have people written very complicated schedulers?
 * How does the mix of service and batch jobs affect scheduling? Want to know more about worst-case scenarios experienced in production, and how jobs are spread across clusters to avoid this.
 
 ### Borg
 
-This is a production experience paper. It's the same workload as Omega since it's also Google, so many of the metapoints remain. Bullet point rundown:
+This is a production experience paper. It's the same workload as Omega since it's also Google, so many of the metapoints are the same.
+
+#### High-level
 
 * Everything runs within Borg, including the storage systems like CFS and BigTable.
 * Median cluster size is 10K nodes, though some are much bigger.
@@ -115,7 +116,7 @@ This is a production experience paper. It's the same workload as Omega since it'
 
 * Resource allocation is separated from process liveness. An *alloc* can be used for task grouping or to hold resources across task restarts.
 * An *alloc set* is a group of allocs on multiple machines. Multiple jobs can be run within a single alloc.
-* This is actually a pretty common pattern! Multi-process is useful to separate concerns.
+* This is actually a pretty common pattern! Multi-process is useful to separate concerns and development.
 
 #### Priorities and quotas
 
@@ -156,23 +157,25 @@ This is a production experience paper. It's the same workload as Omega since it'
 The issues listed here are pretty much fixed in Kubernetes, their public, open-source container scheduler.
 
 Bad:
-
 * Would be nice to schedule multi-job workflows rather than single joba, for tracking and management. This also requires more flexible ways of referring to components of a workflow. This is solved by attaching arbitrary key-value pairs to each task and allowing users to query against them.
 * One IP per machine. This leads to port conflicts on a single machine and complicates binding and service discovery. This is solved by Linux namespaces, IPv6, SDN.
 * Complicated specification language. Lots of knobs to turn, which makes it hard to get started as a casual user. Some work on automatically determining resource requirements.
 
 Good:
-
 * Allocs are great! Allows helper services to be easily placed next to the main task.
 * Baking in services like load balancing and naming is very useful.
 * Metrics, debugging, web UIs are very important so users can solve their own problems.
 * Centralization scales up well, but need to split it up into multiple processes. Kubernetes does this from the start, meaning a nice clean API between the different scheduler components.
 
-### Conclusions
+### Closing remarks
 
 It seems like YARN will need to draw from Mesos and Omega to scale up to the 10K node scale. YARN is still a centralized scheduler, which is the strawman for comparison in Mesos and Omega. Borg specifically mentions the need to shard to scale.
 
-Isolation is very important to achieve high utilization without compromising SLOs. This can surface at the application layer, where apps themselves need to be design to be latency-tolerant. Think tail-at-scale request replication in BigTable. Ultimately it comes down to hardware vs. software spend. You can run at lower utilization to avoid this problem, or work a lot on sophisticated scheduling and isolation to tackle it.
+Isolation is very important to achieve high utilization without compromising SLOs. This can surface at the application layer, where apps themselves need to be design to be latency-tolerant. Think tail-at-scale request replication in BigTable. Ultimately it comes down to hardware spend vs. software spend. Running at lower utilization sidesteps this problem. Or, you can tackle it head-on through OS isolation mechanisms, resource estimation, and tuning your workload and schedulers. At Google-scale, there's enough hardware that it makes sense to hire a bunch of kernel developers. Fortunately they've done the work for us :)
+
+I wonder also if the Google workload assumptions apply more generally. Priority bands, reservations, and preemption work well for Google, but our customers almost all use the fair share scheduler. Yahoo uses the capacity scheduler. Twitter uses the fair scheduler. I haven't heard of any demand or usage of a priority + reservation scheduler.
+
+Finally, very few of our customers run big shared clusters as envisioned at Google. We have customers with thousands of nodes, but this is split up into pods of hundreds of nodes. It's also still common to have separate clusters for separate users or applications. Clusters are also typically homogeneous in terms of hardware. I think this will begin to change though, and soon.
 
 {%endarticle%}
 
