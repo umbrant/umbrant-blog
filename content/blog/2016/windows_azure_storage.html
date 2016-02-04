@@ -38,43 +38,76 @@ WAS is a very layered system, so let's take it from the bottom up, starting with
 
 ### Stream Layer
 
-The bottom-most layer in the stack is the *stream layer*. The stream layer lets you interact with a flat namespace of append-only logs called *streams*. Streams are composed of *extents*, which are a unit of replication and are about *1GB* and stored on as files on a local filesystem. Only the last extent in the stream can be appended to. Extents in turn are composed of *blocks*, which variable-length up to 4MB in size, and are the unit of a client read or write. Blocks are also the unit of checksumming, so the entire block is read at read time to verify the checksum.
+The bottom-most layer in the stack is the *stream layer*. The stream layer exposes a flat namespace of append-only logs called *streams*. Streams are composed of *extents*, which are a unit of replication and are about *1GB* and stored on as files on a local filesystem. Only the last extent in the stream can be appended to. Extents in turn are composed of *blocks*, which variable-length up to 4MB in size, and are the unit of a client read or write. Blocks are also the unit of checksumming, so the entire block is read at read time to verify the checksum.
 
 Architecturally, this looks a lot like HDFS. There is a Paxos-replicated *stream master* which maintains a mapping of streams-to-extents and extents-to-nodes. It chooses which nodes to use for incoming writes, routes reads to the correct and re-replicates extents when nodes fail. The stream master needs to keep these mappings in memory, and it's designed for approximately 100k streams and 50 million total extents.
 
 Notably, the stream master does not track the extent-to-block mapping, which would not fit on a single machine. Instead, this is handled by the extent nodes, which maintain an index of the block offsets alongside the extent file.
 
-The stream layer uses chain replication when writing an extent, with some nice changes compared to HDFS. The first simplification is that the three extent nodes are used for writes is fixed while the extent is unsealed (meaning accepting writes), and one of the three is the primary which replicates to the two secondaries. Writes to extents are at the granularity of entire blocks, and these block writes are atomic (and there is even an atomic multi-block append). Combined, this has the nice property of allowing concurrent writers to an extent, since the primary orders the incoming block appends.
+The stream layer uses chain replication when writing an extent, the same method as HDFS but with some differences I'll be highlighting. Chain replication is nice since it's less complicated than Paxos replication and you can get better throughput by pipelining. The master is off the hot-path during data writes; the writer goes directly to the three chosen extent nodes. One of these nodes is the *primary* and pushes whole-block writes down the pipeline and acks the client when complete. These block writes are atomic (and there is even an atomic multi-block append). Combined, this has the nice property of allowing concurrent writers to an extent, since the primary orders the incoming block appends and serves all reads to the extent while it's being written to. HDFS does not have atomic appends, but does allow applications to block for data to be durable (hflush/hsync) which provides similar properties if you use a length-prefixed record format with a checksum, and roll a new file on failure.
 
-Failures during a write are handled by sealing the extent and starting a new one. Sealing the extent requires agreeing on the length of the extent, which is coordinated with the stream master. The SM asks the remaining nodes for the length of the extent, and uses the smallest length. This is safe since only writes are only ack'd to the client after they are fully-replicated. Longer lengths are also okay, since stream clients are required to handle duplicate blocks in a stream. Once sealed, this is the final length of the extent. If a version of the extent with a different length appears, it is safely discarded.
+Talking more about failures, in WAS, failures during a write are handled by sealing the extent and starting a new one. Sealing the extent requires agreeing on the length of the extent, which is coordinated with the stream master. The SM asks the remaining nodes for the length of the extent, and uses the smallest length. This is safe since only writes are only ack'd to the client after they are fully-replicated. Longer lengths are also okay, since stream clients are required to handle duplicate blocks in a stream. Once sealed, this is the final length of the extent. If a version of the extent with a different length appears, it is safely discarded.
 
-The stream layer also implements background erasure coding of sealed extents, as well as latency-levelling by a similar mechanism to Jeff Dean's [The Tail at Scale](http://research.google.com/pubs/pub40801.html) work. They also allocate a separate SSD for incoming writes and asynchronously flush to data drives for better latency, and do some deadline IO scheduling to further improve latency.
+HDFS does something more complicated called *pipeline recovery* to try and keep writing rather than rolling to a new HDFS block. This is because we want to produce fewer, larger blocks to reduce NameNode memory usage, and for a long time HDFS did not support variable-length blocks (for no really good reason). HDFS pipeline recovery has been described as "an informally-specified implementation of two-phase commit", and you can read all about it (and other recovery processes) in an excellent [series](http://blog.cloudera.com/blog/2015/02/understanding-hdfs-recovery-processes-part-1/) of [blog posts](https://blog.cloudera.com/blog/2015/03/understanding-hdfs-recovery-processes-part-2/) written by my colleague Yongjun Zhang.
+
+The stream layer also implements background erasure coding of sealed extents, as well as latency-levelling by a similar mechanism to Jeff Dean's [The Tail at Scale](http://research.google.com/pubs/pub40801.html) work. They also do some ops tricks to further improve latency, like allocating a separate SSD to buffer writes and doing deadline IO scheduling.
 
 ### Partition Layer
 
-Now, we move onto the co-designed user of the stream layer: the *partition layer*, which maintains user-visible constructs like blobs, tables, and queues.
+Now, we move onto the co-designed user of the stream layer: the *partition layer*, which maintains the user-visible constructs like blobs, tables, and queues.
 
 The partition layer is a range-partitioned distributed database. These ranges can be split and merged and moved around based on load.
 
-There is a table for each of the three user-visible constructs, a table that describes the schema of these three tables, and finally a table of the mapping of ranges to servers (like the meta table in HBase). The primary key for the three *object tables* is a compound key of *(account, partition, object name)*, and other columns describe in what stream, extent, offset, and length have the corresponding data for that object. Since it's a range-partitioned distributed database that uses LSM-trees under the hood, I'm going to point to [Kudu](http://getkudu.io/) and [HBase](https://hbase.apache.org/) as similar systems (particularly Kudu). Things like the memstore, bloom filters, and row caching are present in all of these systems, and I imagine they share other tricks too.
+There is a table for each of the three user-visible constructs, a table that describes the schema of these three tables, and finally a table of the mapping of ranges to servers (like the meta table in HBase). The primary key for the three *object tables* is a compound key of *(account, partition, object name)* (user-level identifiers), and other columns describe what stream, extent, offset, and length have the corresponding data for that object. Since it's a range-partitioned distributed database that uses LSM-trees under the hood, I'm going to point to [Kudu](http://getkudu.io/) and [HBase](https://hbase.apache.org/) as similar systems if you want to learn more. The split and merge process looks the same as HBase, and implementation details like the memstore, bloom filters, and row caching are present in all of these systems.
 
 Each range uses a couple streams to maintain its state. The two important ones are a commit stream (a WAL) and a row data stream (checkpoints of WAL mutations, HFiles in HBase parlance) which are used to maintain the LSM tree. They also implement a BLOB type which writes blob data into a side stream to avoid the write amplification of LSM trees, instead using pointers and efficient stream concat operations to avoid rewriting data.
 
-One interesting point is that on a per stamp basis, they see 75 splits and merges and 200 partition moves every day. That's a lot more than I would have guessed for HBase, but since the partition layer doesn't have storage locality, moving a partition is cheap, and efficient stream concat means you can possibly avoid rewriting a lot of data when doing splits/merges.
+One interesting point is that on a per stamp basis, they see 75 splits and merges and 200 partition moves every day. That's a lot more than I would have guessed for HBase, but since the partition layer worry about storage locality, moving a partition is cheap. An efficient stream concat operation means you can avoid rewriting data when doing merges.
 
-### Inter-stamp replication
+### Front-end service
 
-This is all managed by something called the *Location Service*, which maintains the mapping of account-to-stamp and updates DNS and VIPs accordingly.
+The front-end service is a proxy for user requests which interacts with WAS on behalf. Front-ends are stateless, perform authentication/authorization, and caches the partition map for faster lookups. This is pretty standard in web services.
+
+### Location service
+
+Gluing together stamps is the *location service*, which sits above the partition layer and maintains a global namespace of accounts-to-stamps. We now have the full picture of how to find an object given its (account, partition, name) tuple. The location service tells us which stamp has the account, the partition layer at that stamp translates partition and name to (stream, extent, offset, length), and then the stream layer translates the (extent, offset, length) into a block on disk (the read unit).
+
+The location service is responsible for moving accounts between stamps for load balancing, and also for *inter-stamp replication* for disaster fault-tolerance. An account has a primary stamp and some number of secondaries. The location service links them together, and the partition layer in the primary stamp asynchronously replicates to the secondaries. This async process is pretty fast, they say on average it takes 30s to replicate changes.
+
+In the case of a disaster, the location service flips DNS and VIP over to point to a secondary cluster. This does mean that something like 30s of data will be lost, since replication is asynchronous. These events do happen too. It's not just meteor strikes, I've heard some funny stories about hunters shooting down power lines or utility crews cutting network cables.
 
 ### Questions and comments
 
-#### How many hops / writes?
+#### How many hops / IOs?
 
-It's interesting to count how many network hops and how many writes are required to persist a blob in this system. Let's try and count:
+It's interesting to count how many network hops and how many IOs are required to do operations in this system. Let's try and count, for a typical read request.
 
-1. 
+1. Client has the DNS cached so goes to a front-end at the primary stamp. 1 hop, 0 IOs.
+1. Front-end has the partition map cached, so goes to the partition server for that range. 1 hop, 0 IOs.
+1. Partition server looks in the row data stream for the extent/offset/length of the blob. This is an LSM tree, so requires 0-N lookups to the stream layer (let's assume 1), and the blob layer is 1 lookup. For each stream lookup:
+    1. Go to the stream master to figure out which extent nodes have the extent. 1 hop, 0 IOs.
+    1. Go to the extent node to read the data. This requires looking in the index and then the actual data. 1 hop, 2-3 IOs.
 
-* Since accounts are pinned to a single stamp, that means an account is limited by the performance and capacity of a stamp. This explains what I've heard about WAS users sharding their usage across multiple accounts. Apparently accounts are a lightweight entity in Azure, but it still seems annoying that the user potentially needs to manage this.
+My math says this is a total of 6 hops and 4-6 IOs to do a read. How about writing a small blob?
+
+1. Client has the DNS cached so goes to a front-end at the primary stamp. 1 hop, 0 IOs.
+1. Front-end has the partition map cached, so goes to the partition server for that range. 1 hop, 0 IOs.
+1. Partition server writes to the WAL stream and the side blob stream. For each write:
+    1. Go to the stream master to find the primary extent node for the extent. 1 hop, 0 IOs.
+    1. Go to the primary extent node, write the block. This gets pushed to the two other nodes in the pipeline. 3 hops, 3 IOs.
+1. At this point the write can be ACK'd, though asynchronous inter-stamp replication has not happened yet. There's also some additional work to do LSM compaction, and this is only to the journal on the extent servers.
+
+Add it up, this is ten hops and 6 IOs. This is multiplied by the number of replicas, and again by some small factor for LSM rewrites. The number of IOs is then multiplied by 2 to account for journalling.
+
+#### Lots of partitions
+
+S3 lets you can store an [unlimited number of items in a bucket](http://docs.aws.amazon.com/AmazonS3/latest/dev/BucketRestrictions.html) with no performance implications. This is not the case in WAS, which limits accounts to [500TB usage, 20K IOPS, and 10-30Gbps network throughput](https://azure.microsoft.com/en-us/documentation/articles/azure-subscription-service-limits/#storage-limits). Remember also that an account can have multiple partitions! This is because accounts are assigned to a stamp, so it's limited by the capacity of that one stamp.
+
+This seems pretty annoying compared to S3. I didn't understand why they pin all the contents of an account to a single stamp. Seems like a lot more management complexity to shard data across multiple accounts and partitions.
+
+#### Centralized control
+
+They chose not to use hash-partitioning since they wanted ranged listing and more control over placement for isolation. This is a criticism of hash-partitioning I share. It's really convenient to split/move partitions around based on load. Range partitioning has the issue of hotspotting writes to sequential keys, but there are tricks like reversing or hashing the key to work around this.
 
 {%endarticle%}
 
