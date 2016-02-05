@@ -4,7 +4,7 @@
 
 {%hyde
     title: Windows Azure Storage
-    created: 2016-02-03 21:23:00
+    created: 2016-02-04 21:23:00
     draft: True
 %}
 
@@ -14,7 +14,7 @@
 
 {% excerpt %}
 
-What makes this paper special is that (I believe) it is the only published paper about a production *cloud* blobstore. The 500-pound gorilla in this space is Amazon S3, but I find (WAS) the more interesting system since it provides strong consistency, additional features like append, and serves as the backend for not just WAS Blobs, but also WAS Tables (structured data access) and WAS Queues (message delivery). It also occupies a different design point than hash-partitioned blobstores like Swift and Rados.
+What makes this paper special is that (I believe) it is the only published paper about a production *cloud* blobstore. The 500-pound gorilla in this space is Amazon S3, but I find Windows Azure Storage (WAS) the more interesting system since it provides strong consistency, additional features like append, and serves as the backend for not just WAS Blobs, but also WAS Tables (structured data access) and WAS Queues (message delivery). It also occupies a different design point than hash-partitioned blobstores like Swift and Rados.
 
 This paper, "Windows Azure Storage: A Highly Available Cloud Storage Service with Strong Consistency" by Calder et al., was published at SOSP '11.
 
@@ -32,7 +32,7 @@ You might read this and think that blobstores sound terrible, but there's a very
 
 In the datacenter, WAS is composed of *stamps*, which are sets of 10-20 racks of servers. This is what others might call a *cell* or *pod*, it's used as a unit of deployment and management. There are many stamps per datacenter, and many datacenters which are geographically distributed for fault-tolerance.
 
-Users have *accounts* and all of the data in an account is stored in a stamp in a chosen geographic region. Accounts are another unit of management, and are migrated between stamps based on load.
+Users have *accounts* and all of the data in an account is stored on a single stamp. Accounts are another unit of management, and are migrated between stamps based on load.
 
 WAS is a very layered system, so let's take it from the bottom up, starting with how it works within a single stamp, then talking about how multiple stamps are glued together into a global namespace.
 
@@ -80,34 +80,42 @@ In the case of a disaster, the location service flips DNS and VIP over to point 
 
 #### How many hops / IOs?
 
-It's interesting to count how many network hops and how many IOs are required to do operations in this system. Let's try and count, for a typical read request.
+It's interesting to try and count how many network hops and IOs are required to do operations in this system. Let's look at a typical read request.
 
 1. Client has the DNS cached so goes to a front-end at the primary stamp. 1 hop, 0 IOs.
 1. Front-end has the partition map cached, so goes to the partition server for that range. 1 hop, 0 IOs.
 1. Partition server looks in the row data stream for the extent/offset/length of the blob. This is an LSM tree, so requires 0-N lookups to the stream layer (let's assume 1), and the blob layer is 1 lookup. For each stream lookup:
     1. Go to the stream master to figure out which extent nodes have the extent. 1 hop, 0 IOs.
-    1. Go to the extent node to read the data. This requires looking in the index and then the actual data. 1 hop, 2-3 IOs.
+    1. Go to the extent node to read the data. This requires looking in the index and then the actual data. 1 hop, ~3 IOs. This depends on caching of file handles and the filesystem, so an estimate.
 
-My math says this is a total of 6 hops and 4-6 IOs to do a read. How about writing a small blob?
+My math says this is a total of 6 hops and 6 IOs to do a read. How about writing a small blob?
 
 1. Client has the DNS cached so goes to a front-end at the primary stamp. 1 hop, 0 IOs.
 1. Front-end has the partition map cached, so goes to the partition server for that range. 1 hop, 0 IOs.
 1. Partition server writes to the WAL stream and the side blob stream. For each write:
     1. Go to the stream master to find the primary extent node for the extent. 1 hop, 0 IOs.
-    1. Go to the primary extent node, write the block. This gets pushed to the two other nodes in the pipeline. 3 hops, 3 IOs.
-1. At this point the write can be ACK'd, though asynchronous inter-stamp replication has not happened yet. There's also some additional work to do LSM compaction, and this is only to the journal on the extent servers.
+    1. Go to the primary extent node, write the block. This gets pushed to the two other nodes in the pipeline. Appending to an open file is ~2 IOs (one for the data, one to update the file length in the inode). I'll assume the index is in memory while the extent is unsealed, and checksums are stored inline, else this blows up. 3 hops, 6 IOs.
+1. At this point the write can be ACK'd.
 
-Add it up, this is ten hops and 6 IOs. This is multiplied by the number of replicas, and again by some small factor for LSM rewrites. The number of IOs is then multiplied by 2 to account for journalling.
+Add it up, this is ten hops and 12 IOs. This is multiplied by the number of stamp replicas, and again by some small factor for LSM rewrites, and by 2 since all writes are journaled.
 
-#### Lots of partitions
+#### Account limits
 
 S3 lets you can store an [unlimited number of items in a bucket](http://docs.aws.amazon.com/AmazonS3/latest/dev/BucketRestrictions.html) with no performance implications. This is not the case in WAS, which limits accounts to [500TB usage, 20K IOPS, and 10-30Gbps network throughput](https://azure.microsoft.com/en-us/documentation/articles/azure-subscription-service-limits/#storage-limits). Remember also that an account can have multiple partitions! This is because accounts are assigned to a stamp, so it's limited by the capacity of that one stamp.
 
-This seems pretty annoying compared to S3. I didn't understand why they pin all the contents of an account to a single stamp. Seems like a lot more management complexity to shard data across multiple accounts and partitions.
+Forcing users to partition manually is distinctly worse than the unrestricted buckets provided by S3. Their reasoning was that pinning to a single stamp gives better performance isolation and lets users choose in what geographic region their data is stored. I don't understand why you couldn't do the same thing with range-partitioned buckets. With system-managed partitioning, you could get even better stamp utilization by splitting/merging an account across stamps.
+
+I'm told that Azure Data Lake is the next thing coming down the pipe, is built on top of WAS, and handles sharding across multiple accounts to get around these limits. At this point I begin to wonder; WAS is already a very layered system, and indirections do come at a cost.
 
 #### Centralized control
 
 They chose not to use hash-partitioning since they wanted ranged listing and more control over placement for isolation. This is a criticism of hash-partitioning I share. It's really convenient to split/move partitions around based on load. Range partitioning has the issue of hotspotting writes to sequential keys, but there are tricks like reversing or hashing the key to work around this.
+
+### Conclusion
+
+There are lots of things to like about WAS. They built a number of useful user abstractions on top of a single storage system which provides strong consistency, a fuller feature set than S3, and geo-replication. WAS also has nice provisions to improve latency, increase utilization, and make operations easier.
+
+I view this as a practical way of stitching together multiple clusters. This is something we support in HDFS via federation, and MapR does something similar with its concept of volumes. It's also probably true that most users can live just fine with 500TB of storage. I just find it somewhat dissatisfying that WAS rids itself of a hierarchical namespace, but doesn't exploit that fact to the fullest extent to expose a truly scale-out system.
 
 {%endarticle%}
 
