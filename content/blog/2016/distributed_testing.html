@@ -1,0 +1,32 @@
+{% extends "_post.html" %}
+
+{%load webdesign %}
+
+{%hyde
+    title: Distributed Testing
+    created: 2016-08-25 20:46:00
+%}
+
+{% block article %}
+
+{%article%}
+
+{% excerpt %}
+
+I gave a presentation titled [Happier Developers and Happier Software through Distributed Testing](https://apachebigdata2016.sched.org/event/0b593f209a2ca2cfef189069db3a085c?iframe=no) at Apache Big Data 2016, which detailed how our distributed unit testing framework has decreased the runtime of Apache Hadoop's unit test suite by **60x** from 8.5 hours to about 8 minutes, and the substantial productivity improvements that are possible when developers can easily run and interact with the test suite.
+
+The infrastructure is general enough to accommodate any software project.
+We wrote frontends for both C++/gtest and Java/Maven.
+
+This effort started as a Cloudera hackathon project that Todd and I worked on two years ago, and I'm very glad we got it across the line.
+Furthermore, it's also [open-source](https://github.com/cloudera/dist_test), and we'd love to see it rolled out to more projects.
+
+Slides: [pptx](/presentations/distributed_testing_apache_big_data_2016.pptx)
+
+Source-code: [cloudera/dist_test](https://github.com/cloudera/dist_test)
+
+{%endexcerpt%}
+
+{%endarticle%}
+
+{% endblock %}

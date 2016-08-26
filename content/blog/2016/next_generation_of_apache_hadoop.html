@@ -1,0 +1,40 @@
+{% extends "_post.html" %}
+
+{%load webdesign %}
+
+{%hyde
+    title: The Next Generation of Apache Hadoop
+    created: 2016-08-25 21:44:00
+%}
+
+{% block article %}
+
+{%article%}
+
+{% excerpt %}
+
+Apache Hadoop turned ten this year. To celebrate, Karthik and I gave a talk at USENIX ATC '16 about open problems to solve in Hadoop's second decade.
+This was an opportunity to revisit our academic roots and get a new crop of graduate students interested in the real distributed systems problems we're trying to solve in industry.
+
+This is a huge topic and we only had a 25 minute talk slot, so we were pitching problems rather than solutions.
+However, we did have some ideas in our back pocket, and the hallway track and birds-of-a-feather we hosted afterwards led to a lot of good discussion.
+
+Karthik and I split up the content thematically, which worked really well.
+I covered scalability, meaning sharded filesystems and federated resource management.
+Karthik addressed scheduling (unifying batch jobs and long-running services) and utilization (overprovisioning, preemption, isolation).
+
+I'm hoping to give this talk again in longer form, since I'm proud of the content.
+
+Slides: [pptx](/presentations/atc_2016.pptx)
+
+[USENIX site with PDF slides and audio](https://www.usenix.org/conference/atc16/technical-sessions/presentation/kambatla)
+
+{%endexcerpt%}
+
+Talking big ideas like this with Karthik also made me nostalgic for graduate school.
+Karthik is one of the most impressive people I know; I thought he'd left graduate school for Cloudera like me, but he's actually been working on his PhD nights and weekends!
+While we were prepping this presentation for ATC, he was also working on a submission for SoCC, and is apparently close to graduating.
+
+{%endarticle%}
+
+{% endblock %}
